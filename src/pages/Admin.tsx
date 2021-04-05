@@ -16,8 +16,8 @@ export default (): React.ReactNode => {
       <Card>
         <Alert
           message={intl.formatMessage({
-            id: 'pages.welcome.alertMessage',
-            defaultMessage: '更快更强的重型组件，已经发布。',
+            id: 'pages.home.alertMessage',
+            defaultMessage: '个人主页',
           })}
           type="success"
           showIcon

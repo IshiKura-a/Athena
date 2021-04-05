@@ -107,7 +107,7 @@ const Login: React.FC<LoginProps> = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.username.placeholder',
-                defaultMessage: '用户名: admin or user',
+                defaultMessage: '请输入用户名',
               })}
               rules={[
                 {
@@ -129,7 +129,7 @@ const Login: React.FC<LoginProps> = (props) => {
               }}
               placeholder={intl.formatMessage({
                 id: 'pages.login.password.placeholder',
-                defaultMessage: '密码: ant.design',
+                defaultMessage: '请输入密码',
               })}
               rules={[
                 {
