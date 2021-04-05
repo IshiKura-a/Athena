@@ -21,4 +21,16 @@ export const isAntDesignProOrDev = (): boolean => {
   return isAntDesignPro();
 };
 
+export const getCookie = (name: string) => {
+  const arr = document.cookie.match(new RegExp(`(^| )${name}=([^;]*)(;|$)`));
+  if (arr != null) return decodeURI(arr[2]);
+  return null;
+};
+
+export const setCookie = (cName: string, cValue: string, days = 1) => {
+  const expires = new Date();
+  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+  document.cookie = `${cName}=${escape(cValue)};expires=${expires.toUTCString()};path=/;`;
+};
+
 export const getPageQuery = () => parse(window.location.href.split('?')[1]);

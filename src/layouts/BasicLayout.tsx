@@ -19,7 +19,7 @@ import RightContent from '@/components/GlobalHeader/RightContent';
 import type { ConnectState } from '@/models/connect';
 import { getMatchMenu } from '@umijs/route-utils';
 import logo from '../assets/zju1.svg';
-import Base from '@/pages';
+import Base from '@/index';
 
 const noMatch = (
   <Result

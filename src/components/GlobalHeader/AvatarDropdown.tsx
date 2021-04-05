@@ -7,12 +7,15 @@ import type { ConnectState } from '@/models/connect';
 import type { CurrentUser } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import { inject, observer } from 'mobx-react';
 
 export type GlobalHeaderRightProps = {
   currentUser?: CurrentUser;
   menu?: boolean;
 } & Partial<ConnectProps>;
 
+@inject('loginStore')
+@observer
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
   onMenuClick = (event: {
     key: React.Key;
@@ -23,14 +26,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     const { key } = event;
 
     if (key === 'logout') {
-      const { dispatch } = this.props;
-
-      if (dispatch) {
-        dispatch({
-          type: 'login/logout',
-        });
-      }
-
+      this.props.loginStore.logout();
       return;
     }
 

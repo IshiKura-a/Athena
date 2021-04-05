@@ -1,7 +1,7 @@
 import { action, observable, reaction } from 'mobx';
 import { Day, Lesson } from '@/pages/Home/type';
 import { cloneDeep } from 'lodash';
-import { BaseStore } from '@/pages/store';
+import { BaseStore } from '@/store';
 
 const todoData = [
   {
@@ -102,17 +102,6 @@ export default class HomePageStore {
 
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
-
-    reaction(
-      () => ({
-        token: this.baseStore.token,
-      }),
-      (val) => {
-        console.log(val.token);
-        // TODO fetch
-      },
-      { fireImmediately: true },
-    );
   }
 
   @action setToDoList(todoList: any) {
@@ -126,4 +115,12 @@ export default class HomePageStore {
   @action setToDoPage(todoPage: number) {
     this.todoPage = todoPage;
   }
+
+  @action fetchToDoList = async () => {
+    // TODO
+  };
+
+  @action fetchLessonInfo = async () => {
+    // TODO
+  };
 }

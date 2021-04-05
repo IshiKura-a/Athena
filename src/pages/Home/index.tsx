@@ -21,6 +21,11 @@ export default class HomePage extends Component<HomePageProps, any> {
     this.props.homePageStore.setToDoPage(val);
   };
 
+  componentDidMount() {
+    // TODO 在页面加载时fetch
+    this.props.homePageStore.fetchToDoList();
+  }
+
   render() {
     const { todoList, lessonInfo, msg, todoPage } = this.props.homePageStore;
     return (

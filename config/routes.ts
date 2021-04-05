@@ -1,44 +1,43 @@
 ﻿import {menuRoutes} from "./routes/menuRoutes";
-import {storeRoutes} from "./routes/storeRoutes";
 
 export default [
   {
     path: '/',
-    component: '../layouts/BlankLayout',
+    component: '../index',
     routes: [
       {
-        path: '/user',
-        component: '../layouts/UserLayout',
-        routes: [
-          {
-            name: 'login',
-            path: '/user/login',
-            component: './User/login',
-          },
-        ],
-      },
-      {
         path: '/',
-        component: '../layouts/SecurityLayout',
+        component: '../layouts/BlankLayout',
         routes: [
           {
-            path: '/',
-            component: '../layouts/BasicLayout',
-            authority: ['admin', 'user'],
+            path: '/user',
+            component: '../layouts/UserLayout',
             routes: [
               {
-                component: './index',
-                routes: storeRoutes,
+                name: 'login',
+                path: '/user/login',
+                component: './Login',
               },
-              ...menuRoutes,
-            ]
+            ],
           },
           {
-            component: './404',
+            path: '/',
+            component: '../layouts/SecurityLayout',
+            routes: [
+              {
+                path: '/',
+                component: '../layouts/BasicLayout',
+                authority: ['admin', 'user'],
+                routes: menuRoutes,
+              },
+              {
+                component: './404',
+              },
+            ],
           },
         ],
       },
-    ],
+    ]
   },
   {
     component: './404',

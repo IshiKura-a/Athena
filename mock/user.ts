@@ -95,6 +95,7 @@ export default {
         status: 'ok',
         type,
         currentAuthority: 'admin',
+        token: 'admin',
       });
       return;
     }
@@ -103,6 +104,7 @@ export default {
         status: 'ok',
         type,
         currentAuthority: 'user',
+        token: 'user',
       });
       return;
     }
@@ -111,6 +113,7 @@ export default {
         status: 'ok',
         type,
         currentAuthority: 'admin',
+        token: 'admin',
       });
       return;
     }

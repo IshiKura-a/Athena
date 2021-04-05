@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx';
-import { BaseStore } from '@/pages/store';
+import { BaseStore } from '@/store';
 
 export default class ProfileStore {
   @observable name = 'ssa';
