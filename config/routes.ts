@@ -25,13 +25,19 @@
             routes: [
               {
                 path: '/',
-                redirect: '/welcome',
+                redirect: './home',
               },
               {
-                path: '/welcome',
-                name: 'welcome',
+                path: '/home',
+                name: 'home',
                 icon: 'smile',
-                component: './Welcome',
+                component: './Home/home',
+              },
+              {
+                path: '/Home/home/components/Notifications',
+                name: 'profile',
+                icon: 'smile',
+                component: './Home/components/Notifications',
               },
               {
                 path: '/admin',
@@ -44,7 +50,7 @@
                     path: '/admin/sub-page',
                     name: 'sub-page',
                     icon: 'smile',
-                    component: './Welcome',
+                    component: './Home/home',
                     authority: ['admin'],
                   },
                 ],
