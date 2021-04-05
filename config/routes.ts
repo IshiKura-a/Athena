@@ -1,4 +1,7 @@
-﻿export default [
+﻿import {menuRoutes} from "./routes/menuRoutes";
+import {storeRoutes} from "./routes/storeRoutes";
+
+export default [
   {
     path: '/',
     component: '../layouts/BlankLayout',
@@ -24,47 +27,11 @@
             authority: ['admin', 'user'],
             routes: [
               {
-                path: '/',
-                redirect: './home',
+                component: './index',
+                routes: storeRoutes,
               },
-              {
-                path: '/home',
-                name: 'home',
-                icon: 'smile',
-                component: './Home/home',
-              },
-              {
-                path: '/Home/home/components/Notifications',
-                name: 'profile',
-                icon: 'smile',
-                component: './Home/components/Notifications',
-              },
-              {
-                path: '/admin',
-                name: 'admin',
-                icon: 'crown',
-                component: './Admin',
-                authority: ['admin'],
-                routes: [
-                  {
-                    path: '/admin/sub-page',
-                    name: 'sub-page',
-                    icon: 'smile',
-                    component: './Home/home',
-                    authority: ['admin'],
-                  },
-                ],
-              },
-              {
-                name: 'list.table-list',
-                icon: 'table',
-                path: '/list',
-                component: './TableList',
-              },
-              {
-                component: './404',
-              },
-            ],
+              ...menuRoutes,
+            ]
           },
           {
             component: './404',
