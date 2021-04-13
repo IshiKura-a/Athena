@@ -6,28 +6,20 @@ import HomePageStore from '@/pages/Home/model';
 import { inject, observer } from 'mobx-react';
 import { Day, Lesson } from '@/pages/Home/type';
 import Schedule from '@/pages/Home/component/schedule';
+import TodoList from './component/todolist';
 
 const { TabPane } = Tabs;
 const tabCallBack = (key: any) => {};
 
-interface HomePageProps {
+export interface HomePageProps {
   homePageStore: HomePageStore;
 }
 
 @inject('homePageStore')
 @observer
 export default class HomePage extends Component<HomePageProps, any> {
-  handleChangeToDoPage = (val: number) => {
-    this.props.homePageStore.setToDoPage(val);
-  };
-
-  componentDidMount() {
-    // TODO 在页面加载时fetch
-    this.props.homePageStore.fetchToDoList();
-  }
-
   render() {
-    const { todoList, lessonInfo, msg, todoPage } = this.props.homePageStore;
+    const {todoList, lessonInfo, msg } = this.props.homePageStore;
     return (
       <PageContainer>
         <div className="site-card-wrapper">
@@ -50,25 +42,7 @@ export default class HomePage extends Component<HomePageProps, any> {
               </Card>
             </Col>
             <Col span={8}>
-              <Card title={<Alert message={'待办事项'} type="info" showIcon banner />}>
-                <List
-                  className={styles.todo}
-                  dataSource={todoList}
-                  pagination={{
-                    defaultCurrent: 1,
-                    current: todoPage,
-                    onChange: this.handleChangeToDoPage,
-                    pageSize: 3,
-                  }}
-                  renderItem={(item) => (
-                    <List.Item>
-                      <Card type="inner" title={item.title}>
-                        {item.endDate}
-                      </Card>
-                    </List.Item>
-                  )}
-                />
-              </Card>
+              <TodoList homePageStore={this.props.homePageStore}/>
             </Col>
           </Row>
         </div>

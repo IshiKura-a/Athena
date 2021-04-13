@@ -7,7 +7,7 @@ import {
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, Space, message, Tabs } from 'antd';
+import { Alert, Space, Tabs } from 'antd';
 import React, { Component, useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
@@ -41,7 +41,7 @@ const LoginMessage: React.FC<{
 export default class Login extends Component<LoginProps, any> {
   handleSubmit = (values: LoginParamsType) => {
     const { login, userLogin } = this.props.loginStore;
-    login({ ...values, type: userLogin.type });
+    login({ ...values, loginType: userLogin.loginType, type: 'student'});
   };
 
   setType = (value: string) => {
@@ -50,7 +50,7 @@ export default class Login extends Component<LoginProps, any> {
 
   render() {
     const { userLogin = {}, inSubmitting } = this.props.loginStore;
-    const { status, type } = userLogin;
+    const { message, loginType } = userLogin;
 
     return (
       <div className={styles.main}>
@@ -73,7 +73,7 @@ export default class Login extends Component<LoginProps, any> {
             return Promise.resolve();
           }}
         >
-          <Tabs activeKey={type} onChange={this.setType}>
+          <Tabs activeKey={loginType} onChange={this.setType}>
             <Tabs.TabPane
               key="account"
               tab={formatMessage({
@@ -90,7 +90,7 @@ export default class Login extends Component<LoginProps, any> {
             />
           </Tabs>
 
-          {status === 'error' && type === 'account' && !inSubmitting && (
+          {status === 'error' && loginType === 'account' && !inSubmitting && (
             <LoginMessage
               content={formatMessage({
                 id: 'pages.login.accountLogin.errorMessage',
@@ -98,10 +98,10 @@ export default class Login extends Component<LoginProps, any> {
               })}
             />
           )}
-          {type === 'account' && (
+          {loginType === 'account' && (
             <>
               <ProFormText
-                name="userName"
+                name="aid"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
@@ -147,10 +147,10 @@ export default class Login extends Component<LoginProps, any> {
             </>
           )}
 
-          {status === 'error' && type === 'mobile' && !inSubmitting && (
+          {status === 'error' && loginType === 'mobile' && !inSubmitting && (
             <LoginMessage content="验证码错误" />
           )}
-          {type === 'mobile' && (
+          {loginType === 'mobile' && (
             <>
               <ProFormText
                 fieldProps={{

@@ -15,3 +15,12 @@ export interface Lesson {
 }
 
 export const timeFormat = 'hh:mm';
+
+export interface ToDo {
+  id: number;
+  title: string;
+  finished: boolean;
+  description?: string;
+  start_time?: string;
+  end_time?: string;
+}
