@@ -1,14 +1,17 @@
 import request from '@/utils/request';
 
 export type LoginParamsType = {
-  userName: string;
+  aid: string;
   password: string;
-  mobile: string;
-  captcha: string;
+  type: string;
+  loginType: string;
+  mobile?: string;
+  captcha?: string;
 };
 
 export async function accountLogin(params: LoginParamsType) {
-  return request(`/api/login/account`, {
+  console.log('check login params',params);
+  return request(`/api/login`, {
     method: 'POST',
     data: params,
   });
