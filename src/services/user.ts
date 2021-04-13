@@ -49,7 +49,7 @@ const fakeUser = {
   },
   address: '西湖区工专路 77 号',
   phone: '0752-268888888',
-}
+};
 
 export async function query(): Promise<any> {
   return request('/api/users');
@@ -57,8 +57,8 @@ export async function query(): Promise<any> {
 
 // mock调试选用注释
 export async function queryCurrent(): Promise<any> {
-  return request('/api/currentUser');
-  // return fakeUser
+  // return request('/api/currentUser');
+  return fakeUser;
 }
 
 export async function queryNotices(): Promise<any> {
