@@ -27,7 +27,7 @@ export default class LoginStore {
   @action login = async (payload: LoginParamsType) => {
     this.inSubmitting = true;
     const response = await accountLogin(payload);
-    console.log('login respnse',response);
+    console.log('login respnse', response);
     setAuthority(response.type);
     this.setUserLogin({
       message: response.message,

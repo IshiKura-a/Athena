@@ -10,7 +10,6 @@ export type LoginParamsType = {
 };
 
 export async function accountLogin(params: LoginParamsType) {
-  console.log('check login params',params);
   return request(`/api/login`, {
     method: 'POST',
     data: params,

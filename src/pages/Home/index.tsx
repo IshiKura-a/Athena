@@ -6,12 +6,12 @@ import HomePageStore from '@/pages/Home/model';
 import { inject, observer } from 'mobx-react';
 import { Day, Lesson } from '@/pages/Home/type';
 import Schedule from '@/pages/Home/component/schedule';
-import TodoList from './component/todolist';
+import TodoList from './component/todoList';
 
 const { TabPane } = Tabs;
 const tabCallBack = (key: any) => {};
 
-export interface HomePageProps {
+interface HomePageProps {
   homePageStore: HomePageStore;
 }
 
@@ -19,7 +19,7 @@ export interface HomePageProps {
 @observer
 export default class HomePage extends Component<HomePageProps, any> {
   render() {
-    const {todoList, lessonInfo, msg } = this.props.homePageStore;
+    const { lessonInfo, msg } = this.props.homePageStore;
     return (
       <PageContainer>
         <div className="site-card-wrapper">
@@ -42,7 +42,7 @@ export default class HomePage extends Component<HomePageProps, any> {
               </Card>
             </Col>
             <Col span={8}>
-              <TodoList homePageStore={this.props.homePageStore}/>
+              <TodoList homePageStore={this.props.homePageStore} />
             </Col>
           </Row>
         </div>

@@ -7,7 +7,7 @@ import {
   UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
-import { Alert, Space, Tabs } from 'antd';
+import { Alert, message, Space, Tabs } from 'antd';
 import React, { Component, useState } from 'react';
 import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
@@ -41,7 +41,7 @@ const LoginMessage: React.FC<{
 export default class Login extends Component<LoginProps, any> {
   handleSubmit = (values: LoginParamsType) => {
     const { login, userLogin } = this.props.loginStore;
-    login({ ...values, loginType: userLogin.loginType, type: 'student'});
+    login({ ...values, loginType: userLogin.loginType, type: 'student' });
   };
 
   setType = (value: string) => {
@@ -50,7 +50,7 @@ export default class Login extends Component<LoginProps, any> {
 
   render() {
     const { userLogin = {}, inSubmitting } = this.props.loginStore;
-    const { message, loginType } = userLogin;
+    const { loginType } = userLogin;
 
     return (
       <div className={styles.main}>
@@ -90,7 +90,7 @@ export default class Login extends Component<LoginProps, any> {
             />
           </Tabs>
 
-          {status === 'error' && loginType === 'account' && !inSubmitting && (
+          {userLogin.message === 'error' && loginType === 'account' && !inSubmitting && (
             <LoginMessage
               content={formatMessage({
                 id: 'pages.login.accountLogin.errorMessage',
@@ -147,7 +147,7 @@ export default class Login extends Component<LoginProps, any> {
             </>
           )}
 
-          {status === 'error' && loginType === 'mobile' && !inSubmitting && (
+          {userLogin.message === 'error' && loginType === 'mobile' && !inSubmitting && (
             <LoginMessage content="验证码错误" />
           )}
           {loginType === 'mobile' && (
