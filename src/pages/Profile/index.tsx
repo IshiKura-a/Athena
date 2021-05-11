@@ -46,10 +46,10 @@ const MaleSvg = () => (
   </svg>
 );
 
-const FemaleIcon = (props) => <Icon component={FemaleSvg} {...props} />;
-const MaleIcon = (props) => <Icon component={MaleSvg} {...props} />;
+const FemaleIcon = (props: any) => <Icon component={FemaleSvg} {...props} />;
+const MaleIcon = (props: any) => <Icon component={MaleSvg} {...props} />;
 
-function GenderIcon(props) {
+function GenderIcon(props: any) {
   const gender = props.gender.toString();
   if (gender === '男') {
     return (
@@ -85,8 +85,8 @@ const itemStyle = {
   color: '#bfbfbf',
 };
 
-function StatusIcon(props) {
-  const status = props.status.toString();
+function StatusIcon(props: any) {
+  const status = Number(props.status.toString());
   if (status === 0) {
     return (
       <p>
