@@ -9,6 +9,9 @@ export enum Day {
 }
 export interface Lesson {
   name: string;
+  instructor: string;
+  address: string;
+  department: string;
   startTime: string;
   endTime: string;
   date: Day;

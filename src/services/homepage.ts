@@ -1,5 +1,8 @@
 import request from '@/utils/request';
-import { useParams } from 'react-router';
+
+export type fetchLessonParams = {
+  token: string | null;
+};
 
 export type addToDoParams = {
   token: string | null;
@@ -8,12 +11,10 @@ export type addToDoParams = {
 
 export type fetchToDoParams = {
   token: string | null;
-  key: string;
 };
 
 export type finishToDoParams = {
   token: string | null;
-  key: string;
   id: number;
 };
 
@@ -30,6 +31,13 @@ export type deleteToDoParams = {
   token: string | null;
   id: number;
 };
+
+export async function fetchLesson(params: fetchLessonParams) {
+  return request(`/api/home/lessonFetch`, {
+    method: 'GET',
+    data: params,
+  });
+}
 
 export async function addToDo(params: addToDoParams) {
   return request(`/api/home/todoadd`, {

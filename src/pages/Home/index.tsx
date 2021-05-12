@@ -1,15 +1,18 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, Alert, List, Row, Col, Tabs } from 'antd';
-import styles from './home.less';
-import HomePageStore from '@/pages/Home/model';
+import { Card, Alert, Row, Col, Tabs } from 'antd';
+import type HomePageStore from '@/pages/Home/model';
 import { inject, observer } from 'mobx-react';
-import { Day, Lesson } from '@/pages/Home/type';
+import type { Lesson } from '@/pages/Home/type';
+import { Day } from '@/pages/Home/type';
 import Schedule from '@/pages/Home/component/schedule';
-import TodoList from './component/todoList';
+import TodoList from '@/pages/Home/component/todoList';
+import moment from 'moment';
 
 const { TabPane } = Tabs;
-const tabCallBack = (key: any) => {};
+const tabCallBack = (key: any) => {
+  console.log(key);
+};
 
 interface HomePageProps {
   homePageStore: HomePageStore;
@@ -18,8 +21,18 @@ interface HomePageProps {
 @inject('homePageStore')
 @observer
 export default class HomePage extends Component<HomePageProps, any> {
+  componentDidMount() {
+    this.props.homePageStore.fetchLessonInfo();
+  }
+
+  cmpTime = (timeA: string, timeB: string) => {
+    const A = moment(timeA, 'HH:mm');
+    const B = moment(timeB, 'HH:mm');
+    return A.diff(B);
+  };
+
   render() {
-    const { lessonInfo, msg } = this.props.homePageStore;
+    const { lessonInfo } = this.props.homePageStore;
     return (
       <PageContainer>
         <div className="site-card-wrapper">
@@ -27,14 +40,19 @@ export default class HomePage extends Component<HomePageProps, any> {
             <Col span={16}>
               <Card title={<Alert message="课程信息" type="info" showIcon banner />}>
                 <Tabs defaultActiveKey={Day.Mon} onChange={tabCallBack}>
-                  {Object.values(Day).map((item) => {
+                  {Object.values(Day).map((item, index) => {
                     return (
                       <TabPane tab={item.toString()} key={item}>
-                        <Schedule
-                          lessonInfo={lessonInfo.filter((lesson: Lesson) => {
-                            return lesson.date === item;
-                          })}
-                        />
+                        <Card style={{ height: '300px', overflowY: 'auto', overflowX: 'hidden' }}>
+                          <Schedule
+                            day={index}
+                            lessonInfo={lessonInfo
+                              .filter((lesson: Lesson) => {
+                                return lesson.date === item;
+                              })
+                              .sort((x, y) => this.cmpTime(x.startTime, y.startTime))}
+                          />
+                        </Card>
                       </TabPane>
                     );
                   })}

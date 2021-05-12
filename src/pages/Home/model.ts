@@ -1,76 +1,22 @@
-import { action, observable, runInAction } from 'mobx';
-import { Day, Lesson, ToDo } from '@/pages/Home/type';
+import { action, observable } from 'mobx';
+import type { Lesson, ToDo } from '@/pages/Home/type';
 import { cloneDeep } from 'lodash';
-import { BaseStore } from '@/store';
+import type { BaseStore } from '@/store';
+import type { addToDoParams, deleteToDoParams, editToDoParams } from '@/services/homepage';
 import {
   addToDo,
-  addToDoParams,
   deleteToDo,
-  deleteToDoParams,
   editToDo,
-  editToDoParams,
+  fetchLesson,
   fetchToDo,
   finishToDo,
-  queryToDo,
 } from '@/services/homepage';
 import _ from 'lodash';
-import { response } from 'express';
-
-const lessonData: Lesson[] = [
-  {
-    name: '编译原理',
-    startTime: '15:00',
-    endTime: '16:00',
-    date: Day.Mon,
-  },
-  {
-    name: '编译原理',
-    startTime: '17:00',
-    endTime: '18:00',
-    date: Day.Mon,
-  },
-  {
-    name: '编译原理',
-    startTime: '15:00',
-    endTime: '16:00',
-    date: Day.Tues,
-  },
-  {
-    name: '编译ww原理',
-    startTime: '15:00',
-    endTime: '16:00',
-    date: Day.Wed,
-  },
-  {
-    name: '编译原zz理',
-    startTime: '15:00',
-    endTime: '16:00',
-    date: Day.Thu,
-  },
-  {
-    name: '编译原理',
-    startTime: '15:00',
-    endTime: '16:00',
-    date: Day.Fri,
-  },
-  {
-    name: 'wq',
-    startTime: '13:00',
-    endTime: '13:00',
-    date: Day.Sat,
-  },
-  {
-    name: 'kjhk',
-    startTime: '14:00',
-    endTime: '15:00',
-    date: Day.Sun,
-  },
-];
 
 export default class HomePageStore {
   @observable todoList: ToDo[] = [];
   @observable msg = [];
-  @observable lessonInfo = lessonData;
+  @observable lessonInfo: Lesson[] = [];
 
   baseStore: BaseStore;
 
@@ -88,7 +34,7 @@ export default class HomePageStore {
 
   @action fetchToDoList = async () => {
     // TODO
-    const response = await fetchToDo({ token: this.baseStore.token, key: 'key' });
+    const response = await fetchToDo({ token: this.baseStore.token });
     if (response.status === 'ok') {
       this.setToDoList(response.todoData);
     } else {
@@ -110,7 +56,7 @@ export default class HomePageStore {
     if (response1.status !== 'ok') {
       console.log('delete todo error');
     }
-    const response2 = await fetchToDo({ token: this.baseStore.token, key: 'key' });
+    const response2 = await fetchToDo({ token: this.baseStore.token });
 
     if (response2.status === 'ok') {
       console.log('refetch todo error');
@@ -122,7 +68,6 @@ export default class HomePageStore {
     const response = await finishToDo({
       token: this.baseStore.token,
       id: this.todoList[index].id,
-      key: 'key',
     });
     if (response.status === 'ok') {
       this.todoList = this.todoList.map((item, i: number) =>
@@ -156,6 +101,11 @@ export default class HomePageStore {
   };
 
   @action fetchLessonInfo = async () => {
-    // TODO
+    const response = await fetchLesson({ token: this.baseStore.token });
+    if (response.status === 'ok') {
+      this.setLessonInfo(response.lessonInfo);
+    } else {
+      console.log('fetch lesson error');
+    }
   };
 }
