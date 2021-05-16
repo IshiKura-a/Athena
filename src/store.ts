@@ -22,6 +22,9 @@ export class BaseStore {
   @action setToken(token: string) {
     this.token = cloneDeep(token);
   }
+  @action getToken() {
+    return this.token;
+  }
 }
 
 const baseStore = new BaseStore();

@@ -10,13 +10,13 @@ import { BaseStore } from '@/store';
 import { cloneDeep } from 'lodash';
 
 export type StateType = {
-  status?: 'ok' | 'error';
-  type?: string;
-  currentAuthority?: 'user' | 'guest' | 'admin';
+  message?: 'ok' | 'error';
+  loginType?: 'account' | 'mobile';
+  type?: 'admin' | 'student' | 'instructor';
 };
 
 export default class LoginStore {
-  @observable userLogin: StateType = { type: 'account' };
+  @observable userLogin: StateType = { loginType: 'account' };
   @observable inSubmitting: boolean = false;
 
   baseStore: BaseStore;
@@ -27,14 +27,15 @@ export default class LoginStore {
   @action login = async (payload: LoginParamsType) => {
     this.inSubmitting = true;
     const response = await accountLogin(payload);
-    setAuthority(response.currentAuthority);
+    console.log('login respnse', response);
+    setAuthority(response.type);
     this.setUserLogin({
-      status: response.status,
+      message: response.message,
+      loginType: 'account',
       type: response.type,
-      currentAuthority: response.currentAuthority,
     });
     // Login successfully
-    if (response.status === 'ok') {
+    if (response.message === 'ok') {
       this.baseStore.setToken(response.token);
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
@@ -74,10 +75,10 @@ export default class LoginStore {
     }
   };
 
-  @action setType(type: string) {
+  @action setType(loginType) {
     this.userLogin = cloneDeep({
       ...this.userLogin,
-      type,
+      loginType,
     });
   }
 
