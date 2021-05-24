@@ -1,31 +1,31 @@
 import { Component } from 'react';
 import { Alert, Button, Card, Input, List, Popover, DatePicker, Row, Tooltip, Form } from 'antd';
 import styles from './style.less';
-import type HomePageStore from '../model';
+import HomePageStore from '../model';
 import { DeleteOutlined, EllipsisOutlined } from '@ant-design/icons';
-import { action, computed, observable } from 'mobx';
-import { observer } from 'mobx-react';
+import { action, computed } from 'mobx';
+import { inject, observer } from 'mobx-react';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
 import moment from 'moment';
 import ProForm from '@ant-design/pro-form';
+import type { additionToDo } from '@/services/homepage';
+import ToDoListStore from '../component/todoModel';
 
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 interface TodoProps {
+  todoListStore: ToDoListStore;
   homePageStore: HomePageStore;
 }
 
+@inject('todoListStore')
 @observer
-export default class TodoList extends Component<TodoProps> {
-  @observable inputValue = '';
-  @observable tmpEditValue = '';
-  @observable isEditing = false;
-  @observable atEditing = -2;
-  state = {
-    popVisible: false,
-    atPop: -1,
-  };
+export default class TodoList extends Component<TodoProps, any> {
+  // state = {
+  //   popVisible: false,
+  //   atPop: -1,
+  // };
 
   constructor(props: TodoProps | Readonly<TodoProps>) {
     super(props);
@@ -33,56 +33,86 @@ export default class TodoList extends Component<TodoProps> {
   }
 
   disabledDate = (current: any) => {
-    // Can not select days before today and today
+    // Can not select days before today
     return current && current < moment().endOf('day');
   };
 
+  async init() {
+    await this.props.todoListStore.fetchToDoList();
+  }
+
   @computed get todoList() {
-    return this.props.homePageStore.todoList;
+    return this.props.todoListStore.todoList;
   }
 
   @computed get token() {
     return this.props.homePageStore.baseStore.token;
   }
 
-  @action async init() {
-    await this.props.homePageStore.fetchToDoList();
+  @computed get popVisible() {
+    return this.props.todoListStore.popVisible;
+  }
+
+  @computed get atPop() {
+    return this.props.todoListStore.atPop;
+  }
+
+  @computed get inputValue() {
+    return this.props.todoListStore.inputValue;
+  }
+
+  @computed get tmpEditValue() {
+    return this.props.todoListStore.tmpEditValue;
+  }
+
+  @computed get isEditing() {
+    return this.props.todoListStore.isEditing;
+  }
+
+  @computed get atEditing() {
+    return this.props.todoListStore.atEditing;
   }
 
   @action handleFocus = (index: number) => {
     if (index >= 0) {
-      this.atEditing = index;
-      this.tmpEditValue = this.props.homePageStore.todoList[index].title;
+      this.props.todoListStore.setAtEditing(index);
+      this.props.todoListStore.setTmpEditValue(this.todoList[index].title);
     }
   };
 
   @action handleBlur = () => {
-    this.inputValue = '';
-    this.tmpEditValue = '';
-    this.isEditing = false;
-    this.atEditing = -2;
+    this.props.todoListStore.handleBlur();
   };
 
   @action handleVisibleChange = (index: number, visible: any) => {
-    this.setState({
-      popVisible: visible,
-      atPop: index,
-    });
+    // this.popVisible = visible;
+    // this.atPop = index;
+    // this.setState({
+    //   popVisible: visible,
+    //   atPop: index,
+    // });
+    this.props.todoListStore.visibleChange(index, visible);
+  };
+
+  @action closePopUp = () => {
+    this.props.todoListStore.closePopUp();
   };
 
   @action handleChangeContent = (index: number, event: any) => {
-    if (index === -1) this.inputValue = event.target.value;
+    if (index === -1) this.props.todoListStore.inputValue = event.target.value;
     else {
-      this.setState({
-        atEditing: index,
-      });
-      this.isEditing = true;
-      this.tmpEditValue = event.target.value;
+      // this.setState({
+      //   atEditing: index,
+      // });
+      this.props.todoListStore.setAtEditing(index);
+      this.props.todoListStore.setIsEditing(true);
+      this.props.todoListStore.setTmpEditValue(event.target.value);
     }
   };
 
   @action handlePressEnter = (index: number, event: any) => {
-    this.isEditing = false;
+    this.props.todoListStore.isEditing = false;
+    // this.isEditing = false;
     if (index === -1 && this.inputValue !== '') {
       this.addToDo();
     } else if (index !== -1) {
@@ -95,41 +125,61 @@ export default class TodoList extends Component<TodoProps> {
 
   @action addToDo = () => {
     const title = this.inputValue;
-    this.inputValue = '';
-    this.props.homePageStore.addToDo({ token: this.token, title });
+    this.props.todoListStore.setInputValue('');
+    // this.inputValue = '';
+    this.props.todoListStore.addToDo({ title, finished: false, addition: null });
   };
 
   @action finishToDo = (index: number) => {
-    this.props.homePageStore.finishToTo(index);
+    this.todoList[index].finished = !this.todoList[index].finished;
+    const { _id, title, finished, start_time, end_time, description } = this.todoList[index];
+    const addition: additionToDo = { start_time, end_time, description };
+    this.props.todoListStore.editToDo(index, {
+      _id,
+      title,
+      finished,
+      addition,
+    });
   };
 
   @action editToDoTitle = (index: number) => {
-    const title = this.tmpEditValue;
-    this.props.homePageStore.editToDo(index, {
-      title,
-      token: this.token,
-      id: this.todoList[index].id,
+    const newTitle = this.tmpEditValue;
+    const { _id, finished, start_time, end_time, description } = this.todoList[index];
+    const addition: additionToDo = { start_time, end_time, description };
+    this.props.todoListStore.editToDo(index, {
+      _id,
+      title: newTitle,
+      finished,
+      addition,
     });
-    this.tmpEditValue = '';
+    this.props.todoListStore.setTmpEditValue('');
+    // this.tmpEditValue = '';
   };
 
   @action editToDoContent = (index: number, values: any) => {
+    const { _id, title, finished } = this.todoList[index];
+    const addition: additionToDo = {
+      start_time: values.timePicker[0],
+      end_time: values.timePicker[1],
+      description: values.description,
+    };
     if (Object.keys(values).length > 0) {
-      this.props.homePageStore.editToDo(index, {
-        token: this.token,
-        id: this.todoList[index].id,
-        start_time: values.timePicker[0],
-        end_time: values.timePicker[1],
-        description: values.description,
+      this.props.todoListStore.editToDo(index, {
+        _id,
+        title,
+        finished,
+        addition,
       });
     }
   };
 
   @action deleteToDo = (index: number) => {
-    this.props.homePageStore.deleteToDo(index, { token: this.token, id: this.todoList[index].id });
+    const { _id } = this.todoList[index];
+    this.props.todoListStore.deleteToDo(index, { _id });
   };
 
   render() {
+    const { todoListStore } = this.props;
     return (
       <Card title={<Alert message={'待办事项'} type="info" showIcon banner />}>
         <Input
@@ -142,7 +192,7 @@ export default class TodoList extends Component<TodoProps> {
             borderBottom: '3px solid rgba(83, 167, 232, 0.65)',
           }}
           placeholder="回车添加事项"
-          value={this.inputValue}
+          value={todoListStore.inputValue}
           onChange={this.handleChangeContent.bind(this, -1)}
           onPressEnter={this.handlePressEnter.bind(this, -1)}
           onBlur={this.handleBlur.bind(this)}
@@ -151,7 +201,7 @@ export default class TodoList extends Component<TodoProps> {
           size="small"
           bordered
           className={styles.todoList}
-          dataSource={this.props.homePageStore.todoList}
+          dataSource={this.props.todoListStore.todoList}
           renderItem={(item, index) => (
             <List.Item key={index} role={undefined} className="todoItem">
               <Row style={{ width: '100%' }}>
@@ -167,7 +217,7 @@ export default class TodoList extends Component<TodoProps> {
                       title={
                         item.description === undefined ||
                         item.description === '' ||
-                        item.description == null
+                        item.description === null
                           ? '暂无描述'
                           : item.description
                       }
@@ -176,7 +226,7 @@ export default class TodoList extends Component<TodoProps> {
                       <Popover
                         title="请选择"
                         trigger="click"
-                        visible={this.state.atPop === index && this.state.popVisible}
+                        visible={todoListStore.atPop === index && todoListStore.popVisible}
                         onVisibleChange={this.handleVisibleChange.bind(this, index)}
                         content={
                           <ProForm
@@ -184,10 +234,11 @@ export default class TodoList extends Component<TodoProps> {
                             layout="horizontal"
                             onFinish={async (values) => {
                               this.editToDoContent(index, values);
-                              this.setState({
-                                popVisible: false,
-                                atPop: -1,
-                              });
+                              this.closePopUp();
+                              // this.setState({
+                              //   popVisible: false,
+                              //   atPop: -1,
+                              // });
                             }}
                             submitter={{
                               searchConfig: {
@@ -203,21 +254,25 @@ export default class TodoList extends Component<TodoProps> {
                               <RangePicker
                                 size="small"
                                 disabledDate={this.disabledDate}
-                                format="YYYY/MM/DD HH:mm:ss"
+                                format="YYYY/MM/DD HH:mm"
                                 showTime={{
-                                  hideDisabledOptions: true,
                                   defaultValue: [moment(), moment()],
                                 }}
-                                defaultPickerValue={[
-                                  moment(item.start_time),
-                                  moment(item.end_time),
-                                ]}
+                                defaultValue={
+                                  item.start_time === undefined || item.end_time === undefined
+                                    ? null
+                                    : [moment(item.start_time), moment(item.end_time)]
+                                }
                               />
                             </Form.Item>
                             <Form.Item name="description">
-                              <TextArea showCount maxLength={100} rows={4} placeholder="请输入描述">
-                                {item.description}
-                              </TextArea>
+                              <TextArea
+                                showCount
+                                maxLength={100}
+                                rows={4}
+                                placeholder={'暂无描述'}
+                                defaultValue={item.description}
+                              />
                             </Form.Item>
                           </ProForm>
                         }
@@ -233,7 +288,9 @@ export default class TodoList extends Component<TodoProps> {
                   }
                   disabled={item.finished}
                   value={
-                    this.isEditing && this.atEditing === index ? this.tmpEditValue : item.title
+                    todoListStore.isEditing && todoListStore.atEditing === index
+                      ? todoListStore.tmpEditValue
+                      : item.title
                   }
                   onChange={this.handleChangeContent.bind(this, index)}
                   onPressEnter={this.handlePressEnter.bind(this, index)}

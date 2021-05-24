@@ -1,76 +1,84 @@
 import request from '@/utils/request';
 
-export type fetchLessonParams = {
-  token: string | null;
-};
-
-export type addToDoParams = {
-  token: string | null;
-  title: string;
-};
-
-export type fetchToDoParams = {
-  token: string | null;
-};
-
-export type finishToDoParams = {
-  token: string | null;
-  id: number;
-};
-
-export type editToDoParams = {
-  token: string | null;
-  id: number;
-  title?: string;
+export type additionToDo = {
   start_time?: string;
   end_time?: string;
   description?: string;
 };
 
-export type deleteToDoParams = {
-  token: string | null;
-  id: number;
+export type fetchLessonParams = {
+  id?: string;
 };
 
-export async function fetchLesson(params: fetchLessonParams) {
-  return request(`/api/home/lessonFetch`, {
+export type addToDoParams = {
+  id: string;
+  title: string;
+  finished: boolean;
+  addition: null;
+};
+
+export type fetchToDoParams = {
+  id: string;
+};
+
+export type editToDoParams = {
+  _id: number;
+  title?: string;
+  finished?: boolean;
+  addition: additionToDo;
+};
+
+export type deleteToDoParams = {
+  _id: number;
+};
+
+export async function fetchLesson(params: fetchLessonParams, token: string | null) {
+  return request(`/api/section/all`, {
     method: 'GET',
-    data: params,
+    params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 
-export async function addToDo(params: addToDoParams) {
-  return request(`/api/home/todoadd`, {
+export async function addToDo(params: addToDoParams, token: string | null) {
+  return request(`/api/todo/create`, {
     method: 'POST',
     data: params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 
-export async function finishToDo(params: finishToDoParams) {
-  return request(`/api/home/todofinish`, {
+export async function editToDo(params: editToDoParams, token: string | null) {
+  return request(`/api/todo/update`, {
     method: 'POST',
     data: params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 
-export async function editToDo(params: editToDoParams) {
-  return request(`/api/home/todoedit`, {
+export async function deleteToDo(params: deleteToDoParams, token: string | null) {
+  return request(`/api/todo/delete`, {
     method: 'POST',
     data: params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 
-export async function deleteToDo(params: deleteToDoParams) {
-  return request(`/api/home/tododelete`, {
-    method: 'POST',
-    data: params,
-  });
-}
-
-export async function fetchToDo(params: fetchToDoParams) {
-  return request(`/api/home/todofetch`, {
+export async function fetchToDo(params: fetchToDoParams, token: string | null) {
+  return request(`/api/todo`, {
     method: 'GET',
-    data: params,
+    params,
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
 }
 

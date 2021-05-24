@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import type { Lesson } from '@/pages/Home/type';
-import { timeFormat } from '@/pages/Home/type';
 import { Timeline, Tooltip } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
@@ -40,22 +39,16 @@ export default class Schedule extends Component<ScheduleProps, any> {
       <Timeline mode="alternate">
         {lessonInfo.map((item: Lesson) => (
           <Timeline.Item
-            key={`${item.name}${item.startTime}`}
+            key={`${item.course_name}${item.time[0].start_time}`}
             label={
-              <div style={{ marginBlock: '10' }}>
+              <div style={{ paddingRight: '10px', paddingLeft: '10px' }}>
                 <div style={{ fontSize: 16, fontWeight: 500, textDecoration: 'underline' }}>
-                  {`${moment(item.startTime, timeFormat).format('HH:mm')}
-                    ~
-                    ${moment(item.endTime, timeFormat).format('HH:mm')}`}
+                  bug!!!
                 </div>
                 <div>{item.address}</div>
               </div>
             }
-            dot={
-              <FieldTimeOutlined
-                style={{ fontSize: 20, color: this.judgeFinish(item.startTime, item.endTime) }}
-              />
-            }
+            dot={<FieldTimeOutlined style={{ fontSize: 20, color: 'grey' }} />}
           >
             <div
               style={{
@@ -67,7 +60,7 @@ export default class Schedule extends Component<ScheduleProps, any> {
               }}
             >
               <span>
-                <a className={styles.link}>{item.name}</a>
+                <a className={styles.link}>{item.course_name}</a>
               </span>
               <div>
                 <span style={{ marginRight: '10px' }}>

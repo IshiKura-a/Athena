@@ -94,7 +94,7 @@ export default {
       res.send({
         message: 'ok',
         type: 'admin',
-        token: 'admin',
+        token: { aid: 3180100000, role: 'stu' },
       });
       return;
     }

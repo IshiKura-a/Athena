@@ -12,94 +12,108 @@ const waitTime = (time: number = 100) => {
 let lessonMock = {
   lessonData: [
     {
-      name: '编译原理',
+      course_id: '0',
+      course_name: '编译原理',
       instructor: '李莹',
       address: '曹光彪二期',
       department: '计算机学院',
-      startTime: '15:00',
-      endTime: '16:00',
-      date: Day.Mon,
+      time: [
+        {
+          startTime: '15:00',
+          endTime: '16:00',
+          day: Day.Mon,
+        },
+        {
+          startTime: '21:00',
+          endTime: '22:00',
+          day: Day.Wed,
+        },
+        {
+          startTime: '15:00',
+          endTime: '16:00',
+          day: Day.Thu,
+        },
+      ],
     },
     {
-      name: '软件工程',
+      course_id: '1',
+      course_name: '软件工程',
       instructor: '尹健伟',
       address: '曹光彪二期',
       department: '计算机学院',
-      startTime: '9:50',
-      endTime: '11:00',
-      date: Day.Mon,
+      time: [
+        {
+          startTime: '9:50',
+          endTime: '11:00',
+          day: Day.Mon,
+        },
+        {
+          startTime: '00:50',
+          endTime: '2:00',
+          day: Day.Tues,
+        },
+        {
+          startTime: '13:50',
+          endTime: '14:00',
+          day: Day.Wed,
+        },
+      ],
     },
     {
-      name: '软件工程',
-      instructor: '尹健伟',
-      address: '曹光彪二期',
-      department: '计算机学院',
-      startTime: '00:50',
-      endTime: '2:00',
-      date: Day.Mon,
-    },
-    {
-      name: '软件工程',
-      instructor: '尹健伟',
-      address: '曹光彪二期',
-      department: '计算机学院',
-      startTime: '13:50',
-      endTime: '14:00',
-      date: Day.Mon,
-    },
-    {
-      name: '自然语言处理',
+      course_id: '2',
+      course_name: '自然语言处理',
       instructor: '李莹',
       address: '曹光彪二期',
       department: '计算机学院',
-      startTime: '14:00',
-      endTime: '16:00',
-      date: Day.Tues,
+      time: [
+        {
+          start_time: '14:00',
+          end_time: '16:00',
+          day: Day.Tues,
+        },
+      ],
     },
     {
-      name: '编译原理',
+      course_id: '3',
+      course_name: 'll',
       instructor: '李莹',
       address: '曹光彪二期',
       department: '计算机学院',
-      startTime: '21:00',
-      endTime: '22:00',
-      date: Day.Wed,
+      time: [
+        {
+          start_time: '15:00',
+          end_time: '16:00',
+          day: Day.Fri,
+        },
+      ],
     },
     {
-      name: '编译原理',
-      instructor: '李莹',
-      address: '紫金港西一',
-      department: '马克思主义教育学院',
-      startTime: '15:00',
-      endTime: '16:00',
-      date: Day.Thu,
-    },
-    {
-      name: '编译原理',
+      course_id: '4',
+      course_name: 'wq',
       instructor: '李莹',
       address: '曹光彪二期',
       department: '计算机学院',
-      startTime: '15:00',
-      endTime: '16:00',
-      date: Day.Fri,
+      time: [
+        {
+          start_time: '13:00',
+          end_time: '13:00',
+          day: Day.Sat,
+        },
+      ],
     },
     {
-      name: 'wq',
+      course_id: '5',
+      course_name: 'kjhk',
       instructor: '李莹',
       address: '曹光彪二期',
       department: '计算机学院',
-      startTime: '13:00',
-      endTime: '13:00',
-      date: Day.Sat,
-    },
-    {
-      name: 'kjhk',
-      instructor: '李莹',
-      address: '曹光彪二期',
-      department: '计算机学院',
-      startTime: '14:00',
-      endTime: '15:00',
-      date: Day.Sun,
+      time: [
+        {
+          start_time: '14:00',
+          end_time: '15:00',
+          day: Day.Sun,
+        },
+      ],
     },
   ],
 };
@@ -108,7 +122,7 @@ let todoMock = {
   count: 0,
   todoData: [
     {
-      id: 0,
+      _id: 0,
       title: '做作业',
       finished: false,
       start_time: null,
@@ -119,19 +133,19 @@ let todoMock = {
 };
 
 export default {
-  'GET /api/home/lessonFetch': (req: Request, res: Response) => {
+  'GET /api/section/all': (req: Request, res: Response) => {
     res.send({
-      status: 'ok',
+      message: 'ok',
       lessonInfo: lessonMock.lessonData,
     });
   },
 
-  'POST /api/home/todoadd': (req: Request, res: Response) => {
+  'POST /api/todo/create': (req: Request, res: Response) => {
     waitTime(2000);
     const { title } = req.body;
     todoMock.count++;
     const item = {
-      id: todoMock.count,
+      _id: todoMock.count,
       title,
       finished: false,
       start_time: null,
@@ -140,48 +154,35 @@ export default {
     };
     todoMock.todoData.push(item);
     res.send({
-      status: 'ok',
-      id: todoMock.count,
+      message: 'ok',
+      _id: todoMock.count,
     });
     return;
   },
 
-  'POST /api/home/tododelete': (req: Request, res: Response) => {
-    const { id } = req.body;
-    todoMock.todoData = todoMock.todoData.filter((item) => item.id !== id);
+  'POST /api/todo/delete': (req: Request, res: Response) => {
+    const { _id } = req.body;
+    todoMock.todoData = todoMock.todoData.filter((item) => item._id !== _id);
     todoMock.count--;
     res.send({
-      status: 'ok',
+      message: 'ok',
     });
   },
 
-  'POST /api/home/todofinish': (req: Request, res: Response) => {
-    const { id } = req.body;
-    todoMock.todoData = todoMock.todoData.map((item) =>
-      item.id === id ? { ...item, finished: !item.finished } : item,
-    );
-    res.send({
-      status: 'ok',
-    });
+  'GET /api/todo': (req: Request, res: Response) => {
+    res.send(todoMock.todoData);
   },
 
-  'GET /api/home/todofetch': (req: Request, res: Response) => {
-    res.send({
-      status: 'ok',
-      todoData: todoMock.todoData,
-    });
-  },
-
-  'POST /api/home/todoedit': (req: Request, res: Response) => {
-    const { id, title, start_time, end_time, description } = req.body;
-
+  'POST /api/todo/edit': (req: Request, res: Response) => {
+    const { _id, finished, title, addition } = req.body;
+    const { start_time, end_time, description } = addition;
     todoMock.todoData.forEach((item) => {
-      if (item.id == id) {
-        item = { id, title, start_time, end_time, description, finished: item.finished };
+      if (item._id == _id) {
+        item = { _id, title, start_time, end_time, description, finished };
       }
     });
     res.send({
-      status: 'ok',
+      message: 'ok',
     });
   },
 };
