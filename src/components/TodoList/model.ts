@@ -25,7 +25,7 @@ export class TodoListStore {
   }
 
   @computed get dataToEdit() {
-    return this.list.filter((item: Todo) => item._id === this.editing)[0];
+    return this.list ? this.list.filter((item: Todo) => item._id === this.editing)[0] : undefined;
   }
 
   @action setTodoList(list: Todo[]) {

@@ -37,7 +37,7 @@ export default class LoginStore {
         message: 'ok',
         loginType: 'account',
       });
-      setCookie('JWT-Token', response.token.slice(7));
+      setCookie('JWT-Token', response.token);
       setAuthority(payload.type);
       this.baseStore.setId(payload.aid);
       const urlParams = new URL(window.location.href);

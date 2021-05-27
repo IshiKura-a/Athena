@@ -52,7 +52,7 @@ request.interceptors.request.use((url: string, options: RequestOptionsInit) => {
   const jwt = getCookie('JWT-Token');
   const headers = jwt
     ? {
-        Authorization: `Bearer ${jwt}`,
+        authorization: `Bearer ${jwt}`,
       }
     : undefined;
 

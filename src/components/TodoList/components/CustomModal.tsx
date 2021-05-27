@@ -41,7 +41,11 @@ const CustomModal = (props: IProps) => {
     form
       .validateFields()
       .then((r) => {
-        props.handleOk({ _id, finished: false, ...r });
+        const wrappedVal = {
+          ...r,
+          end_time: r.end_time ? r.end_time : null,
+        };
+        props.handleOk({ _id, finished: dataToEdit.finished, ...wrappedVal });
       })
       .catch((e) => console.error(e));
   };

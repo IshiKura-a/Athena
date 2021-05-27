@@ -245,7 +245,7 @@ export default class Login extends Component<LoginProps, any> {
                   value: RoleType.instructor,
                 },
               ]}
-            ></ProFormRadio.Group>
+            />
             <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
             </ProFormCheckbox>

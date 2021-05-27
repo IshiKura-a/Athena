@@ -31,11 +31,9 @@ const TimeSelector = (props: IProps, ref: any) => {
     setDate((_) => v);
     setValue((old) => {
       if (!old || !v) return v;
-      
-        const [, , , hour, min, sec, ms] = old.toArray();
-        const [year, month, day, , , ,] = v.toArray();
-        return moment([year, month, day, hour, min, sec, ms]);
-      
+      const [, , , hour, min, sec, ms] = old.toArray();
+      const [year, month, day, , , ,] = v.toArray();
+      return moment([year, month, day, hour, min, sec, ms]);
     });
   };
 
@@ -43,11 +41,9 @@ const TimeSelector = (props: IProps, ref: any) => {
     setTime((_) => v);
     setValue((old) => {
       if (!old || !v) return v;
-      
-        const [, , , hour, min, sec, ms] = v.toArray();
-        const [year, month, day, , , ,] = old.toArray();
-        return moment([year, month, day, hour, min, sec, ms]);
-      
+      const [, , , hour, min, sec, ms] = v.toArray();
+      const [year, month, day, , , ,] = old.toArray();
+      return moment([year, month, day, hour, min, sec, ms]);
     });
   };
 
