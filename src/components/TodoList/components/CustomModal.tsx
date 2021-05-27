@@ -45,7 +45,7 @@ const CustomModal = (props: IProps) => {
           ...r,
           end_time: r.end_time ? r.end_time : null,
         };
-        props.handleOk({ _id, finished: dataToEdit.finished, ...wrappedVal });
+        props.handleOk({ _id, finished: dataToEdit.finished || false, ...wrappedVal });
       })
       .catch((e) => console.error(e));
   };
