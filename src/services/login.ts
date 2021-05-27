@@ -1,9 +1,10 @@
 import request from '@/utils/request';
+import type { RoleType } from '@/pages/Login/model';
 
 export type LoginParamsType = {
   aid: string;
   password: string;
-  type: string;
+  type: RoleType;
   loginType: string;
   mobile?: string;
   captcha?: string;

@@ -6,10 +6,9 @@ import { inject, observer } from 'mobx-react';
 import type { Lesson } from '@/pages/Home/type';
 import { Day, week } from '@/pages/Home/type';
 import Schedule from '@/pages/Home/component/schedule';
-import TodoList from '@/pages/Home/component/todoList';
+import TodoList from '@/components/TodoList';
 import moment from 'moment';
 import { cloneDeep } from 'lodash';
-import { ToDoListStore } from '@/pages/Home/component/todoModel';
 
 const { TabPane } = Tabs;
 const tabCallBack = (key: any) => {
@@ -18,10 +17,9 @@ const tabCallBack = (key: any) => {
 
 interface HomePageProps {
   homePageStore: HomePageStore;
-  todoListStore: ToDoListStore;
 }
 
-@inject('homePageStore', 'todoListStore')
+@inject('homePageStore')
 @observer
 export default class HomePage extends Component<HomePageProps, any> {
   async componentDidMount() {
@@ -57,7 +55,7 @@ export default class HomePage extends Component<HomePageProps, any> {
       return false;
     });
 
-    console.log('filterLesson', newLesson);
+    // console.log('filterLesson', newLesson);
 
     for (let i = 0; i < newLesson.length; i += 1) {
       const item = newLesson[i];
@@ -101,10 +99,9 @@ export default class HomePage extends Component<HomePageProps, any> {
               </Card>
             </Col>
             <Col span={8}>
-              <TodoList
-                homePageStore={this.props.homePageStore}
-                todoListStore={this.props.todoListStore}
-              />
+              <Card title={<Alert message={'待办事项'} type="info" showIcon banner />}>
+                <TodoList />
+              </Card>
             </Col>
           </Row>
         </div>

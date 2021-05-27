@@ -19,9 +19,9 @@ export default class HomePageStore {
   }
 
   @action fetchLessonInfo = async () => {
-    const response = await fetchLesson({ id: this.baseStore.getId() }, this.baseStore.token);
+    const response = await fetchLesson({ id: this.baseStore.getId() });
     if (response.message === 'ok') {
-      console.log('filter.find', response.lessonInfo);
+      // console.log('filter.find', response.lessonInfo);
       this.setLessonInfo(response.lessonInfo);
     } else {
       console.log('fetch lesson error');

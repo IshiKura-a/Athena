@@ -94,15 +94,15 @@ export default {
       res.send({
         message: 'ok',
         type: 'admin',
-        token: { aid: 3180100000, role: 'stu' },
+        token: 'Bearer 123.456.789',
       });
       return;
     }
-    if (password === 'ant.design' && aid === 'user') {
+    if (password === '123456' && aid === '3180100000') {
       res.send({
         message: 'ok',
         type: 'student',
-        token: 'user',
+        token: 'Bearer 123.456.789',
       });
       return;
     }
@@ -161,4 +161,18 @@ export default {
   },
 
   'GET  /api/login/captcha': getFakeCaptcha,
+
+  'GET /api/validate': (req: Request, res: Response) => {
+    const jwt = req.headers.authorization;
+    if (jwt === 'Bearer 123.456.789') {
+      res.status(200).send({
+        aid: '3180102000',
+        type: 'student',
+      });
+    } else
+      res.status(500).send({
+        error: 'Unauthorized',
+        message: 'Unauthorized',
+      });
+  },
 };

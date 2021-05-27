@@ -1,0 +1,58 @@
+.list {
+  height: 300px;
+  overflow: scroll;
+}
+
+.list__item {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+
+.todo__title__done {
+  width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-decoration: line-through;
+  text-overflow: ellipsis;
+}
+
+.todo__title__todo {
+  width: 200px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.todo__ddl {
+  width: 100px;
+  margin: 0 8px;
+}
+
+.todo__body {
+  display: inline-flex;
+  margin-left: 8px;
+}
+
+.edit {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  justify-content: space-around;
+}
+
+.expired {
+  color: gray;
+}
+
+.near {
+  color: red;
+}
+
+.free {
+  color: #33af4f;
+}
+
+.time {
+  display: flex;
+}

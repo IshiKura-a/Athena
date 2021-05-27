@@ -122,13 +122,41 @@ let todoMock = {
   count: 0,
   todoData: [
     {
-      _id: 0,
-      title: '做作业',
-      finished: false,
-      start_time: null,
-      end_time: null,
-      description: null,
+      _id: '60a8e47684f3743b0ca9ad32',
+      start_time: '2021-05-24T09:28:28.000Z',
+      end_time: '2021-05-26T23:28:28.000Z',
+      title: 'test update todo3dddsdksdjksjflsfjslfj',
+      description: 'test description333hhh',
+      finished: true,
     },
+    {
+      _id: '60a917af685c1060ae93e823',
+      title: '跑步',
+      finished: false,
+      description: 'sss',
+      end_time: '2021-05-23T15:00:00.000Z',
+      start_time: '2021-05-23T14:59:03.000Z',
+    },
+    {
+      _id: '60a9c4983999a863614b5ec7',
+      title: '吃饭',
+      finished: false,
+      end_time: '2021-05-26T16:15:12.534Z',
+    },
+    { _id: '60a9c4983999a863614b5ec0', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5ec1', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5ec2', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5ec3', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5ec4', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5ec5', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5ec6', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e07', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e17', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e27', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e37', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e47', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e57', title: '吃饭', finished: false },
+    { _id: '60a9c4983999a863614b5e67', title: '吃饭', finished: false },
   ],
 };
 
@@ -148,9 +176,6 @@ export default {
       _id: todoMock.count,
       title,
       finished: false,
-      start_time: null,
-      end_time: null,
-      description: null,
     };
     todoMock.todoData.push(item);
     res.send({
@@ -173,14 +198,16 @@ export default {
     res.send(todoMock.todoData);
   },
 
-  'POST /api/todo/edit': (req: Request, res: Response) => {
-    const { _id, finished, title, addition } = req.body;
-    const { start_time, end_time, description } = addition;
-    todoMock.todoData.forEach((item) => {
-      if (item._id == _id) {
-        item = { _id, title, start_time, end_time, description, finished };
-      }
-    });
+  'POST /api/todo/update': (req: Request, res: Response) => {
+    const { _id } = req.body;
+    todoMock.todoData.map((item) =>
+      item._id === _id
+        ? item
+        : {
+            ...item,
+            ...req.body,
+          },
+    );
     res.send({
       message: 'ok',
     });

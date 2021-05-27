@@ -1,9 +1,8 @@
 import { action, observable } from 'mobx';
-import { BaseStore } from '@/store';
+import type { BaseStore } from '@/store';
 
 export default class ProfileStore {
   @observable name = 'ssa';
-  @observable id = '3180102086';
   @observable department = '计算机科学与技术';
 
   baseStore: BaseStore;
@@ -16,7 +15,7 @@ export default class ProfileStore {
   }
 
   @action setId(id: string) {
-    this.id = id;
+    console.error('set id in profile deprecated');
   }
 
   @action setDepartment(department: string) {

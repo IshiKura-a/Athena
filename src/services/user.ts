@@ -64,3 +64,7 @@ export async function queryCurrent(): Promise<any> {
 export async function queryNotices(): Promise<any> {
   return request('/api/notices');
 }
+
+export async function validate(): Promise<any> {
+  return await request.get(`/api/validate`);
+}

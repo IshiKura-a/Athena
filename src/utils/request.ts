@@ -1,8 +1,10 @@
 /** Request 网络请求工具 更详细的 api 文档: https://github.com/umijs/umi-request */
+import type { RequestOptionsInit } from 'umi-request';
 import { extend } from 'umi-request';
 import { notification } from 'antd';
+import { getCookie } from '@/utils/utils';
 
-const codeMessage: { [status: number]: string } = {
+const codeMessage: Record<number, string> = {
   200: '服务器成功返回请求的数据。',
   201: '新建或修改数据成功。',
   202: '一个请求已经进入后台排队（异步任务）。',
@@ -43,7 +45,23 @@ const errorHandler = (error: { response: Response }): Response => {
 /** 配置request请求时的默认参数 */
 const request = extend({
   errorHandler, // 默认错误处理
-  credentials: 'include', // 默认请求是否带上cookie
+});
+
+request.interceptors.request.use((url: string, options: RequestOptionsInit) => {
+  // options.mode = 'cors';
+  const jwt = getCookie('JWT-Token');
+  const headers = jwt
+    ? {
+        Authorization: `Bearer ${jwt}`,
+      }
+    : undefined;
+
+  return {
+    options: {
+      ...options,
+      headers,
+    },
+  };
 });
 
 export default request;
