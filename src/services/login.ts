@@ -1,14 +1,17 @@
 import request from '@/utils/request';
+import type { RoleType } from '@/pages/Login/model';
 
 export type LoginParamsType = {
-  userName: string;
+  aid: string;
   password: string;
-  mobile: string;
-  captcha: string;
+  type: RoleType;
+  loginType: string;
+  mobile?: string;
+  captcha?: string;
 };
 
-export async function fakeAccountLogin(params: LoginParamsType) {
-  return request('/api/login/account', {
+export async function accountLogin(params: LoginParamsType) {
+  return request(`/api/login`, {
     method: 'POST',
     data: params,
   });

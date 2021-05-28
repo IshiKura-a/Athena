@@ -18,7 +18,8 @@ import Authorized from '@/utils/Authorized';
 import RightContent from '@/components/GlobalHeader/RightContent';
 import type { ConnectState } from '@/models/connect';
 import { getMatchMenu } from '@umijs/route-utils';
-import logo from '../assets/logo.svg';
+import logo from '../assets/zju1.svg';
+import Base from '@/index';
 
 const noMatch = (
   <Result
@@ -56,24 +57,18 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright={`${new Date().getFullYear()} 蚂蚁集团体验技术部出品`}
+    copyright={`${new Date().getFullYear()} 软件工程7人组`}
     links={[
       {
-        key: 'Ant Design Pro',
-        title: 'Ant Design Pro',
-        href: 'https://pro.ant.design',
+        key: 'Project Address',
+        title: 'Project Address',
+        href: '',
         blankTarget: true,
       },
       {
         key: 'github',
         title: <GithubOutlined />,
-        href: 'https://github.com/ant-design/ant-design-pro',
-        blankTarget: true,
-      },
-      {
-        key: 'Ant Design',
-        title: 'Ant Design',
-        href: 'https://ant.design',
+        href: 'https://github.com/IshiKura-a/Athena',
         blankTarget: true,
       },
     ]}
@@ -141,7 +136,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({ id: 'menu.home' }),
+          breadcrumbName: formatMessage({ id: 'menu.root' }),
         },
         ...routers,
       ]}
@@ -165,11 +160,8 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         menuDataRef.current = menuData || [];
         return menuData || [];
       }}
-      waterMarkProps={{
-        content: 'Ant Design Pro',
-        fontColor: 'rgba(24,144,255,0.15)',
-      }}
     >
+      <Base />
       <Authorized authority={authorized!.authority} noMatch={noMatch}>
         {children}
       </Authorized>

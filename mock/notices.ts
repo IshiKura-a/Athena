@@ -1,5 +1,40 @@
 import { Request, Response } from 'express';
-
+// import hwurl from '../src/assets/hw.svg'
+// import notiurl from '../src/assets/noti.svg'
+const hwurl = '/src/assets/hw.svg';
+const notiurl = '/src/assets/noti.svg';
+const getNotification = (req: Request, res: Response) => {
+  res.json([
+    {
+      avatar: hwurl,
+      class: '编译原理',
+      content: 'xxx作业已开放',
+      startDate: '2020-03-15',
+      endDate: '2020-04-05',
+    },
+    {
+      avatar: notiurl,
+      class: '编译原理',
+      content: '明天不用上课',
+      startDate: '2020-03-15',
+      endDate: '',
+    },
+    {
+      avatar: notiurl,
+      class: '数值分析',
+      content: '明天不用上课',
+      startDate: '2020-03-15',
+      endDate: '',
+    },
+    {
+      avatar: notiurl,
+      class: '编译原理',
+      content: '明天不用上课',
+      startDate: '2020-03-15',
+      endDate: '',
+    },
+  ]);
+};
 const getNotices = (req: Request, res: Response) => {
   res.json([
     {
@@ -102,4 +137,5 @@ const getNotices = (req: Request, res: Response) => {
 
 export default {
   'GET /api/notices': getNotices,
+  'GET /api/home': getNotification,
 };
