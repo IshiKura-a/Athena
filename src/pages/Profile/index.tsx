@@ -20,8 +20,19 @@ import {
   List,
   Tooltip,
 } from 'antd';
-import { ExperimentTwoTone, HomeTwoTone, GiftTwoTone, HeartTwoTone } from '@ant-design/icons';
-import { GenderIcon, StatusIcon, iconStyle } from '@/components/Profile/index';
+// import { ExperimentTwoTone, HomeTwoTone, GiftTwoTone, HeartTwoTone } from '@ant-design/icons';
+// import { GenderIcon, StatusIcon, iconStyle } from '@/components/Profile/index';
+// import {
+//   ExperimentTwoTone,
+//   HomeTwoTone,
+//   GiftTwoTone,
+//   HeartTwoTone,
+// } from '@ant-design/icons';
+// import {
+//   GenderIcon,
+//   StatusIcon,
+//   iconStyle
+// } from '@/components/Profile/index';
 import {
   dataTitle,
   checkValidPhone,

@@ -1,7 +1,7 @@
 import { action, observable } from 'mobx';
 import { BaseStore } from '@/store';
 import { getProfileInfoNoToken } from '@/services/profile';
-import type { ProfileParamsType } from '@/services/profile';
+// import type { ProfileParamsType } from '@/services/profile';
 import type { ProfileType } from './type';
 
 export default class ProfileStore {
@@ -38,8 +38,8 @@ export default class ProfileStore {
     this.baseStore = baseStore;
   }
 
-  @action fetchData = async (input: ProfileParamsType) => {
-    const response = await getProfileInfoNoToken(input);
+  @action fetchData = async () => {
+    const response = await getProfileInfoNoToken();
     console.log('test', response.basic_person);
     const { id, name } = response.basic_person;
     this.setId(id);
