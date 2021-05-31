@@ -1,8 +1,9 @@
 import { action, observable } from 'mobx';
 import { BaseStore } from '@/store';
-import { getProfileInfoNoToken } from '@/services/profile';
+import { getProfileInfo } from '@/services/profile';
 import type { ProfileParamsType } from '@/services/profile';
-import type { ProfileType } from './type';
+import type { ProfileType, InfoType } from './type';
+import { message } from 'antd';
 
 export default class ProfileStore {
   @observable profileInfo: ProfileType = {
@@ -21,7 +22,7 @@ export default class ProfileStore {
       wechat: '',
       qq: '',
       birthday: '2000-10-27',
-      gender: '女',
+      gender: '',
       status: 0, // in {0, 1, 2}
     },
     takes: [
@@ -38,12 +39,30 @@ export default class ProfileStore {
     this.baseStore = baseStore;
   }
 
-  @action fetchData = async (input: ProfileParamsType) => {
-    const response = await getProfileInfoNoToken(input);
-    console.log('test', response.basic_person);
-    const { id, name } = response.basic_person;
-    this.setId(id);
-    this.setName(name);
+  @action fetchData = async (params: ProfileParamsType) => {
+    const response = await getProfileInfo(params);
+    if (response) {
+      if (response.basic_person) {
+        this.setProfileInfo(response.basic_person);
+      } else {
+        message.info('Fetch Incorrect Data');
+        console.log('Fetch Incorrect Data');
+      }
+    } else {
+      message.info('Fetch Profile Data Error');
+      console.log('Fetch Profile Data Error');
+    }
+  };
+
+  @action setProfileInfo = async (info: InfoType) => {
+    this.setName(info.name);
+    this.setId(info.id);
+    this.setDepartment(info.major);
+    this.editEmail(info.email);
+    this.editTelephone(info.phone);
+    this.editWechat(info.wechat);
+    this.editQQ(info.qq);
+    this.editStatus(info.status);
   };
 
   @action setName(name: string) {
@@ -78,6 +97,4 @@ export default class ProfileStore {
     // console.log('back', status);
     this.profileInfo.basic_person.status = status;
   };
-
-  @action getProfileInfo = async () => {};
 }

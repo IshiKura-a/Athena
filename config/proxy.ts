@@ -8,21 +8,21 @@
 export default {
   dev: {
     '/api/': {
-      target: 'https://www.baidu.com',
+      target: 'http://123.57.15.108:3000/',
       changeOrigin: true,
       pathRewrite: { '^api': '' },
     },
   },
   test: {
     '/api/': {
-      target: 'https://www.baidu.com',
+      target: 'http://123.57.15.108:3000/',
       changeOrigin: true,
       pathRewrite: { '^api': '' },
     },
   },
   pre: {
     '/api/': {
-      target: 'https://www.baidu.com',
+      target: 'http://123.57.15.108:3000/',
       changeOrigin: true,
       pathRewrite: { '^api': '' },
     },

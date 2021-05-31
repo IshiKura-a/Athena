@@ -1,10 +1,10 @@
-// useState 是改变状态的开关
 import { Component } from 'react';
 import type ProfileStore from '@/pages/Profile/model';
 // import { Descriptions } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './profile.less';
+import type { ProfileParamsType } from '@/services/profile';
 import {
   Typography,
   Card,
@@ -20,7 +20,13 @@ import {
 } from 'antd';
 import { ExperimentTwoTone, HomeTwoTone, GiftTwoTone, HeartTwoTone } from '@ant-design/icons';
 import { GenderIcon, StatusIcon, iconStyle } from '@/components/Profile/index';
-import { checkValidPhone, checkValidEmail, checkValidQQ, info } from '@/components/Profile/data';
+import {
+  checkValidPhone,
+  checkValidEmail,
+  checkValidQQ,
+  info,
+  dataTitle,
+} from '@/components/Profile/data';
 
 export interface ProfileProps {
   profileStore: ProfileStore;
@@ -31,8 +37,20 @@ const { Paragraph } = Typography;
 @inject('profileStore')
 @observer
 export default class Profile extends Component<ProfileProps, any> {
+  constructor(props: any) {
+    super(props);
+    // should be sustituted by the true id
+    const test_id = '3180100000';
+    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhaWQiOiIzMTgwMTAwMDAwIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE2MjIzNjY5MjR9.o4BKPi-efmCUhMyTqa1Jvmh9LIsF7t2Tf6ek8wqOALU";
+    const params: ProfileParamsType = { id: test_id };
+    this.props.profileStore.fetchData(params);
+  }
+
+  state = {
+    value: this.props.profileStore.profileInfo.basic_person.status,
+  };
+
   render() {
-    // 两个参数：当前状态，状态更新函数
     const { profileStore } = this.props;
     const {
       name,
@@ -47,32 +65,29 @@ export default class Profile extends Component<ProfileProps, any> {
       birthday,
       blood_type,
       status,
+      politics,
+      nation,
+      hometown,
+      dormitory,
     } = this.props.profileStore.profileInfo.basic_person;
-    // let telephoneVisible = telephone;
 
     let emailVisible = email;
     let telephoneVisible = phone;
     let wechatVisible = wechat;
     let qqVisible = qq;
-    // let statusVisible = status;
 
     const { value } = this.state;
 
-    const data = [
+    const dataContent = [
       {
-        title: '姓 名',
         content: name,
         editable: false,
-        copyable: true,
       },
       {
-        title: '学 号',
         content: id,
         editable: false,
-        copyable: true,
       },
       {
-        title: '手 机',
         content: telephoneVisible,
         editable: {
           onChange: (telephoneInput: string) => {
@@ -87,12 +102,9 @@ export default class Profile extends Component<ProfileProps, any> {
               info('Input length is not valid.');
             }
           },
-          // icon:<SmileTwoTone></SmileTwoTone>
         },
-        copyable: false,
       },
       {
-        title: '邮 箱',
         content: emailVisible,
         editable: {
           onChange: (emailInput: string) => {
@@ -106,34 +118,24 @@ export default class Profile extends Component<ProfileProps, any> {
             }
           },
         },
-        copyable: false,
       },
       {
-        title: '民 族',
-        content: '汉族',
+        content: nation,
         editable: false,
-        copyable: true,
       },
       {
-        title: '政治面貌',
-        content: '共青团员',
+        content: politics,
         editable: false,
-        copyable: true,
       },
       {
-        title: '生源地',
-        content: '西安',
+        content: hometown,
         editable: false,
-        copyable: true,
       },
       {
-        title: '寝室号',
-        content: '八舍301',
+        content: dormitory,
         editable: false,
-        copyable: true,
       },
       {
-        title: '微信号码',
         content: wechatVisible,
         editable: {
           onChange: (wechatInput: string) => {
@@ -142,10 +144,8 @@ export default class Profile extends Component<ProfileProps, any> {
             this.forceUpdate();
           },
         },
-        copyable: false,
       },
       {
-        title: 'QQ号码',
         content: qqVisible,
         editable: {
           onChange: (qqInput: string) => {
@@ -161,9 +161,12 @@ export default class Profile extends Component<ProfileProps, any> {
             }
           },
         },
-        copyable: false,
       },
     ];
+
+    const data = dataContent.map((item, index) =>
+      Object.assign(item, { title: dataTitle[index].title, copyable: dataTitle[index].copyable }),
+    );
 
     return (
       <PageContainer>
