@@ -1,22 +1,20 @@
-import {
-  AlipayCircleOutlined,
-  LockOutlined,
-  MailOutlined,
-  MobileOutlined,
-  TaobaoCircleOutlined,
-  UserOutlined,
-  WeiboCircleOutlined,
-} from '@ant-design/icons';
-import { Alert, Space, message, Tabs } from 'antd';
-import React, { Component, useState } from 'react';
-import ProForm, { ProFormCaptcha, ProFormCheckbox, ProFormText } from '@ant-design/pro-form';
+import { LockOutlined, MailOutlined, MobileOutlined, UserOutlined } from '@ant-design/icons';
+import { Alert, message, Tabs } from 'antd';
+import React, { Component } from 'react';
+import ProForm, {
+  ProFormCaptcha,
+  ProFormCheckbox,
+  ProFormRadio,
+  ProFormText,
+} from '@ant-design/pro-form';
 import { FormattedMessage } from 'umi';
 import { getFakeCaptcha } from '@/services/login';
 import type { LoginParamsType } from '@/services/login';
 
 import styles from './index.less';
 import { inject, observer } from 'mobx-react';
-import LoginStore from './model';
+import type LoginStore from './model';
+import { RoleType } from './model';
 import { formatMessage } from '@@/plugin-locale/localeExports';
 
 export type LoginProps = {
@@ -41,16 +39,20 @@ const LoginMessage: React.FC<{
 export default class Login extends Component<LoginProps, any> {
   handleSubmit = (values: LoginParamsType) => {
     const { login, userLogin } = this.props.loginStore;
-    login({ ...values, type: userLogin.type });
+    login({ ...values, loginType: userLogin.loginType! });
   };
 
-  setType = (value: string) => {
-    this.props.loginStore.setType(value);
+  setLoginType = (value: string) => {
+    this.props.loginStore.setLoginType(value);
+  };
+
+  setType = (e: any) => {
+    this.props.loginStore.baseStore.setType(e);
   };
 
   render() {
     const { userLogin = {}, inSubmitting } = this.props.loginStore;
-    const { status, type } = userLogin;
+    const { loginType } = userLogin;
 
     return (
       <div className={styles.main}>
@@ -69,11 +71,12 @@ export default class Login extends Component<LoginProps, any> {
             },
           }}
           onFinish={(values) => {
+            this.setType(values.type);
             this.handleSubmit(values as LoginParamsType);
             return Promise.resolve();
           }}
         >
-          <Tabs activeKey={type} onChange={this.setType}>
+          <Tabs activeKey={loginType} onChange={this.setLoginType}>
             <Tabs.TabPane
               key="account"
               tab={formatMessage({
@@ -90,7 +93,7 @@ export default class Login extends Component<LoginProps, any> {
             />
           </Tabs>
 
-          {status === 'error' && type === 'account' && !inSubmitting && (
+          {userLogin.message === 'error' && loginType === 'account' && !inSubmitting && (
             <LoginMessage
               content={formatMessage({
                 id: 'pages.login.accountLogin.errorMessage',
@@ -98,10 +101,10 @@ export default class Login extends Component<LoginProps, any> {
               })}
             />
           )}
-          {type === 'account' && (
+          {loginType === 'account' && (
             <>
               <ProFormText
-                name="userName"
+                name="aid"
                 fieldProps={{
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
@@ -147,10 +150,10 @@ export default class Login extends Component<LoginProps, any> {
             </>
           )}
 
-          {status === 'error' && type === 'mobile' && !inSubmitting && (
+          {userLogin.message === 'error' && loginType === 'mobile' && !inSubmitting && (
             <LoginMessage content="验证码错误" />
           )}
-          {type === 'mobile' && (
+          {loginType === 'mobile' && (
             <>
               <ProFormText
                 fieldProps={{
@@ -229,11 +232,20 @@ export default class Login extends Component<LoginProps, any> {
               />
             </>
           )}
-          <div
-            style={{
-              marginBottom: 24,
-            }}
-          >
+
+          <div className={styles.line}>
+            <ProFormRadio.Group
+              name={'type'}
+              initialValue={this.props.loginStore.baseStore.type}
+              radioType={'button'}
+              options={[
+                { label: '学生', value: RoleType.student },
+                {
+                  label: '老师',
+                  value: RoleType.instructor,
+                },
+              ]}
+            />
             <ProFormCheckbox noStyle name="autoLogin">
               <FormattedMessage id="pages.login.rememberMe" defaultMessage="自动登录" />
             </ProFormCheckbox>
@@ -246,12 +258,6 @@ export default class Login extends Component<LoginProps, any> {
             </a>
           </div>
         </ProForm>
-        <Space className={styles.other}>
-          <FormattedMessage id="pages.login.loginWith" defaultMessage="其他登录方式" />
-          <AlipayCircleOutlined className={styles.icon} />
-          <TaobaoCircleOutlined className={styles.icon} />
-          <WeiboCircleOutlined className={styles.icon} />
-        </Space>
       </div>
     );
   }

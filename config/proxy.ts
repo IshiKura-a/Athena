@@ -10,21 +10,21 @@ export default {
     '/api/': {
       target: 'http://123.57.15.108:3000/',
       changeOrigin: true,
-      pathRewrite: { '^api': '' },
+      pathRewrite: { '^/api/': '' },
     },
   },
   test: {
     '/api/': {
       target: 'http://123.57.15.108:3000/',
       changeOrigin: true,
-      pathRewrite: { '^api': '' },
+      pathRewrite: { '^/api/': '' },
     },
   },
   pre: {
     '/api/': {
       target: 'http://123.57.15.108:3000/',
       changeOrigin: true,
-      pathRewrite: { '^api': '' },
+      pathRewrite: { '^/api/': '' },
     },
   },
 };

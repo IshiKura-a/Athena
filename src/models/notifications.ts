@@ -1,4 +1,4 @@
-import { queryNotification } from '@/services/query';
+import { queryNotification } from '@/services/homepage';
 import type { Effect, Reducer } from 'umi';
 
 // attribute

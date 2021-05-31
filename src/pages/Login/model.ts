@@ -1,22 +1,26 @@
 import { action, observable } from 'mobx';
 import { accountLogin } from '@/services/login';
 import type { LoginParamsType } from '@/services/login';
-import { getPageQuery } from '@/utils/utils';
+import { getPageQuery, setCookie } from '@/utils/utils';
 import { message } from 'antd';
 import { history } from '@@/core/history';
 import { setAuthority } from '@/utils/authority';
 import { stringify } from 'querystring';
-import { BaseStore } from '@/store';
+import type { BaseStore } from '@/store';
 import { cloneDeep } from 'lodash';
 
 export type StateType = {
-  status?: 'ok' | 'error';
-  type?: string;
-  currentAuthority?: 'user' | 'guest' | 'admin';
+  message?: 'ok' | 'error';
+  loginType?: 'account' | 'mobile';
 };
 
+export enum RoleType {
+  student = 'student',
+  instructor = 'instructor',
+}
+
 export default class LoginStore {
-  @observable userLogin: StateType = { type: 'account' };
+  @observable userLogin: StateType = { loginType: 'account' };
   @observable inSubmitting: boolean = false;
 
   baseStore: BaseStore;
@@ -27,15 +31,15 @@ export default class LoginStore {
   @action login = async (payload: LoginParamsType) => {
     this.inSubmitting = true;
     const response = await accountLogin(payload);
-    setAuthority(response.currentAuthority);
-    this.setUserLogin({
-      status: response.status,
-      type: response.type,
-      currentAuthority: response.currentAuthority,
-    });
     // Login successfully
-    if (response.status === 'ok') {
-      this.baseStore.setToken(response.token);
+    if (!response.status || `${response.status}`.indexOf('2') === 0) {
+      this.setUserLogin({
+        message: 'ok',
+        loginType: 'account',
+      });
+      setCookie('JWT-Token', response.token);
+      setAuthority(payload.type);
+      this.baseStore.setId(payload.aid);
       const urlParams = new URL(window.location.href);
       const params = getPageQuery();
       message.success('🎉 🎉 🎉  登录成功！');
@@ -56,13 +60,17 @@ export default class LoginStore {
         }
       }
       history.replace(redirect || '/');
+    } else {
+      this.setUserLogin({
+        message: 'error',
+        loginType: 'account',
+      });
     }
     this.inSubmitting = false;
   };
 
   @action logout = async () => {
     const { redirect } = getPageQuery();
-    this.baseStore.setToken('');
     // Note: There may be security issues, please note
     if (window.location.pathname !== '/user/login' && !redirect) {
       history.replace({
@@ -74,10 +82,10 @@ export default class LoginStore {
     }
   };
 
-  @action setType(type: string) {
+  @action setLoginType(loginType: any) {
     this.userLogin = cloneDeep({
       ...this.userLogin,
-      type,
+      loginType,
     });
   }
 

@@ -71,6 +71,7 @@ export default class ProfileStore {
 
   @action setId(id: string) {
     this.profileInfo.basic_person.id = id;
+    console.error('set id in profile deprecated');
   }
 
   @action setDepartment(department: string) {

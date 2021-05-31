@@ -1,5 +1,5 @@
 import type { MenuDataItem } from '@ant-design/pro-layout';
-import { DefaultFooter, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
 import type { ConnectProps } from 'umi';
 import { Link, SelectLang, useIntl, connect, FormattedMessage } from 'umi';
@@ -7,6 +7,7 @@ import React from 'react';
 import type { ConnectState } from '@/models/connect';
 import logo from '../assets/zju.svg';
 import styles from './UserLayout.less';
+import { Footer } from 'antd/es/layout/layout';
 
 export type UserLayoutProps = {
   breadcrumbNameMap: Record<string, MenuDataItem>;
@@ -61,7 +62,9 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        <Footer style={{ textAlign: 'center' }}>
+          浙江大学教学管理系统 ©2021 Created by Group ID
+        </Footer>
       </div>
     </HelmetProvider>
   );

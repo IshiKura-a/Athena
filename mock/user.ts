@@ -87,41 +87,37 @@ export default {
       address: 'Sidney No. 1 Lake Park',
     },
   ],
-  'POST /api/login/account': async (req: Request, res: Response) => {
-    const { password, userName, type } = req.body;
+  'POST /api/login': async (req: Request, res: Response) => {
+    const { password, aid, loginType } = req.body;
     await waitTime(2000);
-    if (password === 'ant.design' && userName === 'admin') {
+    if (password === 'ant.design' && aid === 'admin') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
-        token: 'admin',
+        message: 'ok',
+        type: 'admin',
+        token: 'Bearer 123.456.789',
       });
       return;
     }
-    if (password === 'ant.design' && userName === 'user') {
+    if (password === '123456' && aid === '3180100000') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'user',
-        token: 'user',
+        message: 'ok',
+        type: 'student',
+        token: 'Bearer 123.456.789',
       });
       return;
     }
-    if (type === 'mobile') {
+    if (loginType === 'mobile') {
       res.send({
-        status: 'ok',
-        type,
-        currentAuthority: 'admin',
+        message: 'ok',
+        type: 'admin',
         token: 'admin',
       });
       return;
     }
 
     res.send({
-      status: 'error',
-      type,
-      currentAuthority: 'guest',
+      message: 'error',
+      type: 'guest',
     });
   },
   'POST /api/register': (req: Request, res: Response) => {
@@ -165,4 +161,18 @@ export default {
   },
 
   'GET  /api/login/captcha': getFakeCaptcha,
+
+  'GET /api/validate': (req: Request, res: Response) => {
+    const jwt = req.headers.authorization;
+    if (jwt === 'Bearer 123.456.789') {
+      res.status(200).send({
+        aid: '3180102000',
+        type: 'student',
+      });
+    } else
+      res.status(500).send({
+        error: 'Unauthorized',
+        message: 'Unauthorized',
+      });
+  },
 };

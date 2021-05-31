@@ -1,26 +1,23 @@
-import { cloneDeep } from 'lodash';
-import { action, observable, reaction } from 'mobx';
 import HomePageStore from '@/pages/Home/model';
 import ProfileStore from '@/pages/Profile/model';
-import LoginStore from '@/pages/Login/model';
-import { getCookie, setCookie } from '@/utils/utils';
+import LoginStore, { RoleType } from '@/pages/Login/model';
+import { action, observable } from 'mobx';
+import { TodoListStore } from '@/components/TodoList/model';
 
 export class BaseStore {
-  @observable token = getCookie('JWT-Token');
+  @observable id = '';
+  @observable type = RoleType.student;
 
-  constructor() {
-    reaction(
-      () => ({
-        token: this.token,
-      }),
-      (val) => {
-        setCookie('JWT-Token', val.token);
-      },
-      { fireImmediately: true },
-    );
+  getId() {
+    return this.id;
   }
-  @action setToken(token: string) {
-    this.token = cloneDeep(token);
+
+  @action setId(id: string) {
+    this.id = id;
+  }
+
+  @action setType(type: RoleType) {
+    this.type = type;
   }
 }
 
@@ -30,4 +27,5 @@ export default {
   homePageStore: new HomePageStore(baseStore),
   profileStore: new ProfileStore(baseStore),
   loginStore: new LoginStore(baseStore),
+  todoListStore: new TodoListStore(baseStore),
 };
