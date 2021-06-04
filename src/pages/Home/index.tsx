@@ -4,16 +4,14 @@ import { Card, Alert, Row, Col, Tabs } from 'antd';
 import type HomePageStore from '@/pages/Home/model';
 import { inject, observer } from 'mobx-react';
 import type { Lesson } from '@/pages/Home/type';
-import { Day, week } from '@/pages/Home/type';
+import { Day } from '@/pages/Home/type';
 import Schedule from '@/pages/Home/component/schedule';
 import TodoList from '@/components/TodoList';
 import moment from 'moment';
-import { cloneDeep } from 'lodash';
+import styles from './home.less';
 
 const { TabPane } = Tabs;
-const tabCallBack = (key: any) => {
-  console.log(key);
-};
+const tabCallBack = (key: any) => {};
 
 interface HomePageProps {
   homePageStore: HomePageStore;
@@ -26,55 +24,14 @@ export default class HomePage extends Component<HomePageProps, any> {
     await this.props.homePageStore.fetchLessonInfo();
   }
 
-  cmpTime = (lessonA: Lesson, lessonB: Lesson, day: number) => {
-    const timeA = lessonA.time.find((item) => {
-      return item.day === day;
-    });
-    const timeB = lessonB.time.find((item) => {
-      return item.day === day;
-    });
-    if (timeA !== undefined && timeB !== undefined) {
-      const A = moment(timeA.start_time, 'HH:mm');
-      const B = moment(timeB.start_time, 'HH:mm');
-      return A.diff(B);
-    }
-    return 0;
-  };
-
-  handlePassLesson = (lessons: Lesson[], day) => {
-    let newLesson: Lesson[] = [];
-    lessons.filter((lesson: Lesson) => {
-      const check = lesson.time.find((item) => {
-        return item.day === day;
-      });
-      if (check !== undefined) {
-        const rightLesson = cloneDeep(lesson);
-        newLesson.push(rightLesson);
-        return true;
-      }
-      return false;
-    });
-
-    // console.log('filterLesson', newLesson);
-
-    for (let i = 0; i < newLesson.length; i += 1) {
-      const item = newLesson[i];
-      item.time = [];
-
-      const newTime = item.time.find(function (it) {
-        return it.day === day;
-      });
-      if (newTime !== undefined) {
-        item.time.push(newTime);
-      }
-    }
-
-    newLesson = newLesson.sort((x, y) => this.cmpTime(x, y, day));
-    return newLesson;
+  cmpTime = (timeA: string, timeB: string) => {
+    const A = moment(timeA, 'HH:mm');
+    const B = moment(timeB, 'HH:mm');
+    return A.diff(B);
   };
 
   render() {
-    const { lessonInfo } = this.props.homePageStore;
+    const { lessonInfo, week } = this.props.homePageStore;
 
     return (
       <PageContainer>
@@ -86,10 +43,14 @@ export default class HomePage extends Component<HomePageProps, any> {
                   {Object.values(Day).map((item, index) => {
                     return (
                       <TabPane tab={item.toString()} key={item}>
-                        <Card style={{ height: '300px', overflowY: 'auto', overflowX: 'hidden' }}>
+                        <Card className={styles.tabPane}>
                           <Schedule
                             day={index}
-                            lessonInfo={this.handlePassLesson(lessonInfo, week.get(item))}
+                            lessonInfo={lessonInfo
+                              .filter((lesson: Lesson) => {
+                                return week.get(item) === lesson.day;
+                              })
+                              .sort((x, y) => this.cmpTime(x.start_time, y.start_time))}
                           />
                         </Card>
                       </TabPane>

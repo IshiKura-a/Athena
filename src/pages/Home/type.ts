@@ -1,4 +1,4 @@
-export type lessonTime = {
+type LessonTime = {
   day: number;
   start_time: string;
   end_time: string;
@@ -13,23 +13,24 @@ export enum Day {
   Sun = 'Sunday',
 }
 
-export const week = new Map([
-  [Day.Mon, 1],
-  [Day.Tues, 2],
-  [Day.Wed, 3],
-  [Day.Thu, 4],
-  [Day.Fri, 5],
-  [Day.Sat, 6],
-  [Day.Sun, 0],
-]);
-
 export interface Lesson {
   course_id: string;
   course_name: string;
   instructor?: string;
   address?: string;
   department?: string;
-  time: lessonTime[];
+  day: number;
+  start_time: string;
+  end_time: string;
+}
+
+export interface LessonReq {
+  course_id: string;
+  course_name: string;
+  instructor?: string;
+  address?: string;
+  department?: string;
+  time: LessonTime[];
 }
 
 export const timeFormat = 'hh:mm';

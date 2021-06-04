@@ -14,7 +14,13 @@ export const menuRoutes = [
     path: '/profile',
     name: 'profile',
     icon: 'UserOutlined',
-    component: './Profile'
+    component: './Profile',
+  },
+  {
+    path: '/section',
+    name: 'section',
+    icon: 'UserOutlined',
+    component: './Section',
   },
   {
     path: '/admin',

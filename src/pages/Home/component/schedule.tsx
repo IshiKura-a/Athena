@@ -5,6 +5,7 @@ import moment from 'moment';
 import styles from './style.less';
 import { FieldTimeOutlined, UserOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
+import { timeFormat } from '@/pages/Home/type';
 
 interface ScheduleProps {
   lessonInfo: Lesson[];
@@ -39,31 +40,29 @@ export default class Schedule extends Component<ScheduleProps, any> {
       <Timeline mode="alternate">
         {lessonInfo.map((item: Lesson) => (
           <Timeline.Item
-            key={`${item.course_name}${item.time[0].start_time}`}
+            key={`${item.course_name}${item.start_time}`}
             label={
-              <div style={{ paddingRight: '10px', paddingLeft: '10px' }}>
-                <div style={{ fontSize: 16, fontWeight: 500, textDecoration: 'underline' }}>
-                  bug!!!
+              <div className={styles.blockMargin}>
+                <div className={styles.schedTime}>
+                  {`${moment(item.start_time, timeFormat).format('HH:mm')}
+                    ~
+                    ${moment(item.end_time, timeFormat).format('HH:mm')}`}
                 </div>
                 <div>{item.address}</div>
               </div>
             }
-            dot={<FieldTimeOutlined style={{ fontSize: 20, color: 'grey' }} />}
+            dot={
+              <FieldTimeOutlined
+                style={{ fontSize: 20, color: this.judgeFinish(item.start_time, item.end_time) }}
+              />
+            }
           >
-            <div
-              style={{
-                width: '70%',
-                display: 'inline-block',
-                textAlign: 'center',
-                border: '2px solid rgb(99 146 183 / 36%)',
-                borderRadius: 15,
-              }}
-            >
+            <div className={styles.infoBorder}>
               <span>
                 <a className={styles.link}>{item.course_name}</a>
               </span>
               <div>
-                <span style={{ marginRight: '10px' }}>
+                <span>
                   <Tooltip title={item.instructor}>
                     <UserOutlined />
                   </Tooltip>

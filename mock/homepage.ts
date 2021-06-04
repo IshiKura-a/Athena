@@ -1,13 +1,12 @@
 import { Request, Response } from 'express';
-import { Day } from '../src/pages/Home/type';
 
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
+// const waitTime = (time: number = 100) => {
+//   return new Promise((resolve) => {
+//     setTimeout(() => {
+//       resolve(true);
+//     }, time);
+//   });
+// };
 
 let lessonMock = {
   lessonData: [
@@ -19,19 +18,19 @@ let lessonMock = {
       department: '计算机学院',
       time: [
         {
-          startTime: '15:00',
-          endTime: '16:00',
-          day: Day.Mon,
+          start_time: '15:00',
+          end_time: '16:00',
+          day: 1,
         },
         {
-          startTime: '21:00',
-          endTime: '22:00',
-          day: Day.Wed,
+          start_time: '21:00',
+          end_time: '22:00',
+          day: 3,
         },
         {
-          startTime: '15:00',
-          endTime: '16:00',
-          day: Day.Thu,
+          start_time: '15:00',
+          end_time: '16:00',
+          day: 4,
         },
       ],
     },
@@ -43,19 +42,19 @@ let lessonMock = {
       department: '计算机学院',
       time: [
         {
-          startTime: '9:50',
-          endTime: '11:00',
-          day: Day.Mon,
+          start_time: '09:50',
+          end_time: '11:00',
+          day: 1,
         },
         {
-          startTime: '00:50',
-          endTime: '2:00',
-          day: Day.Tues,
+          start_time: '00:50',
+          end_time: '02:00',
+          day: 2,
         },
         {
-          startTime: '13:50',
-          endTime: '14:00',
-          day: Day.Wed,
+          start_time: '13:50',
+          end_time: '14:00',
+          day: 3,
         },
       ],
     },
@@ -69,7 +68,7 @@ let lessonMock = {
         {
           start_time: '14:00',
           end_time: '16:00',
-          day: Day.Tues,
+          day: 2,
         },
       ],
     },
@@ -83,7 +82,7 @@ let lessonMock = {
         {
           start_time: '15:00',
           end_time: '16:00',
-          day: Day.Fri,
+          day: 5,
         },
       ],
     },
@@ -96,8 +95,8 @@ let lessonMock = {
       time: [
         {
           start_time: '13:00',
-          end_time: '13:00',
-          day: Day.Sat,
+          end_time: '13:30',
+          day: 6,
         },
       ],
     },
@@ -111,7 +110,7 @@ let lessonMock = {
         {
           start_time: '14:00',
           end_time: '15:00',
-          day: Day.Sun,
+          day: 0,
         },
       ],
     },
@@ -166,23 +165,6 @@ export default {
       message: 'ok',
       lessonInfo: lessonMock.lessonData,
     });
-  },
-
-  'POST /api/todo/create': (req: Request, res: Response) => {
-    waitTime(2000);
-    const { title } = req.body;
-    todoMock.count++;
-    const item = {
-      _id: todoMock.count,
-      title,
-      finished: false,
-    };
-    todoMock.todoData.push(item);
-    res.send({
-      message: 'ok',
-      _id: todoMock.count,
-    });
-    return;
   },
 
   'POST /api/todo/delete': (req: Request, res: Response) => {
