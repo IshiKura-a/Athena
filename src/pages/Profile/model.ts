@@ -1,5 +1,5 @@
 import { action, observable } from 'mobx';
-import { BaseStore } from '@/store';
+import type { BaseStore } from '@/store';
 import { getProfileInfo } from '@/services/profile';
 import type { ProfileParamsType } from '@/services/profile';
 import type { ProfileType, InfoType } from './type';
@@ -43,14 +43,15 @@ export default class ProfileStore {
     const response = await getProfileInfo(params);
     if (response) {
       if (response.basic_person) {
+        console.log(response);
         this.setProfileInfo(response.basic_person);
       } else {
         message.info('Fetch Incorrect Data');
-        console.log('Fetch Incorrect Data');
+        console.error('Fetch Incorrect Data');
       }
     } else {
       message.info('Fetch Profile Data Error');
-      console.log('Fetch Profile Data Error');
+      console.error('Fetch Profile Data Error');
     }
   };
 
@@ -58,6 +59,13 @@ export default class ProfileStore {
     this.setName(info.name);
     this.setId(info.id);
     this.setDepartment(info.major);
+    this.setBirthday(info.birthday);
+    this.setBloodType(info.blood_type);
+    this.setCampus(info.campus);
+    this.setGender(info.gender);
+    this.setNation(info.nation);
+    this.setHometown(info.hometown);
+    this.setPolitics(info.politics);
     this.editEmail(info.email);
     this.editTelephone(info.phone);
     this.editWechat(info.wechat);
@@ -74,8 +82,36 @@ export default class ProfileStore {
     console.error('set id in profile deprecated');
   }
 
-  @action setDepartment(department: string) {
-    this.profileInfo.basic_person.id = department;
+  @action setDepartment(major: string) {
+    this.profileInfo.basic_person.major = major;
+  }
+
+  @action setBirthday(birthday: string) {
+    this.profileInfo.basic_person.birthday = birthday;
+  }
+
+  @action setBloodType(blood_type: string) {
+    this.profileInfo.basic_person.blood_type = blood_type;
+  }
+
+  @action setCampus(campus: string) {
+    this.profileInfo.basic_person.campus = campus;
+  }
+
+  @action setGender(gender: string) {
+    this.profileInfo.basic_person.gender = gender;
+  }
+
+  @action setHometown(hometown: string) {
+    this.profileInfo.basic_person.hometown = hometown;
+  }
+
+  @action setNation(nation: string) {
+    this.profileInfo.basic_person.nation = nation;
+  }
+
+  @action setPolitics(politics: string) {
+    this.profileInfo.basic_person.politics = politics;
   }
 
   @action editEmail = async (email: string) => {
