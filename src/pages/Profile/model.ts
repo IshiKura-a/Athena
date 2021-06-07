@@ -134,4 +134,6 @@ export default class ProfileStore {
     // console.log('back', status);
     this.profileInfo.basic_person.status = status;
   };
+
+  @action getProfileInfo = async () => {};
 }

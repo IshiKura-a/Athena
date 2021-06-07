@@ -1,10 +1,10 @@
 import { Component } from 'react';
 import type ProfileStore from '@/pages/Profile/model';
+import type { ProfileParamsType } from '@/services/profile';
 // import { Descriptions } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from './profile.less';
-import type { ProfileParamsType } from '@/services/profile';
 import {
   Typography,
   Card,
