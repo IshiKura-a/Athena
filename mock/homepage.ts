@@ -11,6 +11,7 @@ import { Request, Response } from 'express';
 let lessonMock = {
   lessonData: [
     {
+      _id: '0',
       course_id: '0',
       course_name: '编译原理',
       instructor: '李莹',
@@ -35,6 +36,7 @@ let lessonMock = {
       ],
     },
     {
+      _id: '1',
       course_id: '1',
       course_name: '软件工程',
       instructor: '尹健伟',
@@ -59,6 +61,7 @@ let lessonMock = {
       ],
     },
     {
+      _id: '2',
       course_id: '2',
       course_name: '自然语言处理',
       instructor: '李莹',
@@ -73,6 +76,7 @@ let lessonMock = {
       ],
     },
     {
+      _id: '3',
       course_id: '3',
       course_name: 'll',
       instructor: '李莹',
@@ -87,6 +91,7 @@ let lessonMock = {
       ],
     },
     {
+      _id: '4',
       course_id: '4',
       course_name: 'wq',
       instructor: '李莹',
@@ -101,6 +106,7 @@ let lessonMock = {
       ],
     },
     {
+      _id: '5',
       course_id: '5',
       course_name: 'kjhk',
       instructor: '李莹',

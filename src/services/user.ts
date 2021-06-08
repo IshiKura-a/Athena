@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 const fakeUser = {
-  name: 'Serati Ma',
+  name: 'User',
   avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
   userid: '00000001',
   email: 'antdesign@alipay.com',
@@ -51,11 +51,12 @@ const fakeUser = {
   phone: '0752-268888888',
 };
 
+//
 export async function query(): Promise<any> {
   return request('/api/users');
 }
 
-// mock调试选用注释
+// TODO get profile while login
 export async function queryCurrent(): Promise<any> {
   // return request('/api/currentUser');
   return fakeUser;

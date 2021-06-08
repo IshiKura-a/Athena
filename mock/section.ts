@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { RoleType } from '../src/pages/Login/model';
+// import {isStudent} from "../src/pages/Login/model";
 
 const waitTime = (time: number = 100) => {
   return new Promise((resolve) => {
@@ -13,95 +13,142 @@ let signInList = {
   count: 2,
   data: [
     {
-      sectionID: 0,
-      id: 0,
+      sectionID: '0',
+      id: '0',
       description: '不重要',
-      expireAt: '2021-5-30T20:00:00.000Z',
+      expireAt: '2021-6-20 20:00:00',
     },
     {
-      sectionID: 0,
-      id: 1,
+      sectionID: '0',
+      id: '1',
       description: '不重要',
-      expireAt: '2021-6-1T21:00:00.000Z',
+      expireAt: '2021-6-1 21:00:00',
     },
     {
-      sectionID: 0,
-      id: 2,
-      description: '不重要',
-      expireAt: '2021-6-2T22:30:00.000Z',
+      sectionID: '0',
+      id: '2',
+      description: '这是一个签到',
+      expireAt: '2021-6-2 22:30:00',
     },
     {
-      sectionID: 1,
-      id: 3,
+      sectionID: '1',
+      id: '3',
       description: '不重要',
-      expireAt: '2021-6-2T23:30:00.000Z',
+      expireAt: '2021-6-2 23:30:00',
     },
     {
-      sectionID: 2,
-      id: 4,
+      sectionID: '2',
+      id: '4',
       description: '不重要',
-      expireAt: '2021-6-2T20:30:00.000Z',
+      expireAt: '2021-6-2 20:30:00',
     },
   ],
 };
 
 let signInStu = [
   {
-    id: 0,
-    sectionID: 0,
-    stuID: 0,
+    id: '0',
+    sectionID: '0',
+    stuID: '0',
     name: 'wzl',
     status: 2,
   },
   {
-    id: 0,
-    stuID: 1,
-    sectionID: 0,
+    id: '0',
+    stuID: '1',
+    sectionID: '0',
     name: 'stq',
     status: 2,
   },
   {
-    id: 0,
-    stuID: 2,
-    sectionID: 0,
+    id: '0',
+    stuID: '2',
+    sectionID: '0',
     name: 'fjy',
     status: 0,
   },
   {
-    id: 1,
-    stuID: 0,
-    sectionID: 0,
+    id: '1',
+    stuID: '0',
+    sectionID: '0',
     name: 'wzl',
     status: 2,
   },
   {
-    id: 1,
-    stuID: 1,
-    sectionID: 1,
+    id: '1',
+    stuID: '1',
+    sectionID: '1',
     name: 'stq',
     status: 2,
   },
   {
-    id: 2,
-    stuID: 2,
-    sectionID: 1,
-    name: 'fjy',
+    id: '2',
+    stuID: '0',
+    sectionID: '0',
+    name: 'wzl',
     status: 1,
   },
   {
-    id: 2,
-    stuID: 1,
-    sectionID: 1,
+    id: '2',
+    stuID: '1',
+    sectionID: '1',
     name: 'stq',
     status: 2,
   },
 ];
 
+let stuSignInData = [
+  {
+    sectionID: '0',
+    id: '0',
+    description: '不重要',
+    expireAt: '2021-6-20 20:00:00',
+    extra: 1,
+  },
+  {
+    sectionID: '0',
+    id: '1',
+    description: '不重要',
+    expireAt: '2021-6-1 21:00:00',
+    extra: 2,
+  },
+  {
+    sectionID: '0',
+    id: '2',
+    description: '不重要',
+    expireAt: '2021-6-2 22:30:00',
+    extra: 2,
+  },
+  {
+    sectionID: '1',
+    id: '3',
+    description: '不重要',
+    expireAt: '2021-6-2 23:30:00',
+    extra: 2,
+  },
+  {
+    sectionID: '2',
+    id: '4',
+    description: '不重要',
+    expireAt: '2021-6-2 20:30:00',
+    extra: 0,
+  },
+];
+
 export default {
   'GET /api/signIn/list': (req: Request, res: Response) => {
-    const { role, sectionID, stuID } = req.body; //id 暂时自己传一下
+    res.status(200).send({
+      message: 'ok',
+      data: stuSignInData,
+    });
+  },
+
+  'GET /api/signIn/list1': (req: Request, res: Response) => {
+    const role = 'student';
+    const sectionID = '0';
+    const stuID = '0';
     const ret: any = [];
-    if (role === RoleType.student) {
+    if (role === 'student') {
       const stuData =
         sectionID === undefined
           ? signInStu.filter((item) => item.stuID === stuID)
@@ -112,7 +159,7 @@ export default {
         const data = { id, description, expireAt, extra: item.status };
         ret.push(data);
       });
-    } else if (role === RoleType.instructor) {
+    } else {
       const unsignedData =
         sectionID === undefined
           ? signInStu.filter((item) => item.status === 0 || item.status === 1)
@@ -130,9 +177,7 @@ export default {
         ret.push({ ...data, extra });
       });
     }
-
-    res.send({
-      statusCode: 0,
+    res.status(200).send({
       message: 'ok',
       data: ret,
     });
@@ -143,20 +188,19 @@ export default {
     const { sectionID, description, expireAt } = req.body;
     signInList.count++;
     const item = {
-      id: signInList.count,
+      id: signInList.count.toString(),
       sectionID,
       description,
       expireAt,
     };
     signInList.data.push(item);
-    signInStu.push({ id: item.id, stuID: 0, name: 'wzl', sectionID: item.sectionID, status: 1 });
+    signInStu.push({ id: item.id, stuID: '0', name: 'wzl', sectionID: item.sectionID, status: 1 });
     res.send({
       message: 'ok',
     });
     return;
   },
 
-  // update在第一次访问的时候根据时间都及逆行update一下
   'POST /api/signIn/update': (req: Request, res: Response) => {
     const { stuID, id } = req.body;
     signInStu.map((item) => {

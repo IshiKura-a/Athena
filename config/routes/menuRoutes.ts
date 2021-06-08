@@ -17,10 +17,10 @@ export const menuRoutes = [
     component: './Profile',
   },
   {
-    path: '/section',
+    path: '/section/:sectionID',
     name: 'section',
     icon: 'UserOutlined',
-    component: './Section',
+    component: './Section/[sectionID]',
   },
   {
     path: '/admin',

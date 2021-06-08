@@ -1,10 +1,10 @@
 import { Component } from 'react';
 import { Card, Tabs, List } from 'antd';
 import { observer } from 'mobx-react';
-import { InstuctorFeat } from '@/pages/Section/type';
+import { InstuctorFeats } from '@/pages/Section/[sectionID]/type';
 import styles from './style.less';
-import type { SignIn } from '@/pages/Section/model';
-import type SectionStore from '@/pages/Section/model';
+import type { SignIn } from '@/pages/Section/[sectionID]/model';
+import type SectionStore from '@/pages/Section/[sectionID]/model';
 
 const { TabPane } = Tabs;
 
@@ -17,16 +17,12 @@ const tabCallBack = (key: any) => {
 };
 
 @observer
-export default class InstructorFeatList extends Component<InstructorProps, any> {
-  componentDidMount() {
-    this.props.sectionStore.listSign();
-  }
-
+export default class InstructorFeat extends Component<InstructorProps, any> {
   render() {
     const { sectionStore } = this.props;
     return (
       <>
-        <Tabs defaultActiveKey={InstuctorFeat.Named} onChange={tabCallBack}>
+        <Tabs defaultActiveKey={InstuctorFeats.Named} onChange={tabCallBack}>
           <TabPane tab={'点名'} key={0}>
             <Card className={styles.tabPane}>
               <List

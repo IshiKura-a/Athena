@@ -1,40 +1,40 @@
 import request from '@/utils/request';
 import type { RoleType } from '@/pages/Login/model';
 
-export type signInList = {
-  stuID: number;
+export type paramsSignInList = {
+  stuID: string;
   role: RoleType;
   sectionID: string;
 };
 
-export type signInCreate = {
+export type paramsSignInCreate = {
   sectionID: string;
   description: string;
   expireAt: string;
 };
 
-export type signInUpdate = {
-  stuID: number;
-  id: number;
+export type paramsSignInUpdate = {
+  stuID: string;
+  id: string;
 };
 
-export async function listSignIn(params: signInList) {
-  return request(`/api/section/list`, {
+export async function listSignIn(params: paramsSignInList) {
+  return request(`/api/signIn/list1`, {
     method: 'GET',
-    params,
+    data: params,
   });
 }
 
-export async function createSignIn(params: signInCreate) {
-  return request(`/api/section/create`, {
+export async function createSignIn(params: paramsSignInCreate) {
+  return request(`/api/signIn/create`, {
     method: 'POST',
-    params,
+    data: params,
   });
 }
 
-export async function updateSignIn(params: signInUpdate) {
-  return request(`/api/section/update`, {
+export async function updateSignIn(params: paramsSignInUpdate) {
+  return request(`/api/signIn/update`, {
     method: 'POST',
-    params,
+    data: params,
   });
 }

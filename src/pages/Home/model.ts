@@ -33,7 +33,6 @@ export default class HomePageStore {
         newLesson.push(aLesson);
       });
     });
-    console.log(newLesson);
     return newLesson;
   }
 

@@ -3,16 +3,19 @@ import type { BaseStore } from '@/store';
 import type { LessonReq } from '@/pages/Home/type';
 import { cloneDeep } from 'lodash';
 import { fetchLesson } from '@/services/homepage';
+import type { paramsSignInList} from '@/services/section';
 import { createSignIn, listSignIn, updateSignIn } from '@/services/section';
+import moment from 'moment';
 
 export interface SignIn {
-  id: number;
+  id: string;
   description: string;
   expireAt: string;
   extra: number | { id: number; name: string }[];
 }
 
 export default class SectionStore {
+  @observable isSign = '';
   @observable lessonList: LessonReq[] = [];
   @observable currentLesson: string = '';
   @observable signInList: SignIn[] = [];
@@ -21,6 +24,28 @@ export default class SectionStore {
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
   }
+
+  cmpTime = (timeA: string, timeB: string) => {
+    const format = 'YYYY-MM-DD HH:mm:ss';
+    const A = moment(timeA, format);
+    const B = moment(timeB, format);
+    return A.diff(B);
+  };
+
+  @action setIsSign = (id: string) => {
+    this.isSign = id;
+  };
+
+  @action handleRoute = (sectionID: string) => {
+    console.log('atHandleRoute:', sectionID);
+    if (sectionID === ':sectionID') {
+      if (this.lessonList.length > 0) {
+        this.setCurrentLesson(this.lessonList[0].course_id);
+      }
+    } else {
+      this.setCurrentLesson(sectionID);
+    }
+  };
 
   @action setCurrentLesson(courseId: string) {
     this.currentLesson = courseId;
@@ -31,7 +56,7 @@ export default class SectionStore {
   }
 
   @action setSignInList(signInList: SignIn[]) {
-    this.signInList = cloneDeep(signInList);
+    this.signInList = cloneDeep(signInList.sort((x, y) => this.cmpTime(x.expireAt, y.expireAt)));
   }
 
   @action fectchLessonList = async () => {
@@ -44,8 +69,12 @@ export default class SectionStore {
     }
   };
 
-  @action listSign = async () => {
-    const response = await listSignIn({ stuID: 0, role: this.baseStore.type, sectionID: '0' });
+  getSignInStatistic = (id: string) => {
+    return [40, 60];
+  };
+
+  @action listSign = async (params: paramsSignInList) => {
+    const response = await listSignIn(params);
     if (response.message === 'ok') {
       this.setSignInList(response.data);
     }
@@ -55,17 +84,17 @@ export default class SectionStore {
     const response = await createSignIn({
       sectionID: '0',
       description: 'test',
-      expireAt: '2021-6-7T22:30:00.000Z',
+      expireAt: '2021-6-7 22:30:00',
     });
     if (response.message === 'ok') {
-      this.listSign();
+      this.listSign({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
     }
   };
 
-  @action updateSign = async (id: number) => {
-    const response = await updateSignIn({ id, stuID: 0 });
+  @action updateSign = async (id: string) => {
+    const response = await updateSignIn({ id, stuID: '0' });
     if (response.message === 'ok') {
-      this.listSign();
+      this.listSign({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
     }
   };
 }

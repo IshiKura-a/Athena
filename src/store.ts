@@ -3,7 +3,7 @@ import ProfileStore from '@/pages/Profile/model';
 import LoginStore, { RoleType } from '@/pages/Login/model';
 import { action, observable } from 'mobx';
 import { TodoListStore } from '@/components/TodoList/model';
-import SectionStore from '@/pages/Section/model';
+import SectionStore from '@/pages/Section/[sectionID]/model';
 
 export class BaseStore {
   @observable id = '';
