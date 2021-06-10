@@ -7,6 +7,7 @@ import type { Lesson } from '@/pages/Home/type';
 import { Day, week } from '@/pages/Home/type';
 import Schedule from '@/pages/Home/component/schedule';
 import TodoList from '@/components/TodoList';
+import Notification from '@/components/Notification';
 import moment from 'moment';
 import { cloneDeep } from 'lodash';
 
@@ -106,7 +107,9 @@ export default class HomePage extends Component<HomePageProps, any> {
           </Row>
         </div>
         <br />
-        <Card title={<Alert message="最新通知" type="info" showIcon banner />}>// TODO</Card>
+        <Card title={<Alert message="最新通知" type="info" showIcon banner />}>
+          <Notification />
+        </Card>
       </PageContainer>
     );
   }

@@ -8,19 +8,19 @@ import { message } from 'antd';
 export default class ProfileStore {
   @observable profileInfo: ProfileType = {
     basic_person: {
-      id: '3180100000',
-      name: '张天然',
-      phone: '15336520000',
+      id: '未获取',
+      name: '未获取',
+      phone: '未获取',
       major: 'cs',
-      email: '3180100000@zju.edu.cn',
-      politics: '',
-      hometown: '',
-      nation: '',
+      email: '未获取',
+      politics: '未获取',
+      hometown: '未获取',
+      nation: '未获取',
       blood_type: 'O',
       campus: '玉泉',
-      dormitory: '',
+      dormitory: '未获取',
       wechat: '',
-      qq: '',
+      qq: '未获取',
       birthday: '2000-10-27',
       gender: '',
       status: 0, // in {0, 1, 2}
@@ -39,11 +39,11 @@ export default class ProfileStore {
     this.baseStore = baseStore;
   }
 
-  @action fetchData = async (params: ProfileParamsType) => {
+  @action fetchData = async () => {
+    const params: ProfileParamsType = { id: this.baseStore.id };
     const response = await getProfileInfo(params);
     if (response) {
       if (response.basic_person) {
-        console.log(response);
         this.setProfileInfo(response.basic_person);
       } else {
         message.info('Fetch Incorrect Data');
@@ -57,7 +57,7 @@ export default class ProfileStore {
 
   @action setProfileInfo = async (info: InfoType) => {
     this.setName(info.name);
-    this.setId(info.id);
+    this.setId(this.baseStore.id);
     this.setDepartment(info.major);
     this.setBirthday(info.birthday);
     this.setBloodType(info.blood_type);
@@ -66,6 +66,7 @@ export default class ProfileStore {
     this.setNation(info.nation);
     this.setHometown(info.hometown);
     this.setPolitics(info.politics);
+    this.setDomitory(info.dormitory);
     this.editEmail(info.email);
     this.editTelephone(info.phone);
     this.editWechat(info.wechat);
@@ -79,7 +80,7 @@ export default class ProfileStore {
 
   @action setId(id: string) {
     this.profileInfo.basic_person.id = id;
-    console.error('set id in profile deprecated');
+    // console.error('set id in profile deprecated');
   }
 
   @action setDepartment(major: string) {
@@ -114,12 +115,16 @@ export default class ProfileStore {
     this.profileInfo.basic_person.politics = politics;
   }
 
+  @action setDomitory(dorm: string) {
+    this.profileInfo.basic_person.dormitory = dorm;
+  }
+
   @action editEmail = async (email: string) => {
     this.profileInfo.basic_person.email = email;
   };
 
   @action editTelephone = async (telephone: string) => {
-    this.profileInfo.basic_person.email = telephone;
+    this.profileInfo.basic_person.phone = telephone;
   };
 
   @action editWechat = async (wechat: string) => {
@@ -131,9 +136,6 @@ export default class ProfileStore {
   };
 
   @action editStatus = async (status: number) => {
-    // console.log('back', status);
     this.profileInfo.basic_person.status = status;
   };
-
-  @action getProfileInfo = async () => {};
 }

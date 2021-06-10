@@ -1,6 +1,5 @@
 import { Component } from 'react';
 import type ProfileStore from '@/pages/Profile/model';
-import type { ProfileParamsType } from '@/services/profile';
 // import { Descriptions } from 'antd';
 import { inject, observer } from 'mobx-react';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -37,13 +36,8 @@ const { Paragraph } = Typography;
 @inject('profileStore')
 @observer
 export default class Profile extends Component<ProfileProps, any> {
-  constructor(props: any) {
-    super(props);
-    // should be sustituted by the true id
-    const test_id = '3180100000';
-    // const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhaWQiOiIzMTgwMTAwMDAwIiwidHlwZSI6InN0dWRlbnQiLCJpYXQiOjE2MjIzNjY5MjR9.o4BKPi-efmCUhMyTqa1Jvmh9LIsF7t2Tf6ek8wqOALU";
-    const params: ProfileParamsType = { id: test_id };
-    this.props.profileStore.fetchData(params);
+  componentDidMount() {
+    this.props.profileStore.fetchData();
   }
 
   state = {

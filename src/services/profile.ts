@@ -5,11 +5,14 @@ export type ProfileParamsType = {
 };
 
 export async function getProfileInfo(params: ProfileParamsType) {
-  return request(`/api/studenttemp?id=${params.id}`, {
+  return request(`/api/student/`, {
     method: 'GET',
+    params,
   });
 }
 
 export async function getProfileInfoNoToken() {
   return request(`/api/student0`);
 }
+
+export default { getProfileInfo };

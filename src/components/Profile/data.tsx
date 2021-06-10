@@ -18,11 +18,11 @@ export function checkValidPhone(phoneInput: string) {
 }
 
 export function checkValidEmail(emailInput: string) {
-  if (emailInput.indexOf('@') === -1) {
-    // 没有输入@
-    return 0;
+  if (emailInput.match(/^\w+@\w+\.\w+$/i)) {
+    console.log(emailInput.match(/^\w+@\w+\.\w+$/i));
+    return 1;
   }
-  return 1;
+  return 0;
 }
 
 export function checkValidQQ(qqInput: string) {
