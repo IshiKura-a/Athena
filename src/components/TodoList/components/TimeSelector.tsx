@@ -7,6 +7,7 @@ import { DatePicker, TimePicker } from 'antd';
 interface IProps {
   value?: string;
   onChange: any;
+  format: string;
 }
 
 const TimeSelector = (props: IProps, ref: any) => {
@@ -50,7 +51,12 @@ const TimeSelector = (props: IProps, ref: any) => {
   return (
     <div className={styles.time} ref={ref} value={value?.toISOString()}>
       <DatePicker onChange={dateChange} value={date} />
-      <TimePicker style={{ marginLeft: 10 }} format={'HH:mm'} onChange={timeChange} value={time} />
+      <TimePicker
+        style={{ marginLeft: 10 }}
+        format={props.format}
+        onChange={timeChange}
+        value={time}
+      />
     </div>
   );
 };

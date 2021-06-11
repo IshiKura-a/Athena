@@ -135,6 +135,111 @@ let stuSignInData = [
   },
 ];
 
+let homeworkList = {
+  count: 4,
+  data: [
+    {
+      id: '0',
+      sectionID: '0',
+      description: 'xxxxx',
+      expireAt: '2021-6-30 8:00:00',
+    },
+    {
+      id: '1',
+      sectionID: '0',
+      description: 'yyyyyy',
+      expireAt: '2021-6-30 8:00:00',
+    },
+    {
+      id: '2',
+      sectionID: '1',
+      description: 'hhhhhhhhh',
+      expireAt: '2021-6-1 8:00:00',
+    },
+    {
+      id: '3',
+      sectionID: '1',
+      description: 'sssss',
+      expireAt: '2021-6-30 8:00:00',
+    },
+  ],
+};
+
+let homeworkStu = [
+  {
+    id: '0',
+    sectionID: '0',
+    stuID: '0',
+    name: 'wzl',
+    status: 0,
+    score: undefined,
+    records: [
+      {
+        content: '这是content1',
+        accessory: ['附件1', '附件2'],
+      },
+      {
+        content: '这是content2',
+        accessory: ['附件1', '附件2'],
+      },
+    ],
+  },
+  {
+    id: '1',
+    sectionID: '0',
+    stuID: '0',
+    name: 'wzl',
+    status: 1,
+    score: 100,
+    records: [
+      {
+        content: '这是content1',
+        accessory: ['附件1', '附件2'],
+      },
+      {
+        content: '这是content2',
+        accessory: ['附件1', '附件2'],
+      },
+    ],
+  },
+  {
+    id: '2',
+    sectionID: '0',
+    stuID: '0',
+    name: 'wzl',
+    status: 2,
+    score: undefined,
+    records: [
+      {
+        content: '这是content1',
+        accessory: ['附件1', '附件2'],
+      },
+      {
+        content: '这是content2',
+        accessory: ['附件1', '附件2'],
+      },
+    ],
+  },
+  {
+    id: '3',
+    sectionID: '1',
+    stuID: '0',
+    name: 'wzl',
+    status: 1,
+    score: 100,
+    records: [
+      {
+        content: '这是content1',
+        accessory: ['附件1', '附件2'],
+      },
+      {
+        content: '这是content2',
+        accessory: ['附件1', '附件2'],
+      },
+    ],
+  },
+];
+
 export default {
   'GET /api/signIn/list': (req: Request, res: Response) => {
     res.status(200).send({
@@ -144,9 +249,8 @@ export default {
   },
 
   'GET /api/signIn/list1': (req: Request, res: Response) => {
-    const role = 'student';
-    const sectionID = '0';
-    const stuID = '0';
+    const { role, stuID, sectionID } = req.params;
+
     const ret: any = [];
     if (role === 'student') {
       const stuData =
@@ -210,6 +314,47 @@ export default {
     });
     res.send({
       message: 'ok',
+    });
+  },
+
+  'GET /api/homework/list': (req: Request, res: Response) => {
+    const { role, stuID, sectionID } = req.params;
+    const ret: any = [];
+    if (role === 'student') {
+      const stuData =
+        sectionID === undefined
+          ? homeworkStu.filter((item) => item.stuID === stuID)
+          : homeworkStu.filter((item) => item.stuID === stuID && item.sectionID === sectionID);
+
+      stuData.map((item, index) => {
+        const { id, description, expireAt } = signInList.data.filter((it) => it.id === item.id)[0];
+        const data = {
+          id,
+          description,
+          expireAt,
+          extra: { status: item.status, isExpire: false, records: item.records, score: item.score },
+        };
+        ret.push(data);
+      });
+    } else {
+      const homework =
+        sectionID === undefined
+          ? homeworkStu
+          : homeworkStu.filter((item) => item.sectionID === sectionID);
+      homeworkList.data.map((item) => {
+        const hw = homework.filter((it) => it.id === item.id);
+        let data = { id: item.id, description: item.description, expireAt: item.expireAt };
+        let extra: any = [];
+        hw.map((it) => {
+          const stu = { id: it.stuID, name: it.name, record: it.records[it.records.length - 1] };
+          extra.push(stu);
+        });
+        ret.push({ ...data, extra });
+      });
+    }
+    res.status(200).send({
+      message: 'ok',
+      data: ret,
     });
   },
 };

@@ -18,6 +18,12 @@ export type paramsSignInUpdate = {
   id: string;
 };
 
+export type paramsHwList = {
+  stuID: string;
+  role: RoleType;
+  sectionID: string;
+};
+
 export async function listSignIn(params: paramsSignInList) {
   return request(`/api/signIn/list1`, {
     method: 'GET',
@@ -35,6 +41,13 @@ export async function createSignIn(params: paramsSignInCreate) {
 export async function updateSignIn(params: paramsSignInUpdate) {
   return request(`/api/signIn/update`, {
     method: 'POST',
+    data: params,
+  });
+}
+
+export async function listHw(params: paramsHwList) {
+  return request(`/api/homework/list`, {
+    method: 'GET',
     data: params,
   });
 }

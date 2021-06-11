@@ -1,12 +1,15 @@
-import { Component, useEffect, useState } from 'react';
-import { Card, List, message, Popconfirm, Tabs } from 'antd';
+import React, { Component } from 'react';
+import { Button, Card, Divider, List, message, Modal, Tabs } from 'antd';
 import { observer } from 'mobx-react';
 import { StudentFeats } from '@/pages/Section/[sectionID]/type';
 import styles from '@/pages/Section/component/style.less';
 import type SectionStore from '@/pages/Section/[sectionID]/model';
 import type { SignIn } from '@/pages/Section/[sectionID]/model';
+import { RoleType } from '../../Login/model';
+import SignInConfirm from '@/pages/Section/component/SubComponent/SignInConfirm';
+import { FormOutlined } from '@ant-design/icons';
 import moment from 'moment';
-import { RoleType } from '@/pages/Login/model';
+import type { HW } from '@/pages/Section/[sectionID]/model';
 
 const { TabPane } = Tabs;
 
@@ -14,58 +17,18 @@ interface StudentProps {
   sectionStore: SectionStore;
 }
 
-interface PopConfirm {
-  isSign: string;
-  data: SignIn;
-  handleOk: any;
-  handleCancel: any;
-}
-
 const tabCallBack = (key: any) => {};
-
-const CustomPopConfirm = (props: PopConfirm) => {
-  const [isSign, setIsSign] = useState(props.isSign);
-  useEffect(() => setIsSign(props.isSign), [props.isSign]);
-
-  const handleConfirmSignVisible = (visible: boolean) => {
-    if (visible && props.data.extra === 1) setIsSign(props.data.id);
-    else setIsSign('');
-  };
-
-  const handleOk = () => {
-    props.handleOk(props.data);
-  };
-
-  return (
-    <Popconfirm
-      title="确认签到?"
-      visible={isSign === props.data.id}
-      onVisibleChange={handleConfirmSignVisible}
-      onConfirm={handleOk}
-      onCancel={props.handleCancel}
-      okText="确认"
-      cancelText="取消"
-      className={styles.signInItem}
-    >
-      <span className={props.data.extra === 2 ? styles.signMarkYes : styles.signMarkNot} />
-      <span className={styles.signDes}>{props.data.description}</span>
-      <span className={styles.signExpir}>
-        {moment(props.data.expireAt).format('YYYY-MM-DD HH:mm:ss')}
-      </span>
-      {props.data.extra === 2 ? (
-        <span className={styles.signStatusYes}>已签到</span>
-      ) : (
-        <span className={styles.signStatusNot}>未签到</span>
-      )}
-    </Popconfirm>
-  );
-};
 
 @observer
 export default class StudentFeat extends Component<StudentProps, any> {
   componentDidMount() {
     const sectionID = this.props.sectionStore.currentLesson;
     this.props.sectionStore.listSign({ stuID: '0', role: RoleType.student, sectionID });
+    this.props.sectionStore.listHw({ stuID: '0', role: RoleType.student, sectionID });
+  }
+
+  componentWillUnmount() {
+    Modal.destroyAll();
   }
 
   handleSign = (item: SignIn) => {
@@ -85,11 +48,21 @@ export default class StudentFeat extends Component<StudentProps, any> {
 
   render() {
     const { sectionStore } = this.props;
+    const { lessonName, hwList } = this.props.sectionStore;
     return (
       <>
         <Tabs defaultActiveKey={StudentFeats.SignIn} onChange={tabCallBack}>
           <TabPane tab={'签到'} key={0}>
             <Card className={styles.tabPane}>
+              <Divider>
+                <span>{`${lessonName}签到列表`}</span>
+              </Divider>
+
+              <span className={styles.signInHead}>
+                <div className={styles.headDes}>签到描述</div>
+                <div className={styles.headExpir}>截止时间</div>
+                <span className={styles.headStatus}>签到人数</span>
+              </span>
               <List
                 dataSource={sectionStore.signInList}
                 renderItem={(item: SignIn) => (
@@ -97,7 +70,7 @@ export default class StudentFeat extends Component<StudentProps, any> {
                     className={styles.itemHeight}
                     onClick={this.handleSign.bind(this, item)}
                   >
-                    <CustomPopConfirm
+                    <SignInConfirm
                       isSign={sectionStore.isSign}
                       data={item}
                       handleCancel={this.handleCancel}
@@ -109,7 +82,21 @@ export default class StudentFeat extends Component<StudentProps, any> {
             </Card>
           </TabPane>
           <TabPane tab={'作业'} key={1}>
-            <Card className={styles.tabPane}>student zuoye</Card>
+            <Card className={styles.tabPane}>
+              <List
+                dataSource={hwList}
+                renderItem={(item: HW) => [
+                  <List.Item>
+                    <div>
+                      <span>{item.description}</span>
+                      <span>{item.expireAt}</span>
+                      <span>{item.description}</span>
+                      <span>{item.extra[0]?.status}</span>
+                    </div>
+                  </List.Item>,
+                ]}
+              ></List>
+            </Card>
           </TabPane>
         </Tabs>
       </>

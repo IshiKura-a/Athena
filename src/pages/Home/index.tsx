@@ -17,18 +17,18 @@ interface HomePageProps {
   homePageStore: HomePageStore;
 }
 
+export function cmpTime(timeA: string, timeB: string, format: string): number {
+  const A = moment(timeA, format);
+  const B = moment(timeB, format);
+  return A.diff(B);
+}
+
 @inject('homePageStore')
 @observer
 export default class HomePage extends Component<HomePageProps, any> {
   async componentDidMount() {
     await this.props.homePageStore.fetchLessonInfo();
   }
-
-  cmpTime = (timeA: string, timeB: string) => {
-    const A = moment(timeA, 'HH:mm');
-    const B = moment(timeB, 'HH:mm');
-    return A.diff(B);
-  };
 
   render() {
     const { lessonInfo, week } = this.props.homePageStore;
@@ -50,7 +50,7 @@ export default class HomePage extends Component<HomePageProps, any> {
                               .filter((lesson: Lesson) => {
                                 return week.get(item) === lesson.day;
                               })
-                              .sort((x, y) => this.cmpTime(x.start_time, y.start_time))}
+                              .sort((x, y) => cmpTime(x.start_time, y.start_time, 'HH:mm'))}
                           />
                         </Card>
                       </TabPane>

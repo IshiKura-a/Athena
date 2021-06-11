@@ -18,6 +18,9 @@ export default class Section extends Component<SectionProps, any> {
     const { sectionID } = this.props.match.params;
     this.props.sectionStore.handleRoute(sectionID);
     this.props.sectionStore.setIsSign('');
+    this.props.sectionStore.setModalVisible(false);
+    this.props.sectionStore.setPolling(false);
+    this.props.sectionStore.setSignInShow(undefined);
   }
 
   render() {
