@@ -3,23 +3,25 @@ import type { BaseStore } from '@/store';
 import type { LessonReq } from '@/pages/Home/type';
 import { cloneDeep } from 'lodash';
 import { fetchLesson } from '@/services/homepage';
-import type { paramsHwList, paramsSignInList } from '@/services/section';
-import { createSignIn, listHw, listSignIn, updateSignIn } from '@/services/section';
+import type { paramsHwHandIn, paramsHwList, paramsSignInList } from '@/services/section';
+import { createSignIn, handInHw, listHw, listSignIn, updateSignIn } from '@/services/section';
 import { cmpTime } from '@/pages/Home';
+import { history } from 'umi';
+import section from '../../../../mock/section';
 
-type Record = {
+export type Record = {
   content: string;
   accessory: string[];
 };
 
-type StuHW = {
+export type StuHW = {
   status: number;
   isExpire: boolean;
   score?: number;
   records: Record[];
 };
 
-type InstHW = {
+export type InstHW = {
   id: string;
   name: string;
   record: Record;
@@ -40,44 +42,98 @@ export interface HW {
 }
 
 export default class SectionStore {
-  @observable isSign = '';
+  // create sign in
   @observable signInCreate = false;
+  // which is to be signed in
+  @observable isSign = undefined as string | undefined;
+  // modal of sign in in detail
   @observable modalVisible = false;
+  // whether it'll polling
   @observable polling = false;
+  // which sign is to be shown im detail
   @observable signInShow = undefined as string | undefined;
+  // create homework
+  @observable hwCreate = false;
+  // which is to be hand in
+  @observable isHandIn = undefined as string | undefined;
+  // modal of homework to hand in
+  @observable handInModalVisible = false;
+  // which homework is to be checked
+  @observable isCheck = undefined as string | undefined;
+  // modal of homework hand-in list
+  @observable checkModalVisible = false;
 
   @observable lessonList = [] as LessonReq[];
   @observable signInList = [] as SignIn[];
   @observable hwList = [] as HW[];
-  @observable currentLesson: string = '';
+  @observable currentLesson = undefined as string | undefined;
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
   }
 
-  getSignInStatistic = (id: string) => {
-    return [40, 60];
+  redirectRoute = (sectionID: string) => {
+    history.push({
+      pathname: `/section/${sectionID}`,
+    });
+    this.setCurrentLesson(sectionID);
+  };
+
+  handleRoute = (sectionID: string) => {
+    if (sectionID === undefined || sectionID === ':sectionID') {
+      const defaultID = this.lessonList[0]?.course_id;
+      this.redirectRoute(defaultID);
+      this.setCurrentLesson(defaultID);
+      // TODO
+    } else {
+      this.setCurrentLesson(sectionID);
+    }
   };
 
   @computed get dataToShow() {
-    const it = this.signInList
+    return this.signInList
       ? this.signInList.filter((item: SignIn) => item.id === this.signInShow)[0]
       : undefined;
-    return it;
   }
 
   @computed get lessonName() {
-    return 'lesson';
-    // return this.lessonList.length > 0?this.lessonList.filter((item: LessonReq) => item.course_id === this.currentLesson)[0].course_name:undefined;
+    return this.currentLesson
+      ? this.lessonList.filter((item: LessonReq) => item.course_id === this.currentLesson)[0]
+          ?.course_name
+      : undefined;
+  }
+
+  @computed get recordsToShow() {
+    return this.isHandIn
+      ? this.hwList.filter((item) => item.id === this.isHandIn)[0].extra.records
+      : undefined;
+  }
+
+  @computed get dataToCheck() {
+    return this.isCheck
+      ? this.hwList.filter((item) => item.id === this.isCheck)[0].extra
+      : undefined;
   }
 
   @action setSignInCreate = (value: boolean) => {
     this.signInCreate = value;
   };
 
+  @action setHwCreate = (value: boolean) => {
+    this.hwCreate = value;
+  };
+
   @action setModalVisible = (value: boolean) => {
     this.modalVisible = value;
+  };
+
+  @action setHandInModalVisible = (value: boolean) => {
+    this.handInModalVisible = value;
+  };
+
+  @action setCheckModalVisible = (value: boolean) => {
+    this.checkModalVisible = value;
   };
 
   @action setPolling = (value: boolean) => {
@@ -88,20 +144,16 @@ export default class SectionStore {
     this.signInShow = id;
   };
 
-  @action setIsSign = (id: string) => {
+  @action setIsSign = (id: string | undefined) => {
     this.isSign = id;
   };
 
-  @action handleRoute = (sectionID: string) => {
-    if (sectionID === ':sectionID') {
-      if (this.lessonList.length > 0) {
-        this.setCurrentLesson(this.lessonList[0].course_id);
-      }
-    } else {
-      this.setCurrentLesson(sectionID);
-      console.log('current:', this.currentLesson);
-    }
-    console.log('setCurrentLesson:', this.currentLesson);
+  @action setIsHandIn = (id: string | undefined) => {
+    this.isHandIn = id;
+  };
+
+  @action setIsCheck = (id: string | undefined) => {
+    this.isCheck = id;
   };
 
   @action setCurrentLesson(courseId: string) {
@@ -126,7 +178,7 @@ export default class SectionStore {
     const response = await fetchLesson({ id: this.baseStore.getId() });
     if (response.message === 'ok') {
       this.setLessonList(response.lessonInfo);
-      this.setCurrentLesson(this.lessonList.length > 0 ? this.lessonList[0].course_id : '');
+      // this.setCurrentLesson(this.lessonList.length > 0 ? this.lessonList[0].course_id : '');
     } else {
       console.log('fetch lesson error');
     }
@@ -146,23 +198,28 @@ export default class SectionStore {
       expireAt: '2021-6-7 22:30:00',
     });
     if (response.message === 'ok') {
-      this.listSign({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
-      console.log('type:', this.baseStore.type);
+      await this.listSign({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
     }
   };
 
   @action updateSign = async (id: string) => {
     const response = await updateSignIn({ id, stuID: '0' });
     if (response.message === 'ok') {
-      this.listSign({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
+      await this.listSign({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
     }
   };
 
   @action listHw = async (params: paramsHwList) => {
     const response = await listHw(params);
-    console.log('hw:', response);
     if (response.message === 'ok') {
       this.setHwList(response.data);
+    }
+  };
+
+  @action handInHw = async (params: paramsHwHandIn) => {
+    const response = await handInHw(params);
+    if (response.message === 'ok') {
+      await this.listHw({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
     }
   };
 }

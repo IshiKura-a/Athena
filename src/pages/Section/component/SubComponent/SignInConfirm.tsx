@@ -5,7 +5,7 @@ import moment from 'moment';
 import type { SignIn } from '@/pages/Section/[sectionID]/model';
 
 interface PopConfirm {
-  isSign: string;
+  isSign: string | undefined;
   data: SignIn;
   handleOk: any;
   handleCancel: any;

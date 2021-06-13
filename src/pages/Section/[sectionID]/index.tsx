@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Col, List, Row } from 'antd';
 import { inject, observer } from 'mobx-react';
 import type SectionStore from '@/pages/Section/[sectionID]/model';
@@ -13,15 +13,24 @@ interface SectionProps {
 @inject('sectionStore')
 @observer
 export default class Section extends Component<SectionProps, any> {
-  componentDidMount() {
-    this.props.sectionStore.fectchLessonList();
+  async componentDidMount() {
+    const { sectionStore } = this.props;
     const { sectionID } = this.props.match.params;
-    this.props.sectionStore.handleRoute(sectionID);
-    this.props.sectionStore.setIsSign('');
-    this.props.sectionStore.setModalVisible(false);
-    this.props.sectionStore.setPolling(false);
-    this.props.sectionStore.setSignInShow(undefined);
+
+    await sectionStore.fectchLessonList();
+    sectionStore.handleRoute(sectionID);
+
+    sectionStore.setModalVisible(false);
+    sectionStore.setHandInModalVisible(false);
+    sectionStore.setCheckModalVisible(false);
+    sectionStore.setPolling(false);
+    sectionStore.setIsSign(undefined);
+    sectionStore.setSignInShow(undefined);
   }
+
+  redirectToSection = (id: string) => {
+    this.props.sectionStore.redirectRoute(id);
+  };
 
   render() {
     const { sectionStore } = this.props;
@@ -42,7 +51,7 @@ export default class Section extends Component<SectionProps, any> {
             <List
               dataSource={sectionStore.lessonList}
               renderItem={(item: LessonReq) => (
-                <List.Item>
+                <List.Item onClick={this.redirectToSection.bind(this, item.course_id)}>
                   <span>{item.course_name}</span>
                   <span>{item.instructor}</span>
                   <span>{item.department}</span>

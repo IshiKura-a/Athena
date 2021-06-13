@@ -51,7 +51,7 @@ let signInStu = [
     sectionID: '0',
     stuID: '0',
     name: 'wzl',
-    status: 2,
+    status: 1,
   },
   {
     id: '0',
@@ -142,7 +142,7 @@ let homeworkList = {
       id: '0',
       sectionID: '0',
       description: 'xxxxx',
-      expireAt: '2021-6-30 8:00:00',
+      expireAt: '2021-6-2 8:00:00',
     },
     {
       id: '1',
@@ -172,6 +172,26 @@ let homeworkStu = [
     stuID: '0',
     name: 'wzl',
     status: 0,
+    isExpire: true,
+    score: undefined,
+    records: [
+      {
+        content: '这是content1',
+        accessory: ['附件1', '附件2'],
+      },
+      {
+        content: '这是content2',
+        accessory: ['附件1', '附件2'],
+      },
+    ],
+  },
+  {
+    id: '0',
+    sectionID: '0',
+    stuID: '1',
+    name: 'xx',
+    status: 0,
+    isExpire: false,
     score: undefined,
     records: [
       {
@@ -190,6 +210,7 @@ let homeworkStu = [
     stuID: '0',
     name: 'wzl',
     status: 1,
+    isExpire: false,
     score: 100,
     records: [
       {
@@ -208,6 +229,7 @@ let homeworkStu = [
     stuID: '0',
     name: 'wzl',
     status: 2,
+    isExpire: true,
     score: undefined,
     records: [
       {
@@ -226,6 +248,7 @@ let homeworkStu = [
     stuID: '0',
     name: 'wzl',
     status: 1,
+    isExpire: false,
     score: 100,
     records: [
       {
@@ -241,16 +264,17 @@ let homeworkStu = [
 ];
 
 export default {
-  'GET /api/signIn/list': (req: Request, res: Response) => {
+  'GET /api/signIn/list1': (req: Request, res: Response) => {
     res.status(200).send({
       message: 'ok',
       data: stuSignInData,
     });
   },
 
-  'GET /api/signIn/list1': (req: Request, res: Response) => {
-    const { role, stuID, sectionID } = req.params;
-
+  'GET /api/signIn/list': (req: Request, res: Response) => {
+    const role = 'student';
+    const stuID = '0';
+    const sectionID = '0';
     const ret: any = [];
     if (role === 'student') {
       const stuData =
@@ -318,8 +342,10 @@ export default {
   },
 
   'GET /api/homework/list': (req: Request, res: Response) => {
-    const { role, stuID, sectionID } = req.params;
     const ret: any = [];
+    const role = 'instrutor';
+    const stuID = '0';
+    const sectionID = '0';
     if (role === 'student') {
       const stuData =
         sectionID === undefined
@@ -327,12 +353,19 @@ export default {
           : homeworkStu.filter((item) => item.stuID === stuID && item.sectionID === sectionID);
 
       stuData.map((item, index) => {
-        const { id, description, expireAt } = signInList.data.filter((it) => it.id === item.id)[0];
+        const { id, description, expireAt } = homeworkList.data.filter(
+          (it) => it.id === item.id,
+        )[0];
         const data = {
           id,
           description,
           expireAt,
-          extra: { status: item.status, isExpire: false, records: item.records, score: item.score },
+          extra: {
+            status: item.status,
+            isExpire: item.isExpire,
+            records: item.records,
+            score: item.score,
+          },
         };
         ret.push(data);
       });

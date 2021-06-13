@@ -1,10 +1,11 @@
 import request from '@/utils/request';
 import type { RoleType } from '@/pages/Login/model';
+import type { Record } from '@/pages/Section/[sectionID]/model';
 
 export type paramsSignInList = {
   stuID: string;
-  role: RoleType;
   sectionID: string;
+  role: RoleType;
 };
 
 export type paramsSignInCreate = {
@@ -24,8 +25,13 @@ export type paramsHwList = {
   sectionID: string;
 };
 
+export type paramsHwHandIn = {
+  id: string;
+  record: Record;
+};
+
 export async function listSignIn(params: paramsSignInList) {
-  return request(`/api/signIn/list1`, {
+  return request(`/api/signIn/list`, {
     method: 'GET',
     data: params,
   });
@@ -48,6 +54,13 @@ export async function updateSignIn(params: paramsSignInUpdate) {
 export async function listHw(params: paramsHwList) {
   return request(`/api/homework/list`, {
     method: 'GET',
+    params,
+  });
+}
+
+export async function handInHw(params: paramsHwHandIn) {
+  return request(`/api/homework/list`, {
+    method: 'POST',
     data: params,
   });
 }

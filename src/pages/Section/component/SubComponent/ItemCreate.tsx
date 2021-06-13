@@ -3,12 +3,14 @@ import React, { useEffect, useState } from 'react';
 import TimeSelector from '@/components/TodoList/components/TimeSelector';
 
 interface IProps {
+  title: string;
+  desLable: string;
   isCreate: boolean;
   handleOk: any;
   handeCancel: any;
 }
 
-const SignInCreate = (props: IProps) => {
+const ItemCreate = (props: IProps) => {
   const [form] = Form.useForm();
   const [isCreate, setIsCreate] = useState(props.isCreate);
   useEffect(() => setIsCreate(props.isCreate), [props.isCreate]);
@@ -32,12 +34,12 @@ const SignInCreate = (props: IProps) => {
   };
 
   return (
-    <Modal title={'创建签到'} visible={isCreate} onOk={handleOk} onCancel={props.handeCancel}>
+    <Modal title={props.title} visible={isCreate} onOk={handleOk} onCancel={props.handeCancel}>
       <Form form={form}>
-        <Form.Item label={'签到描述'} name="description" rules={[{ required: true }]}>
+        <Form.Item label={props.desLable} name="description" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item label={'过期时间'} name={'expireAt'} rules={[{ required: true }]}>
+        <Form.Item label={'截止时间'} name={'expireAt'} rules={[{ required: true }]}>
           <TimeSelector format={'HH:mm:ss'} />
         </Form.Item>
       </Form>
@@ -45,4 +47,4 @@ const SignInCreate = (props: IProps) => {
   );
 };
 
-export default SignInCreate;
+export default ItemCreate;

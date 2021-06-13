@@ -95,3 +95,47 @@
   padding: 10px 10px;
   text-align: center;
 }
+
+.hw_check_whole {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 150px;
+}
+
+.hw_check_left {
+  width: 50%;
+  height: 100%;
+}
+
+.hw_check_right {
+  width: 48%;
+  height: 100%;
+}
+:global {
+  .hwCheckAppendix {
+    .ant-list-split {
+      padding: 0;
+      border-top: none;
+      border-bottom: none;
+    }
+    .ant-list-item {
+      height: 10px;
+      font-size: small;
+      border-top: none;
+      border-bottom: none;
+    }
+  }
+}
+
+.hw_check_button {
+  display: inline;
+  float: right;
+}
+
+.hw_check_switch {
+  position: absolute;
+  right: 5%;
+  bottom: 5%;
+  display: inline-block;
+}

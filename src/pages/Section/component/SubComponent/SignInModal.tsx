@@ -10,7 +10,7 @@ interface ModalProps {
   polling: boolean;
   handleOk: any;
   handlePolling: any;
-  sectionName: string;
+  sectionName: string | undefined;
   data: SignIn | undefined;
 }
 
@@ -62,7 +62,7 @@ const SignInModal = (props: ModalProps) => {
     >
       <Card>
         <Meta
-          title={props.sectionName}
+          title={props.sectionName ? props.sectionName : 'error'}
           description={`${props.data?.description} ${props.data?.expireAt}`}
         />
         {<Table columns={columns} dataSource={signInData?.extra} />}

@@ -3,14 +3,15 @@ import { Card, Tabs, List, Button, Divider, message, Modal } from 'antd';
 import { observer } from 'mobx-react';
 import { InstuctorFeats } from '@/pages/Section/[sectionID]/type';
 import styles from './style.less';
-import type { HW, SignIn } from '@/pages/Section/[sectionID]/model';
+import type { SignIn } from '@/pages/Section/[sectionID]/model';
 import type SectionStore from '@/pages/Section/[sectionID]/model';
 import moment from 'moment';
 import { RoleType } from '@/pages/Login/model';
 import SignInModal from '@/pages/Section/component/SubComponent/SignInModal';
 import { cmpTime } from '@/pages/Home';
-import SignInCreate from '@/pages/Section/component/SubComponent/SignInCreate';
+import ItemCreate from '@/pages/Section/component/SubComponent/ItemCreate';
 import { FormOutlined } from '@ant-design/icons';
+import CheckModal from '@/pages/Section/component/SubComponent/CheckHwModal';
 
 const { TabPane } = Tabs;
 
@@ -25,16 +26,24 @@ const tabCallBack = (key: any) => {
 @observer
 export default class InstructorFeat extends Component<InstructorProps, any> {
   componentDidMount() {
-    const sectionID = this.props.sectionStore.currentLesson;
-    this.props.sectionStore.listSign({ stuID: '0', role: RoleType.instructor, sectionID });
-    this.props.sectionStore.listHw({ stuID: '0', role: RoleType.instructor, sectionID });
+    const tmp = this.props.sectionStore.currentLesson;
+    this.props.sectionStore.listSign({
+      stuID: '0',
+      role: RoleType.instructor,
+      sectionID: tmp || '0',
+    });
+    this.props.sectionStore.listHw({
+      stuID: '0',
+      role: RoleType.instructor,
+      sectionID: tmp || '0',
+    });
   }
 
   componentWillUnmount() {
     Modal.destroyAll();
   }
 
-  handleLook = (item: SignIn) => {
+  handleLook = (item: any) => {
     if (item.extra.length === 0) {
       message.success('已全部签到');
       return;
@@ -59,21 +68,59 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
     this.props.sectionStore.setSignInShow(undefined);
   };
 
-  handleCreate = () => {
+  handleCreateSignIn = () => {
     this.props.sectionStore.setSignInCreate(true);
   };
 
-  handleCreateOk = (e: any) => {
+  handleCreateSignInOk = (data: any) => {
     this.props.sectionStore.setSignInCreate(false);
   };
 
-  handleCreateCancel = () => {
+  handleCreateSignInCancel = () => {
     this.props.sectionStore.setSignInCreate(false);
+  };
+
+  handleCheckHw = (id: string) => {
+    this.props.sectionStore.setIsCheck(id);
+    this.props.sectionStore.setCheckModalVisible(true);
+  };
+
+  handleCheckHwOk = (data: any) => {
+    console.log(data);
+    this.props.sectionStore.setCheckModalVisible(false);
+    this.props.sectionStore.setIsCheck(undefined);
+  };
+
+  handleCheckHwCancel = () => {
+    this.props.sectionStore.setCheckModalVisible(false);
+    this.props.sectionStore.setIsCheck(undefined);
+  };
+
+  handleCreateHw = () => {
+    this.props.sectionStore.setHwCreate(true);
+  };
+
+  handleCreateHwOk = (data: any) => {
+    this.props.sectionStore.setHwCreate(false);
+  };
+
+  handleCreateHwCancel = () => {
+    this.props.sectionStore.setHwCreate(false);
   };
 
   render() {
-    const { lessonName, modalVisible, polling, dataToShow, signInList, signInCreate, hwList } =
-      this.props.sectionStore;
+    const {
+      lessonName,
+      modalVisible,
+      polling,
+      dataToShow,
+      signInList,
+      signInCreate,
+      hwList,
+      checkModalVisible,
+      dataToCheck,
+      hwCreate,
+    } = this.props.sectionStore;
 
     return (
       <>
@@ -85,7 +132,7 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                 <Button
                   icon={<FormOutlined />}
                   className={styles.signButton}
-                  onClick={this.handleCreate}
+                  onClick={this.handleCreateSignIn}
                 >
                   发布签到
                 </Button>
@@ -108,7 +155,7 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                       <div className={styles.signExpir}>
                         {moment(item.expireAt).format('YYYY-MM-DD HH:mm:ss')}
                       </div>
-                      <span className={styles.signStatusYes}>签到人数</span>
+                      <div className={styles.signStatusYes}>签到人数</div>
                     </span>
                   </List.Item>
                 )}
@@ -123,28 +170,65 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                 handlePolling={this.handlePolling}
               />
 
-              <SignInCreate
+              <ItemCreate
+                title={'创建签到'}
+                desLable={'签到描述'}
                 isCreate={signInCreate}
-                handleOk={this.handleCreateOk}
-                handeCancel={this.handleCreateCancel}
+                handleOk={this.handleCreateSignInOk}
+                handeCancel={this.handleCreateSignInCancel}
               />
             </Card>
           </TabPane>
           <TabPane tab={'批改作业'} key={1}>
             <Card className={styles.tabPane}>
+              <Divider>
+                <span>{`${lessonName}作业列表`}</span>
+                <Button
+                  icon={<FormOutlined />}
+                  className={styles.signButton}
+                  onClick={this.handleCreateHw}
+                >
+                  发布作业
+                </Button>
+              </Divider>
+              <span className={styles.signInHead}>
+                <div className={styles.headDes}>作业描述</div>
+                <div className={styles.headExpir}>截止时间</div>
+                <span className={styles.headStatus}>提交状态</span>
+              </span>
               <List
                 dataSource={hwList}
-                renderItem={(item: HW) => [
-                  <List.Item>
-                    <div>
-                      <span>{item.description}</span>
-                      <span>{item.expireAt}</span>
-                      <span>{item.description}</span>
-                      <span>{item.extra.status}</span>
-                    </div>
+                renderItem={(item) => [
+                  <List.Item
+                    className={styles.itemHeight}
+                    onClick={this.handleCheckHw.bind(this, item.id)}
+                  >
+                    <span className={styles.signInItem}>
+                      <div className={styles.signMarkYes} />
+                      <div className={styles.signDes}>{item.description}</div>
+                      <div className={styles.signExpir}>
+                        {moment(item.expireAt).format('YYYY-MM-DD HH:mm:ss')}
+                      </div>
+                      <div className={styles.signStatusYes}>提交人数</div>
+                    </span>
                   </List.Item>,
                 ]}
-              ></List>
+              />
+
+              <CheckModal
+                modalVisible={checkModalVisible}
+                data={dataToCheck}
+                onSubmit={this.handleCheckHwOk}
+                onOk={this.handleCheckHwCancel}
+              />
+
+              <ItemCreate
+                title={'创建作业'}
+                desLable={'作业描述'}
+                isCreate={hwCreate}
+                handleOk={this.handleCreateHwOk}
+                handeCancel={this.handleCreateHwCancel}
+              />
             </Card>
           </TabPane>
           <TabPane tab={'讨论区'} key={2}>
