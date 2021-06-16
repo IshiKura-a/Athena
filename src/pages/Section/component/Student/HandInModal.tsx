@@ -1,4 +1,4 @@
-import type { Record } from '@/pages/Section/[sectionID]/model';
+import type { Record } from '@/pages/Section/[sectionID]/type';
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, message, Modal, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
@@ -38,7 +38,6 @@ const HandInModal = (props: IProps) => {
   const onUploadChange = ({ file }) => {
     if (file.status === 'done' || file.status === 'error') {
       message.success(`${file} uploaded successfully`);
-      console.log(file.name);
       const tmp = accessory;
       tmp.push(file.name);
       setAccessory(tmp);

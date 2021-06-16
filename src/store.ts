@@ -3,15 +3,12 @@ import ProfileStore from '@/pages/Profile/model';
 import LoginStore, { RoleType } from '@/pages/Login/model';
 import { action, observable } from 'mobx';
 import { TodoListStore } from '@/components/TodoList/model';
-import SectionStore from '@/pages/Section/[sectionID]/model';
+import StudentStore from '@/pages/Section/component/Student/model';
+import InstructorStore from '@/pages/Section/component/Instructor/model';
 
 export class BaseStore {
   @observable id = '';
   @observable type = RoleType.student;
-
-  getId() {
-    return this.id;
-  }
 
   @action setId(id: string) {
     this.id = id;
@@ -29,5 +26,6 @@ export default {
   profileStore: new ProfileStore(baseStore),
   loginStore: new LoginStore(baseStore),
   todoListStore: new TodoListStore(baseStore),
-  sectionStore: new SectionStore(baseStore),
+  studentStore: new StudentStore(baseStore),
+  instructorStore: new InstructorStore(baseStore),
 };

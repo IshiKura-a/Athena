@@ -1,9 +1,9 @@
 import { Button, Card, Modal, Table } from 'antd';
-import type { SignIn } from '@/pages/Section/[sectionID]/model';
 import { useEffect, useState } from 'react';
 import { useRequest } from '@@/plugin-request/request';
 import styles from '../style.less';
 import { Meta } from 'antd/es/list/Item';
+import type { SignIn } from '@/pages/Section/[sectionID]/type';
 
 interface ModalProps {
   modalVisible: boolean;
@@ -27,11 +27,9 @@ const SignInModal = (props: ModalProps) => {
   useEffect(() => {
     if (!isPolling && props.polling && props.modalVisible) {
       setIsPolling(true);
-      console.log('run');
       run();
     } else if (isPolling && !props.polling) {
       setIsPolling(false);
-      console.log('cancel:');
       cancel();
     }
   }, [props.modalVisible, props.polling]);
@@ -63,7 +61,7 @@ const SignInModal = (props: ModalProps) => {
       <Card>
         <Meta
           title={props.sectionName ? props.sectionName : 'error'}
-          description={`${props.data?.description} ${props.data?.expireAt}`}
+          description={`${props.data?.description} ${props.data?.expire_at}`}
         />
         {<Table columns={columns} dataSource={signInData?.extra} />}
         <div className={styles.modal_table}></div>

@@ -14,10 +14,12 @@ export enum Day {
 }
 
 export interface Lesson {
+  _id: string;
+  section_id: string;
   course_id: string;
   course_name: string;
   instructor?: string;
-  address?: string;
+  location: string;
   department?: string;
   day: number;
   start_time: string;
@@ -25,10 +27,12 @@ export interface Lesson {
 }
 
 export interface LessonReq {
+  _id: string;
+  section_id: string;
   course_id: string;
   course_name: string;
   instructor?: string;
-  address?: string;
+  location: string;
   department?: string;
   time: LessonTime[];
 }

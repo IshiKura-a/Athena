@@ -17,7 +17,7 @@ const ItemCreate = (props: IProps) => {
   useEffect(() => {
     form.setFieldsValue({
       description: undefined,
-      expireAt: undefined,
+      expire_at: undefined,
     });
   });
 
@@ -39,7 +39,7 @@ const ItemCreate = (props: IProps) => {
         <Form.Item label={props.desLable} name="description" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item label={'截止时间'} name={'expireAt'} rules={[{ required: true }]}>
+        <Form.Item label={'截止时间'} name={'expire_at'} rules={[{ required: true }]}>
           <TimeSelector format={'HH:mm:ss'} />
         </Form.Item>
       </Form>

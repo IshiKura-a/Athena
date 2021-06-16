@@ -27,9 +27,19 @@ export default class HomePageStore {
   expandLesson(lessons: LessonReq[]) {
     const newLesson: Lesson[] = [];
     lessons.forEach((item) => {
-      const { course_id, course_name, instructor, address, department, time } = item;
+      const { _id, section_id, course_id, course_name, instructor, location, department, time } =
+        item;
       time.forEach((t) => {
-        const aLesson: Lesson = { course_id, course_name, instructor, address, department, ...t };
+        const aLesson: Lesson = {
+          _id,
+          section_id,
+          course_id,
+          course_name,
+          instructor,
+          location,
+          department,
+          ...t,
+        };
         newLesson.push(aLesson);
       });
     });
@@ -41,11 +51,9 @@ export default class HomePageStore {
   }
 
   @action fetchLessonInfo = async () => {
-    const response = await fetchLesson({ id: this.baseStore.getId() });
-    if (response.message === 'ok') {
-      this.setLessonInfo(this.expandLesson(response.lessonInfo));
-    } else {
-      console.log('fetch lesson error');
-    }
+    const { id } = this.baseStore;
+    // console.log("baseStore.id",id)
+    const response = await fetchLesson({ id });
+    this.setLessonInfo(this.expandLesson(response));
   };
 }

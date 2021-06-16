@@ -1,21 +1,18 @@
 import request from '@/utils/request';
 import type { RoleType } from '@/pages/Login/model';
-import type { Record } from '@/pages/Section/[sectionID]/model';
+import type { Record } from '@/pages/Section/[sectionID]/type';
 
 export type paramsSignInList = {
-  stuID: string;
-  sectionID: string;
-  role: RoleType;
+  section_id: string;
 };
 
 export type paramsSignInCreate = {
-  sectionID: string;
+  section_id: string;
   description: string;
-  expireAt: string;
+  expire_at: string;
 };
 
 export type paramsSignInUpdate = {
-  stuID: string;
   id: string;
 };
 
@@ -31,21 +28,21 @@ export type paramsHwHandIn = {
 };
 
 export async function listSignIn(params: paramsSignInList) {
-  return request(`/api/signIn/list`, {
+  return request(`/api/sign_in/list`, {
     method: 'GET',
-    data: params,
+    params,
   });
 }
 
 export async function createSignIn(params: paramsSignInCreate) {
-  return request(`/api/signIn/create`, {
+  return request(`/api/sign_in/create`, {
     method: 'POST',
     data: params,
   });
 }
 
 export async function updateSignIn(params: paramsSignInUpdate) {
-  return request(`/api/signIn/update`, {
+  return request(`/api/sign_in`, {
     method: 'POST',
     data: params,
   });

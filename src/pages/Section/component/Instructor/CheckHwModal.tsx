@@ -1,9 +1,9 @@
-import type { InstHW } from '@/pages/Section/[sectionID]/model';
 import { useEffect, useState } from 'react';
 import { Button, Card, Divider, Form, Input, List, Modal } from 'antd';
 import styles from '../style.less';
 
 import { FileOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import type { InstHW } from '@/pages/Section/[sectionID]/type';
 
 interface IProps {
   modalVisible: boolean;

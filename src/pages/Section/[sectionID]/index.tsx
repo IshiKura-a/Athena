@@ -1,66 +1,36 @@
-import { Component } from 'react';
-import { Card, Col, List, Row } from 'antd';
+import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import type SectionStore from '@/pages/Section/[sectionID]/model';
-import type { LessonReq } from '@/pages/Home/type';
-import StudentFeat from '../component/StudentFeat';
-import InstructorFeat from '../component/InstructorFeat';
+import StudentFeat from '../component/Student/StudentFeat';
+import InstructorFeat from '../component/Instructor/InstructorFeat';
+import { RoleType } from '@/pages/Login/model';
+import type { BaseStore } from '@/store';
+import { observable } from 'mobx';
 
-interface SectionProps {
-  sectionStore: SectionStore;
+interface IProps {
+  baseStore: BaseStore;
 }
 
-@inject('sectionStore')
+@inject('baseStore')
 @observer
-export default class Section extends Component<SectionProps, any> {
-  async componentDidMount() {
-    const { sectionStore } = this.props;
+export default class Section extends Component<IProps, any> {
+  @observable sectionID = undefined as string | undefined;
+
+  componentDidMount() {
     const { sectionID } = this.props.match.params;
-
-    await sectionStore.fectchLessonList();
-    sectionStore.handleRoute(sectionID);
-
-    sectionStore.setModalVisible(false);
-    sectionStore.setHandInModalVisible(false);
-    sectionStore.setCheckModalVisible(false);
-    sectionStore.setPolling(false);
-    sectionStore.setIsSign(undefined);
-    sectionStore.setSignInShow(undefined);
+    this.sectionID = sectionID;
   }
 
-  redirectToSection = (id: string) => {
-    this.props.sectionStore.redirectRoute(id);
-  };
-
   render() {
-    const { sectionStore } = this.props;
+    const { baseStore } = this.props;
 
     return (
-      <Row gutter={2}>
-        <Col span={18}>
-          <Card>
-            {sectionStore.baseStore.type === 'student' ? (
-              <StudentFeat sectionStore={this.props.sectionStore} />
-            ) : (
-              <InstructorFeat sectionStore={this.props.sectionStore} />
-            )}
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <List
-              dataSource={sectionStore.lessonList}
-              renderItem={(item: LessonReq) => (
-                <List.Item onClick={this.redirectToSection.bind(this, item.course_id)}>
-                  <span>{item.course_name}</span>
-                  <span>{item.instructor}</span>
-                  <span>{item.department}</span>
-                </List.Item>
-              )}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <>
+        {baseStore.type === RoleType.student ? (
+          <StudentFeat sectionID={this.sectionID} />
+        ) : (
+          <InstructorFeat sectionID={this.sectionID} />
+        )}
+      </>
     );
   }
 }

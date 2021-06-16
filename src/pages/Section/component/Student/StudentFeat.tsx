@@ -1,0 +1,185 @@
+import React, { Component } from 'react';
+import { Card, Col, Divider, List, message, Modal, Row, Tabs } from 'antd';
+import { inject, observer } from 'mobx-react';
+import moment from 'moment';
+import { StudentFeats } from '@/pages/Section/[sectionID]/type';
+import type { SignIn } from '@/pages/Section/[sectionID]/type';
+import styles from '@/pages/Section/component/style.less';
+import SignInConfirm from '@/pages/Section/component/Student/SignInConfirm';
+import HandInModal from '@/pages/Section/component/Student/HandInModal';
+import type StudentStore from '@/pages/Section/component/Student/model';
+import type { InstLesson } from '@/pages/Section/component/Instructor/model';
+
+const { TabPane } = Tabs;
+
+interface StudentProps {
+  studentStore: StudentStore;
+  sectionID: string | undefined;
+}
+
+const tabCallBack = (key: any) => {};
+
+@inject('studentStore')
+@observer
+export default class StudentFeat extends Component<StudentProps, any> {
+  async componentDidMount() {
+    const { studentStore, sectionID } = this.props;
+    await studentStore.fectchLessonList();
+    studentStore.handleRoute(sectionID);
+
+    studentStore.setIsSign(undefined);
+    studentStore.setIsHandIn(undefined);
+    studentStore.setHandInModalVisible(false);
+  }
+
+  componentWillUnmount() {
+    Modal.destroyAll();
+  }
+
+  handleSign = (item: SignIn) => {
+    if (item.extra === 2) message.error('已过期');
+    else if (item.extra === 0) message.success('已签到');
+    else if (item.extra === 1) this.props.studentStore.setIsSign(item.id);
+  };
+
+  handleSignInOk = async (id: string) => {
+    console.log('update sign:', id);
+    await this.props.studentStore.updateSign(id);
+    this.props.studentStore.setIsSign(undefined);
+  };
+
+  handleSignInCancel = () => {
+    this.props.studentStore.setIsSign(undefined);
+  };
+
+  handleHandIn = (id: string, item: any) => {
+    if (item.isExpire) {
+      message.error('已过期不能提交');
+      return;
+    }
+
+    this.props.studentStore.setIsHandIn(id);
+    this.props.studentStore.setHandInModalVisible(true);
+  };
+
+  handleHandInOk = (data: any) => {
+    this.props.studentStore.setHandInModalVisible(false);
+    this.props.studentStore.setIsHandIn(undefined);
+    console.log('handin:', data);
+  };
+
+  handleHandInCancel = () => {
+    this.props.studentStore.setHandInModalVisible(false);
+    this.props.studentStore.setIsHandIn(undefined);
+  };
+
+  redirectToSection = (id: string) => {
+    this.props.studentStore.redirectRoute(id);
+  };
+
+  render() {
+    const { studentStore } = this.props;
+    const { lessonName, hwList, handInModalVisible, recordsToShow } = this.props.studentStore;
+    return (
+      <>
+        <Row gutter={2}>
+          <Col span={18}>
+            <Card>
+              <Tabs defaultActiveKey={StudentFeats.SignIn} onChange={tabCallBack}>
+                <TabPane tab={'签到'} key={0}>
+                  <Card className={styles.tabPane}>
+                    <Divider>
+                      <span>{`${lessonName}签到列表`}</span>
+                    </Divider>
+
+                    <span className={styles.signInHead}>
+                      <div className={styles.headDes}>签到描述</div>
+                      <div className={styles.headExpir}>截止时间</div>
+                      <span className={styles.headStatus}>签到状态</span>
+                    </span>
+                    <List
+                      dataSource={studentStore.signInList}
+                      renderItem={(item: SignIn) => (
+                        <List.Item
+                          className={styles.itemHeight}
+                          onClick={this.handleSign.bind(this, item)}
+                        >
+                          <SignInConfirm
+                            isSign={studentStore.isSign}
+                            data={item}
+                            handleCancel={this.handleSignInCancel}
+                            handleOk={this.handleSignInOk}
+                          />
+                        </List.Item>
+                      )}
+                    />
+                  </Card>
+                </TabPane>
+                <TabPane tab={'作业'} key={1}>
+                  <Card className={styles.tabPane}>
+                    <Divider>
+                      <span>{`${lessonName}作业列表`}</span>
+                    </Divider>
+                    <span className={styles.signInHead}>
+                      <div className={styles.headDes}>作业描述</div>
+                      <div className={styles.headExpir}>截止时间</div>
+                      <span className={styles.headStatus}>提交状态</span>
+                    </span>
+                    <List
+                      dataSource={hwList}
+                      renderItem={(item: any) => [
+                        <List.Item
+                          className={styles.itemHeight}
+                          onClick={this.handleHandIn.bind(this, item.id, item.extra)}
+                        >
+                          <span className={styles.signInItem}>
+                            <div
+                              className={
+                                item.extra?.status === 2 ? styles.signMarkNot : styles.signMarkYes
+                              }
+                            />
+                            <div className={styles.signDes}>{item.description}</div>
+                            <div className={styles.signExpir}>
+                              {moment(item.expire_at).format('YYYY-MM-DD HH:mm:ss')}
+                            </div>
+                            {item.extra?.status === 2 ? (
+                              <div className={styles.signStatusNot}>未提交</div>
+                            ) : (
+                              <div className={styles.signStatusYes}>
+                                {item.extra?.status === 1 ? item.extra.score : '已提交'}
+                              </div>
+                            )}
+                          </span>
+                        </List.Item>,
+                      ]}
+                    />
+
+                    <HandInModal
+                      modalVisible={handInModalVisible}
+                      records={recordsToShow}
+                      handInOk={this.handleHandInOk}
+                      handInCancel={this.handleHandInCancel}
+                    />
+                  </Card>
+                </TabPane>
+              </Tabs>
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <List
+                dataSource={studentStore.lessonList}
+                renderItem={(item: InstLesson) => (
+                  <List.Item onClick={this.redirectToSection.bind(this, item.section_id)}>
+                    <span>{item.course_id}</span>
+                    <span>{item.course_name}</span>
+                  </List.Item>
+                )}
+              />
+            </Card>
+          </Col>
+        </Row>
+      </>
+    );
+  }
+}

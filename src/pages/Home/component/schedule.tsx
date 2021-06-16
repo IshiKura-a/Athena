@@ -48,7 +48,7 @@ export default class Schedule extends Component<ScheduleProps, any> {
                     ~
                     ${moment(item.end_time, timeFormat).format('HH:mm')}`}
                 </div>
-                <div>{item.address}</div>
+                <div>{item.location}</div>
               </div>
             }
             dot={
@@ -63,11 +63,11 @@ export default class Schedule extends Component<ScheduleProps, any> {
               </span>
               <div>
                 <span>
-                  <Tooltip title={item.instructor}>
+                  <Tooltip title={item.instructor ? item.instructor : 'xxx'}>
                     <UserOutlined />
                   </Tooltip>
                 </span>
-                {item.department}
+                {item.department ? item.department : 'hhhhhh学院'}
               </div>
             </div>
           </Timeline.Item>
