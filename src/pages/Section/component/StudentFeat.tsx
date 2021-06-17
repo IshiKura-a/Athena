@@ -9,6 +9,8 @@ import { RoleType } from '../../Login/model';
 import SignInConfirm from '@/pages/Section/component/SubComponent/SignInConfirm';
 import moment from 'moment';
 import HandInModal from '@/pages/Section/component/SubComponent/HandInModal';
+import Discussion from '@/components/Discussion';
+import Resource from '@/components/Resource';
 
 const { TabPane } = Tabs;
 
@@ -147,6 +149,12 @@ export default class StudentFeat extends Component<StudentProps, any> {
                 handInCancel={this.handleHandInCancel}
               />
             </Card>
+          </TabPane>
+          <TabPane tab={'讨论'} key={2}>
+            <Discussion />
+          </TabPane>
+          <TabPane tab={'资料'} key={3}>
+            <Resource />
           </TabPane>
         </Tabs>
       </>

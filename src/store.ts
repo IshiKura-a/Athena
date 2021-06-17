@@ -4,6 +4,8 @@ import LoginStore, { RoleType } from '@/pages/Login/model';
 import { action, observable } from 'mobx';
 import { TodoListStore } from '@/components/TodoList/model';
 import SectionStore from '@/pages/Section/[sectionID]/model';
+import { DiscussionStore } from '@/components/Discussion/model';
+import { ResourceStore } from '@/components/Resource/model';
 
 export class BaseStore {
   @observable id = '';
@@ -30,4 +32,6 @@ export default {
   loginStore: new LoginStore(baseStore),
   todoListStore: new TodoListStore(baseStore),
   sectionStore: new SectionStore(baseStore),
+  discussionStore: new DiscussionStore(baseStore),
+  resourceStore: new ResourceStore(baseStore),
 };
