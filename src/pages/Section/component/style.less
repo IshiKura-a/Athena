@@ -4,6 +4,18 @@
   overflow-y: scroll;
 }
 
+.section_item {
+  display: flex;
+  justify-content: space-between;
+  height: 30px;
+  margin-top: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
+  border: 3px solid #aedfef9c;
+  border-bottom: 2px solid rgba(211, 211, 211, 0.73);
+  border-radius: 5px;
+}
+
 .signInHead {
   display: inline-flex;
   flex-direction: row;
@@ -11,8 +23,7 @@
   width: 100%;
   padding: 5px;
   font-weight: bold;
-  //background-color: #b8d9e899;
-  border-bottom: 2px solid rgba(113, 123, 128, 0.7);
+  border-bottom: 2px solid rgba(226, 234, 236, 0.36);
 }
 
 .markPad {
@@ -46,32 +57,40 @@
 }
 
 .signMarkYes {
-  padding: 10px 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
   background-color: rgba(117, 201, 227, 0.59);
 }
 
 .signMarkNot {
-  padding: 10px 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  padding-left: 5px;
   background-color: rgba(248, 69, 96, 0.59);
 }
 
-.signDes {
-  width: 50%;
-  margin-left: 6%;
+.desWrap {
+  width: 60%;
 }
 
-.signExpir {
+.des {
+  width: 90%;
+  margin-left: 10px;
+}
+
+.expire {
   width: 25%;
   text-align: center;
 }
 
 .signStatusYes {
-  width: 16%;
+  width: 15%;
   text-align: center;
 }
 
 .signStatusNot {
-  width: 16%;
+  width: 15%;
   color: red;
   text-align: center;
 }
@@ -106,12 +125,19 @@
 .hw_check_left {
   width: 50%;
   height: 100%;
+  padding: 4px;
+  border: 1px solid rgba(229, 224, 224, 0.91);
+  border-radius: 2px;
 }
 
 .hw_check_right {
   width: 48%;
   height: 100%;
+  padding: 4px;
+  border: 1px solid rgba(229, 224, 224, 0.91);
+  border-radius: 2px;
 }
+
 :global {
   .hwCheckAppendix {
     .ant-list-split {
@@ -128,6 +154,20 @@
   }
 }
 
+.hw_hand_in_record {
+  margin-bottom: 10px;
+  margin-left: 10px;
+  border-bottom: 1px dashed lightgray;
+}
+.hw_hand_in_content {
+  display: inline-block;
+  width: 30%;
+}
+
+.hw_hand_in_appendix {
+  margin-left: 10px;
+}
+
 .hw_check_button {
   display: inline;
   float: right;
@@ -135,7 +175,7 @@
 
 .hw_check_switch {
   position: absolute;
-  right: 5%;
-  bottom: 5%;
+  right: 6%;
+  bottom: 15%;
   display: inline-block;
 }

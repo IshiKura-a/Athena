@@ -3,20 +3,22 @@ import type { BaseStore } from '@/store';
 import type { LessonReq } from '@/pages/Home/type';
 import { cloneDeep } from 'lodash';
 import { fetchLesson } from '@/services/homepage';
-import type { paramsHwHandIn, paramsHwList, paramsSignInList } from '@/services/section';
-import { handInHw, listHw, listSignIn, updateSignIn } from '@/services/section';
 import { cmpTime } from '@/pages/Home';
 import { history } from 'umi';
 import type { Record } from '@/pages/Section/[sectionID]/type';
+import type { paramsSignInList } from '@/services/section';
+import { listHw, listSignIn } from '@/services/section';
+import { handInHw, updateSignIn } from '@/pages/Section/component/Student/service';
 
 type StuHW = {
+  id: string;
   status: number;
-  isExpire: boolean;
+  is_expire: boolean;
   score?: number;
   records: Record[];
 };
 
-interface SignIn {
+export interface SignIn {
   id: string;
   description: string;
   expire_at: string;
@@ -24,7 +26,7 @@ interface SignIn {
 }
 
 interface HW {
-  id: string;
+  batch_id: string;
   description: string;
   expire_at: string;
   extra: StuHW;
@@ -52,7 +54,7 @@ export default class StudentStore {
   requestAgain = async () => {
     if (this.currentLesson) {
       await this.listSign({ section_id: this.currentLesson });
-      // await this.listHw({stuID: '0', role: RoleType.student, sectionID: tmp || '0'});
+      await this.listHw({ section_id: this.currentLesson });
     }
   };
 
@@ -85,7 +87,7 @@ export default class StudentStore {
 
   @computed get recordsToShow() {
     return this.isHandIn
-      ? this.hwList.filter((item) => item.id === this.isHandIn)[0].extra.records
+      ? this.hwList.filter((item) => item.extra.id === this.isHandIn)[0].extra.records
       : undefined;
   }
 
@@ -127,7 +129,6 @@ export default class StudentStore {
   @action listSign = async (params: paramsSignInList) => {
     if (this.currentLesson) {
       const response = await listSignIn({ section_id: this.currentLesson });
-      console.log('signin', response);
       this.setSignInList(response);
     } else {
       console.log('list sign current empty');
@@ -136,23 +137,20 @@ export default class StudentStore {
 
   @action updateSign = async (id: string) => {
     const response = await updateSignIn({ id });
-    console.log('signInUpdate:', response);
     if (response.message === 'Sign in succeeded') {
       if (this.currentLesson) await this.listSign({ section_id: this.currentLesson });
     }
   };
 
-  @action listHw = async (params: paramsHwList) => {
+  @action listHw = async (params: any) => {
     const response = await listHw(params);
-    if (response.message === 'ok') {
-      this.setHwList(response.data);
-    }
+    this.setHwList(response);
   };
 
-  @action handInHw = async (params: paramsHwHandIn) => {
-    const response = await handInHw(params);
+  @action handInHw = async (params: any) => {
+    const response = await handInHw({ id: this.isHandIn, ...params });
     if (response.message === 'ok') {
-      await this.listHw({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
+      await this.listHw({ section_id: this.currentLesson });
     }
   };
 }

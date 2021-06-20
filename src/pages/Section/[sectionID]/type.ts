@@ -1,26 +1,14 @@
-export interface SignIn {
-  id: string;
-  description: string;
-  expire_at: string;
-  extra: number | { id: number; name: string }[];
-}
-
 export type Record = {
   content: string;
   accessory: string[];
 };
 
-export type StuHW = {
-  status: number;
-  isExpire: boolean;
-  score?: number;
-  records: Record[];
-};
-
 export type InstHW = {
   id: string;
+  student_id: string;
   name: string;
-  record: Record;
+  score?: number;
+  record?: Record;
 };
 
 export enum StudentFeats {

@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { Card, Tabs, List, Button, Divider, message, Modal, Row, Col } from 'antd';
 import { inject, observer } from 'mobx-react';
-import type { SignIn } from '@/pages/Section/[sectionID]/type';
+import type { SignIn } from '@/pages/Section/component/Instructor/model';
 import { InstuctorFeats } from '@/pages/Section/[sectionID]/type';
 import styles from '../style.less';
 import moment from 'moment';
@@ -43,29 +43,31 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
     Modal.destroyAll();
   }
 
-  handleLookSignIn = (item: any) => {
-    if (item.extra.length === 0) {
+  handleLookSignIn = (item: SignIn) => {
+    if (item.extra?.length === 0) {
       message.success('已全部签到');
       return;
     }
+    const { instructorStore } = this.props;
 
-    this.props.instructorStore.setSignInShow(item.id);
-    this.props.instructorStore.setSignInModalVisible(true);
+    instructorStore.setSignInShow(item.id);
+    instructorStore.setSignInModalVisible(true);
     const now = moment().format('YYYY-MM-DD HH:mm:ss');
-    if (cmpTime(now, item.expireAt, 'YYYY-MM-DD HH:mm:ss') < 0) {
-      this.props.instructorStore.setPolling(true);
+    if (cmpTime(now, item.expire_at, 'YYYY-MM-DD HH:mm:ss') < 0) {
+      instructorStore.setPolling(true);
     }
   };
 
-  handlePolling = () => {
-    console.log('polling');
-    return 'data';
+  handlePolling = async () => {
+    await this.props.instructorStore.listSign();
+    return undefined;
   };
 
   handleLookSignInOk = () => {
-    this.props.instructorStore.setSignInModalVisible(false);
-    this.props.instructorStore.setPolling(false);
-    this.props.instructorStore.setSignInShow(undefined);
+    const { instructorStore } = this.props;
+    instructorStore.setSignInModalVisible(false);
+    instructorStore.setPolling(false);
+    instructorStore.setSignInShow(undefined);
   };
 
   handleCreateSignIn = () => {
@@ -73,7 +75,9 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
   };
 
   handleCreateSignInOk = (data: any) => {
-    this.props.instructorStore.setSignInCreate(false);
+    const { instructorStore } = this.props;
+    instructorStore.createSign(data);
+    instructorStore.setSignInCreate(false);
   };
 
   handleCreateSignInCancel = () => {
@@ -81,18 +85,22 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
   };
 
   handleCheckHw = (id: string) => {
-    this.props.instructorStore.setIsCheck(id);
-    this.props.instructorStore.setCheckModalVisible(true);
+    const { instructorStore } = this.props;
+
+    instructorStore.setIsCheck(id);
+    instructorStore.setCheckModalVisible(true);
   };
 
   handleCheckHwOk = (data: any) => {
-    this.props.instructorStore.setCheckModalVisible(false);
-    this.props.instructorStore.setIsCheck(undefined);
+    const { instructorStore } = this.props;
+    instructorStore.checkHW(data);
   };
 
   handleCheckHwCancel = () => {
-    this.props.instructorStore.setCheckModalVisible(false);
-    this.props.instructorStore.setIsCheck(undefined);
+    const { instructorStore } = this.props;
+
+    instructorStore.setCheckModalVisible(false);
+    instructorStore.setIsCheck(undefined);
   };
 
   handleCreateHw = () => {
@@ -100,6 +108,7 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
   };
 
   handleCreateHwOk = (data: any) => {
+    this.props.instructorStore.createHW(data);
     this.props.instructorStore.setHwCreate(false);
   };
 
@@ -128,7 +137,7 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
     return (
       <>
         <Row gutter={2}>
-          <Col span={18}>
+          <Col span={16}>
             <Card>
               <Tabs defaultActiveKey={InstuctorFeats.Named} onChange={tabCallBack}>
                 <TabPane tab={'点名'} key={0}>
@@ -156,12 +165,17 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                           onClick={this.handleLookSignIn.bind(this, item)}
                         >
                           <span className={styles.signInItem}>
-                            <div className={styles.signMarkYes} />
-                            <div className={styles.signDes}>{item.description}</div>
-                            <div className={styles.signExpir}>
+                            <div className={styles.desWrap}>
+                              <span className={styles.signMarkYes} />
+                              <span className={styles.des}>{item.description}</span>
+                            </div>
+
+                            <div className={styles.expire}>
                               {moment(item.expire_at).format('YYYY-MM-DD HH:mm:ss')}
                             </div>
-                            <div className={styles.signStatusYes}>签到人数</div>
+                            <div
+                              className={styles.signStatusYes}
+                            >{`${item.signed_students_count}/${item.students_total}`}</div>
                           </span>
                         </List.Item>
                       )}
@@ -200,22 +214,26 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                     <span className={styles.signInHead}>
                       <div className={styles.headDes}>作业描述</div>
                       <div className={styles.headExpir}>截止时间</div>
-                      <span className={styles.headStatus}>提交状态</span>
+                      <span className={styles.headStatus}>提交人数</span>
                     </span>
                     <List
                       dataSource={hwList}
                       renderItem={(item) => [
                         <List.Item
                           className={styles.itemHeight}
-                          onClick={this.handleCheckHw.bind(this, item.id)}
+                          onClick={this.handleCheckHw.bind(this, item.batch_id)}
                         >
                           <span className={styles.signInItem}>
-                            <div className={styles.signMarkYes} />
-                            <div className={styles.signDes}>{item.description}</div>
-                            <div className={styles.signExpir}>
+                            <span className={styles.desWrap}>
+                              <span className={styles.signMarkYes} />
+                              <span className={styles.des}>{item.description}</span>
+                            </span>
+                            <div className={styles.expire}>
                               {moment(item.expire_at).format('YYYY-MM-DD HH:mm:ss')}
                             </div>
-                            <div className={styles.signStatusYes}>提交人数</div>
+                            <div
+                              className={styles.signStatusYes}
+                            >{`${item.hand_in_count}/${item.extra.length}`}</div>
                           </span>
                         </List.Item>,
                       ]}
@@ -243,15 +261,19 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
               </Tabs>
             </Card>
           </Col>
-          <Col span={6}>
+          <Col span={8}>
             <Card>
+              <Divider>课程列表</Divider>
               <List
                 dataSource={instructorStore.lessonList}
                 renderItem={(item: InstLesson) => (
-                  <List.Item onClick={this.redirectToSection.bind(this, item.section_id)}>
+                  <div
+                    className={styles.section_item}
+                    onClick={this.redirectToSection.bind(this, item.section_id)}
+                  >
                     <span>{item.course_id}</span>
                     <span>{item.course_name}</span>
-                  </List.Item>
+                  </div>
                 )}
               />
             </Card>

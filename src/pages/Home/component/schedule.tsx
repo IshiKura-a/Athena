@@ -6,6 +6,7 @@ import styles from './style.less';
 import { FieldTimeOutlined, UserOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { timeFormat } from '@/pages/Home/type';
+import { Link } from 'react-router-dom';
 
 interface ScheduleProps {
   lessonInfo: Lesson[];
@@ -59,7 +60,9 @@ export default class Schedule extends Component<ScheduleProps, any> {
           >
             <div className={styles.infoBorder}>
               <span>
-                <a className={styles.link}>{item.course_name}</a>
+                <Link to={`/section/${item.section_id}`} className={styles.link}>
+                  {item.course_name}
+                </Link>
               </span>
               <div>
                 <span>

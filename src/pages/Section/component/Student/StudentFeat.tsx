@@ -9,6 +9,7 @@ import SignInConfirm from '@/pages/Section/component/Student/SignInConfirm';
 import HandInModal from '@/pages/Section/component/Student/HandInModal';
 import type StudentStore from '@/pages/Section/component/Student/model';
 import type { InstLesson } from '@/pages/Section/component/Instructor/model';
+import type { Record } from '@/pages/Section/[sectionID]/type';
 
 const { TabPane } = Tabs;
 
@@ -39,33 +40,36 @@ export default class StudentFeat extends Component<StudentProps, any> {
   handleSign = (item: SignIn) => {
     if (item.extra === 2) message.error('已过期');
     else if (item.extra === 0) message.success('已签到');
-    else if (item.extra === 1) this.props.studentStore.setIsSign(item.id);
+    else if (item.extra === 1) {
+      this.props.studentStore.setIsSign(item.id);
+    }
   };
 
   handleSignInOk = async (id: string) => {
-    console.log('update sign:', id);
-    await this.props.studentStore.updateSign(id);
     this.props.studentStore.setIsSign(undefined);
+    await this.props.studentStore.updateSign(id);
   };
 
   handleSignInCancel = () => {
     this.props.studentStore.setIsSign(undefined);
   };
 
-  handleHandIn = (id: string, item: any) => {
-    if (item.isExpire) {
+  handleHandIn = (item: any) => {
+    if (item.is_expire) {
       message.error('已过期不能提交');
       return;
     }
-
-    this.props.studentStore.setIsHandIn(id);
+    this.props.studentStore.setIsHandIn(item.id);
     this.props.studentStore.setHandInModalVisible(true);
   };
 
-  handleHandInOk = (data: any) => {
-    this.props.studentStore.setHandInModalVisible(false);
+  handleHandInOk = (data: Record) => {
+    const { studentStore } = this.props;
+    studentStore.setHandInModalVisible(false);
+    if (studentStore.isHandIn) {
+      studentStore.handInHw({ record: data });
+    }
     this.props.studentStore.setIsHandIn(undefined);
-    console.log('handin:', data);
   };
 
   handleHandInCancel = () => {
@@ -79,11 +83,12 @@ export default class StudentFeat extends Component<StudentProps, any> {
 
   render() {
     const { studentStore } = this.props;
-    const { lessonName, hwList, handInModalVisible, recordsToShow } = this.props.studentStore;
+    const { lessonName, isSign, hwList, handInModalVisible, recordsToShow } =
+      this.props.studentStore;
     return (
       <>
         <Row gutter={2}>
-          <Col span={18}>
+          <Col span={17}>
             <Card>
               <Tabs defaultActiveKey={StudentFeats.SignIn} onChange={tabCallBack}>
                 <TabPane tab={'签到'} key={0}>
@@ -105,7 +110,7 @@ export default class StudentFeat extends Component<StudentProps, any> {
                           onClick={this.handleSign.bind(this, item)}
                         >
                           <SignInConfirm
-                            isSign={studentStore.isSign}
+                            isSign={isSign}
                             data={item}
                             handleCancel={this.handleSignInCancel}
                             handleOk={this.handleSignInOk}
@@ -127,19 +132,21 @@ export default class StudentFeat extends Component<StudentProps, any> {
                     </span>
                     <List
                       dataSource={hwList}
-                      renderItem={(item: any) => [
+                      renderItem={(item) => [
                         <List.Item
                           className={styles.itemHeight}
-                          onClick={this.handleHandIn.bind(this, item.id, item.extra)}
+                          onClick={this.handleHandIn.bind(this, item.extra)}
                         >
                           <span className={styles.signInItem}>
-                            <div
-                              className={
-                                item.extra?.status === 2 ? styles.signMarkNot : styles.signMarkYes
-                              }
-                            />
-                            <div className={styles.signDes}>{item.description}</div>
-                            <div className={styles.signExpir}>
+                            <span className={styles.desWrap}>
+                              <span
+                                className={
+                                  item.extra?.status === 2 ? styles.signMarkNot : styles.signMarkYes
+                                }
+                              />
+                              <span className={styles.des}>{item.description}</span>
+                            </span>
+                            <div className={styles.expire}>
                               {moment(item.expire_at).format('YYYY-MM-DD HH:mm:ss')}
                             </div>
                             {item.extra?.status === 2 ? (
@@ -165,15 +172,19 @@ export default class StudentFeat extends Component<StudentProps, any> {
               </Tabs>
             </Card>
           </Col>
-          <Col span={6}>
+          <Col span={7}>
             <Card>
+              <Divider>课程列表</Divider>
               <List
                 dataSource={studentStore.lessonList}
                 renderItem={(item: InstLesson) => (
-                  <List.Item onClick={this.redirectToSection.bind(this, item.section_id)}>
+                  <div
+                    className={styles.section_item}
+                    onClick={this.redirectToSection.bind(this, item.section_id)}
+                  >
                     <span>{item.course_id}</span>
                     <span>{item.course_name}</span>
-                  </List.Item>
+                  </div>
                 )}
               />
             </Card>

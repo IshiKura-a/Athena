@@ -9,10 +9,8 @@ export type deleteToDoParams = {
 };
 
 export async function fetchLesson(params: fetchLessonParams) {
-  // console.log(params)
   return request(`/api/section/all`, {
     method: 'GET',
-    // params
   });
 }
 

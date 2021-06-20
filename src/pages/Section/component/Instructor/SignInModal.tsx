@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRequest } from '@@/plugin-request/request';
 import styles from '../style.less';
 import { Meta } from 'antd/es/list/Item';
-import type { SignIn } from '@/pages/Section/[sectionID]/type';
+import type { SignIn } from '@/pages/Section/component/Instructor/model';
 
 interface ModalProps {
   modalVisible: boolean;

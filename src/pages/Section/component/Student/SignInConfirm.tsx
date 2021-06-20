@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Popconfirm } from 'antd';
 import styles from '@/pages/Section/component/style.less';
 import moment from 'moment';
-import type { SignIn } from '@/pages/Section/[sectionID]/type';
+import type { SignIn } from '@/pages/Section/component/Student/model';
 
 interface PopConfirm {
   isSign: string | undefined;
@@ -17,11 +17,12 @@ const SignInConfirm = (props: PopConfirm) => {
 
   const handleConfirmSignVisible = (visible: boolean) => {
     if (visible && props.data.extra === 1) setIsSign(props.data.id);
-    else setIsSign('');
+    else setIsSign(undefined);
   };
 
   const handleOk = () => {
-    props.handleOk(props.data.id);
+    props.handleOk(isSign);
+    setIsSign(undefined);
   };
 
   return (
@@ -35,15 +36,18 @@ const SignInConfirm = (props: PopConfirm) => {
       cancelText="取消"
       className={styles.signInItem}
     >
-      <span className={props.data.extra === 2 ? styles.signMarkNot : styles.signMarkYes} />
-      <span className={styles.signDes}>{props.data.description}</span>
-      <span className={styles.signExpir}>
+      <span className={styles.desWrap}>
+        <span className={props.data.extra === 0 ? styles.signMarkYes : styles.signMarkNot} />
+        <span className={styles.des}>{props.data.description}</span>
+      </span>
+
+      <span className={styles.expire}>
         {moment(props.data.expire_at).format('YYYY-MM-DD HH:mm:ss')}
       </span>
-      {props.data.extra === 2 ? (
-        <span className={styles.signStatusNot}>未签到</span>
-      ) : (
+      {props.data.extra === 0 ? (
         <span className={styles.signStatusYes}>已签到</span>
+      ) : (
+        <span className={styles.signStatusNot}>未签到</span>
       )}
     </Popconfirm>
   );

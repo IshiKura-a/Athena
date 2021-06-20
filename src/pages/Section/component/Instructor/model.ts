@@ -1,29 +1,33 @@
 import { action, computed, observable } from 'mobx';
 import type { BaseStore } from '@/store';
 import { cloneDeep } from 'lodash';
-import type { paramsHwList } from '@/services/section';
-import { createSignIn, listHw, listSignIn } from '@/services/section';
 import { cmpTime } from '@/pages/Home';
 import { history } from 'umi';
-import { instructorInfo, createHW } from '@/pages/Section/component/Instructor/service';
+import { listHw, listSignIn } from '@/services/section';
+import type { paramsCheckHW } from '@/pages/Section/component/Instructor/service';
+import {
+  instructorInfo,
+  createHW,
+  checkHW,
+  createSignIn,
+} from '@/pages/Section/component/Instructor/service';
+import type { InstHW } from '@/pages/Section/[sectionID]/type';
+import { message } from 'antd';
 
-type InstHW = {
-  id: string;
-  name: string;
-  record: Record;
-};
-
-interface SignIn {
+export interface SignIn {
   id: string;
   description: string;
   expire_at: string;
+  signed_students_count: number;
+  students_total: number;
   extra: { id: number; name: string }[];
 }
 
 interface HW {
-  id: string;
+  batch_id: string;
   description: string;
   expire_at: string;
+  hand_in_count: number;
   extra: InstHW[];
 }
 
@@ -64,6 +68,7 @@ export default class InstructorStore {
   requestAgain = async () => {
     if (this.currentLesson) {
       await this.listSign();
+      await this.listHw();
     }
   };
 
@@ -96,13 +101,13 @@ export default class InstructorStore {
   @computed get lessonName() {
     return this.currentLesson
       ? this.lessonList.filter((item: InstLesson) => item.section_id === this.currentLesson)[0]
-          ?.course_id
+          ?.course_name
       : undefined;
   }
 
   @computed get dataToCheck() {
     return this.isCheck
-      ? this.hwList.filter((item) => item.id === this.isCheck)[0].extra
+      ? this.hwList.filter((item) => item.batch_id === this.isCheck)[0].extra
       : undefined;
   }
 
@@ -154,26 +159,23 @@ export default class InstructorStore {
 
   @action fectchLessonList = async () => {
     const response = await instructorInfo(this.baseStore.id);
-    console.log('lessonList', response);
     this.setLessonList(response.teaches);
   };
 
   @action listSign = async () => {
     if (this.currentLesson) {
       const response = await listSignIn({ section_id: this.currentLesson });
-      console.log('signin', response);
+      console.log('sign', response);
       this.setSignInList(response);
-    } else {
-      console.log('list sign current empty');
     }
   };
 
-  @action createSign = async () => {
+  @action createSign = async (data: any) => {
     if (this.currentLesson) {
       const response = await createSignIn({
         section_id: this.currentLesson,
-        description: 'test',
-        expire_at: '2021-6-7 22:30:00',
+        description: data.description,
+        expire_at: data.expire_at,
       });
       if (response.message === 'ok') {
         if (this.currentLesson) await this.listSign();
@@ -181,17 +183,25 @@ export default class InstructorStore {
     }
   };
 
-  @action listHw = async (params: paramsHwList) => {
-    const response = await listHw(params);
-    if (response.message === 'ok') {
-      this.setHwList(response.data);
+  @action listHw = async () => {
+    if (this.currentLesson) {
+      const response = await listHw({ section_id: this.currentLesson });
+      this.setHwList(response);
     }
   };
 
-  @action createHW = async (params: string) => {
-    const response = await createHW(params);
+  @action createHW = async (params: any) => {
+    const response = await createHW({ section_id: this.currentLesson, ...params });
     if (response.message === 'ok') {
-      await this.listHw({ stuID: '0', role: this.baseStore.type, sectionID: '0' });
+      await this.listHw();
+    }
+  };
+
+  @action checkHW = async (params: paramsCheckHW) => {
+    const response = await checkHW(params);
+    if (response.message === 'ok') {
+      message.success('评分成功');
+      await this.listHw();
     }
   };
 }
