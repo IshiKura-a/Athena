@@ -36,10 +36,10 @@ export default class HomePage extends Component<HomePageProps, any> {
     return (
       <PageContainer>
         <div className="site-card-wrapper">
-          <Row gutter={3}>
-            <Col span={16}>
+          <Row gutter={6}>
+            <Col span={15}>
               <Card title={<Alert message="课程信息" type="info" showIcon banner />}>
-                <Tabs defaultActiveKey={Day.Mon} onChange={tabCallBack}>
+                <Tabs defaultActiveKey={Day.Mon} centered={false} onChange={tabCallBack}>
                   {Object.values(Day).map((item, index) => {
                     return (
                       <TabPane tab={item.toString()} key={item}>
@@ -59,7 +59,7 @@ export default class HomePage extends Component<HomePageProps, any> {
                 </Tabs>
               </Card>
             </Col>
-            <Col span={8}>
+            <Col span={9}>
               <Card title={<Alert message={'待办事项'} type="info" showIcon banner />}>
                 <TodoList />
               </Card>

@@ -139,8 +139,8 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
         <Row gutter={2}>
           <Col span={16}>
             <Card>
-              <Tabs defaultActiveKey={InstuctorFeats.Named} onChange={tabCallBack}>
-                <TabPane tab={'点名'} key={0}>
+              <Tabs onChange={tabCallBack}>
+                <TabPane tab={'点名'} key={InstuctorFeats.SignIn}>
                   <Card className={styles.tabPane}>
                     <Divider>
                       <span>{`${lessonName}签到列表`}</span>
@@ -199,7 +199,7 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                     />
                   </Card>
                 </TabPane>
-                <TabPane tab={'批改作业'} key={1}>
+                <TabPane tab={'批改作业'} key={InstuctorFeats.Review}>
                   <Card className={styles.tabPane}>
                     <Divider>
                       <span>{`${lessonName}作业列表`}</span>
@@ -255,7 +255,7 @@ export default class InstructorFeat extends Component<InstructorProps, any> {
                     />
                   </Card>
                 </TabPane>
-                <TabPane tab={'讨论区'} key={2}>
+                <TabPane tab={'讨论区'} key={InstuctorFeats.Discuss}>
                   <Card className={styles.tabPane}>//TODO</Card>
                 </TabPane>
               </Tabs>

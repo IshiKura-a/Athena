@@ -4,13 +4,13 @@ type LessonTime = {
   end_time: string;
 };
 export enum Day {
-  Mon = 'Monday',
-  Tues = 'Tuesday',
-  Wed = 'Wednesday',
-  Thu = 'Thursday',
-  Fri = 'Friday',
-  Sat = 'Saturday',
-  Sun = 'Sunday',
+  Mon = '周一',
+  Tues = '周二',
+  Wed = '周三',
+  Thu = '周四',
+  Fri = '周五',
+  Sat = '周六',
+  Sun = '周日',
 }
 
 export interface Lesson {

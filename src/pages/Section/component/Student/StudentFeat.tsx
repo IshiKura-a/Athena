@@ -91,7 +91,7 @@ export default class StudentFeat extends Component<StudentProps, any> {
           <Col span={17}>
             <Card>
               <Tabs defaultActiveKey={StudentFeats.SignIn} onChange={tabCallBack}>
-                <TabPane tab={'签到'} key={0}>
+                <TabPane tab={'签到'} key={StudentFeats.SignIn}>
                   <Card className={styles.tabPane}>
                     <Divider>
                       <span>{`${lessonName}签到列表`}</span>
@@ -120,7 +120,7 @@ export default class StudentFeat extends Component<StudentProps, any> {
                     />
                   </Card>
                 </TabPane>
-                <TabPane tab={'作业'} key={1}>
+                <TabPane tab={'作业'} key={StudentFeats.SubmitHW}>
                   <Card className={styles.tabPane}>
                     <Divider>
                       <span>{`${lessonName}作业列表`}</span>
