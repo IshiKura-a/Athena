@@ -6,6 +6,8 @@ import type ResourceStore from '@/components/Resource/model';
 import { action, observable } from 'mobx';
 import type { LessonReq } from '@/pages/Home/type';
 import { history } from 'umi';
+import { fetchLesson } from '@/services/homepage';
+import { cloneDeep } from 'lodash';
 
 export default class SectionStore {
   @observable lessonList = [] as LessonReq[];
@@ -47,7 +49,7 @@ export default class SectionStore {
   };
 
   handleRoute = (sectionID: string | undefined) => {
-    if (sectionID === undefined || sectionID === ':sectionID') {
+    if (sectionID === undefined || sectionID === ':id') {
       if (this.lessonList.length > 0) {
         const defaultID = this.lessonList[0].section_id;
         this.redirectRoute(defaultID);
@@ -58,7 +60,16 @@ export default class SectionStore {
     }
   };
 
-  @action setCurrentLesson(courseId: string) {
-    this.currentLesson = courseId;
+  @action setCurrentLesson(sectionID: string) {
+    this.currentLesson = sectionID;
   }
+
+  @action setLessonList(lessonList: LessonReq[]) {
+    this.lessonList = cloneDeep(lessonList);
+  }
+
+  @action fectchLessonList = async () => {
+    const response = await fetchLesson();
+    this.setLessonList(response);
+  };
 }

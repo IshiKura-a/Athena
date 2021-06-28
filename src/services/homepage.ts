@@ -1,17 +1,8 @@
 import request from '@/utils/request';
 
-export type fetchLessonParams = {
-  id?: string;
-};
-
-export type deleteToDoParams = {
-  _id: number;
-};
-
-export async function fetchLesson(params: fetchLessonParams) {
+export async function fetchLesson() {
   return request(`/api/section/all`, {
     method: 'GET',
-    params,
   });
 }
 
