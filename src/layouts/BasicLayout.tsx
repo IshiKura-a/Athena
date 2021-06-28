@@ -57,7 +57,7 @@ const menuDataRender = (menuList: MenuDataItem[]): MenuDataItem[] =>
 
 const defaultFooterDom = (
   <DefaultFooter
-    copyright={`${new Date().getFullYear()} 软件工程7人组`}
+    copyright={`${new Date().getFullYear()} 软件工程第一组`}
     links={[
       {
         key: 'Project Address',

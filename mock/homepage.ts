@@ -1,17 +1,9 @@
 import { Request, Response } from 'express';
-import { Day } from '../src/pages/Home/type';
-
-const waitTime = (time: number = 100) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(true);
-    }, time);
-  });
-};
 
 let lessonMock = {
   lessonData: [
     {
+      _id: '0',
       course_id: '0',
       course_name: '编译原理',
       instructor: '李莹',
@@ -19,19 +11,19 @@ let lessonMock = {
       department: '计算机学院',
       time: [
         {
-          startTime: '15:00',
-          endTime: '16:00',
-          day: Day.Mon,
+          start_time: '15:00',
+          end_time: '16:00',
+          day: 1,
         },
         {
-          startTime: '21:00',
-          endTime: '22:00',
-          day: Day.Wed,
+          start_time: '21:00',
+          end_time: '22:00',
+          day: 3,
         },
         {
-          startTime: '15:00',
-          endTime: '16:00',
-          day: Day.Thu,
+          start_time: '15:00',
+          end_time: '16:00',
+          day: 4,
         },
       ],
     },
@@ -43,23 +35,24 @@ let lessonMock = {
       department: '计算机学院',
       time: [
         {
-          startTime: '9:50',
-          endTime: '11:00',
-          day: Day.Mon,
+          start_time: '09:50',
+          end_time: '11:00',
+          day: 1,
         },
         {
-          startTime: '00:50',
-          endTime: '2:00',
-          day: Day.Tues,
+          start_time: '00:50',
+          end_time: '02:00',
+          day: 2,
         },
         {
-          startTime: '13:50',
-          endTime: '14:00',
-          day: Day.Wed,
+          start_time: '13:50',
+          end_time: '14:00',
+          day: 3,
         },
       ],
     },
     {
+      _id: '2',
       course_id: '2',
       course_name: '自然语言处理',
       instructor: '李莹',
@@ -69,7 +62,7 @@ let lessonMock = {
         {
           start_time: '14:00',
           end_time: '16:00',
-          day: Day.Tues,
+          day: 2,
         },
       ],
     },
@@ -83,7 +76,7 @@ let lessonMock = {
         {
           start_time: '15:00',
           end_time: '16:00',
-          day: Day.Fri,
+          day: 5,
         },
       ],
     },
@@ -96,12 +89,13 @@ let lessonMock = {
       time: [
         {
           start_time: '13:00',
-          end_time: '13:00',
-          day: Day.Sat,
+          end_time: '13:30',
+          day: 6,
         },
       ],
     },
     {
+      _id: '5',
       course_id: '5',
       course_name: 'kjhk',
       instructor: '李莹',
@@ -111,7 +105,7 @@ let lessonMock = {
         {
           start_time: '14:00',
           end_time: '15:00',
-          day: Day.Sun,
+          day: 0,
         },
       ],
     },

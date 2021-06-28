@@ -3,7 +3,7 @@ import { accountLogin } from '@/services/login';
 import type { LoginParamsType } from '@/services/login';
 import { getPageQuery, setCookie } from '@/utils/utils';
 import { message } from 'antd';
-import { history } from '@@/core/history';
+import { history } from 'umi';
 import { setAuthority } from '@/utils/authority';
 import { stringify } from 'querystring';
 import type { BaseStore } from '@/store';
@@ -17,6 +17,10 @@ export type StateType = {
 export enum RoleType {
   student = 'student',
   instructor = 'instructor',
+}
+
+export function isStudent(type: string) {
+  return type === RoleType.student;
 }
 
 export default class LoginStore {

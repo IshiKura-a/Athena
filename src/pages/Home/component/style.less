@@ -1,35 +1,40 @@
-.todoInput {
-  margin-top: 15px;
-  margin-bottom: 10px;
-  border-bottom: 3px solid rgba(83, 167, 232, 0.65);
+.blockMargin {
+  display: flex;
+  align-items: flex-start;
+  height: 75px;
+  margin-right: 3%;
+  margin-left: 3%;
+  border-bottom: 2px solid hsl(0, 11%, 89%);
 }
 
-.todoList {
-  height: 300px;
-  margin-top: 4px;
-  overflow-y: scroll;
-  color: #4091f7;
-  font-weight: bold;
+.block__bar__info {
+  display: inline-flex;
 }
 
-.link {
-  color: rgba(83, 167, 232, 0.8);
+.block__bar {
+  margin-right: 15px;
+  padding-top: 1px;
+  padding-left: 8px;
+  background-color: #629ddc;
+}
+
+.block__info {
+  margin-top: -5px;
+}
+
+.block__info__title {
+  position: relative;
+  color: #4a86c5;
   font-weight: bold;
   font-size: 16px;
 }
 
-:global {
-  .todoItem {
-    .ant-input-affix-wrapper-disabled .ant-input {
-      color: rgba(0, 0, 0, 0.25);
-      text-decoration: line-through;
-      background-color: rgba(255, 255, 255, 0);
-      cursor: not-allowed;
-    }
+.block__info__detail {
+  font-size: 10pt;
+}
 
-    .ant-input-affix-wrapper {
-      align-items: flex-start;
-      border-style: hidden;
-    }
-  }
+.block__click {
+  position: absolute;
+  top: 2px;
+  right: 3%;
 }

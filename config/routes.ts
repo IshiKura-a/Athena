@@ -1,4 +1,4 @@
-﻿import {menuRoutes} from "./routes/menuRoutes";
+﻿import { menuRoutes } from './routes/menuRoutes';
 
 export default [
   {
@@ -37,7 +37,7 @@ export default [
           },
         ],
       },
-    ]
+    ],
   },
   {
     component: './404',

@@ -1,35 +1,40 @@
-export type lessonTime = {
+type LessonTime = {
   day: number;
   start_time: string;
   end_time: string;
 };
 export enum Day {
-  Mon = 'Monday',
-  Tues = 'Tuesday',
-  Wed = 'Wednesday',
-  Thu = 'Thursday',
-  Fri = 'Friday',
-  Sat = 'Saturday',
-  Sun = 'Sunday',
+  Mon = '周一',
+  Tues = '周二',
+  Wed = '周三',
+  Thu = '周四',
+  Fri = '周五',
+  Sat = '周六',
+  Sun = '周日',
 }
 
-export const week = new Map([
-  [Day.Mon, 1],
-  [Day.Tues, 2],
-  [Day.Wed, 3],
-  [Day.Thu, 4],
-  [Day.Fri, 5],
-  [Day.Sat, 6],
-  [Day.Sun, 0],
-]);
-
 export interface Lesson {
+  _id: string;
+  section_id: string;
   course_id: string;
   course_name: string;
   instructor?: string;
-  address?: string;
+  location: string;
   department?: string;
-  time: lessonTime[];
+  day: number;
+  start_time: string;
+  end_time: string;
+}
+
+export interface LessonReq {
+  _id: string;
+  section_id: string;
+  course_id: string;
+  course_name: string;
+  instructor?: string;
+  location: string;
+  department?: string;
+  time: LessonTime[];
 }
 
 export const timeFormat = 'hh:mm';
