@@ -68,13 +68,13 @@ export default class Schedule extends Component<ScheduleProps, any> {
                   <div>
                     <div>
                       <Link
-                        to={`/section/${item.section_id}`}
+                        to={`/section:${item.section_id}`}
                         className={styles.block__info__title}
                       >
                         {item.course_name}
                       </Link>
                       <span className={styles.block__click}>
-                        <Link to={`/section/${item.section_id}`}>课程详情</Link>
+                        <Link to={`/section:${item.section_id}`}>课程详情</Link>
                       </span>
                     </div>
                     <div className={styles.block__info__detail}>
