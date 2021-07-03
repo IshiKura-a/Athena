@@ -20,7 +20,7 @@ interface HomePageProps {
 export function cmpTime(timeA: string, timeB: string, format: string): number {
   const A = moment(timeA, format);
   const B = moment(timeB, format);
-  return A.diff(B);
+  return -A.diff(B);
 }
 
 @inject('homePageStore')

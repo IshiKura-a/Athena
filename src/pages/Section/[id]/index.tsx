@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { history } from 'umi';
-import { Card, Col, Divider, List, Row, Tabs } from 'antd';
+import { Card, Col, Divider, List, Modal, Row, Tabs } from 'antd';
 import styles from '../style.less';
 import { TabKey, TabName } from '@/pages/Section/type';
 import type SectionStore from '@/pages/Section/model';
 import { Link } from 'react-router-dom';
+import SignInTab from '@/components/SignIn';
+import HomeworkTab from '@/components/HomeWork';
 
 const { TabPane } = Tabs;
 
@@ -25,14 +27,19 @@ export default class Section extends Component<IProps, any> {
     this.props.sectionStore.handleRoute(section_id);
   }
 
+  componentWillUnmount() {
+    Modal.destroyAll();
+  }
+
   tabCallBack = (key: any) => {};
+
   redirectToSection = (sectionID: any) => {
     this.props.sectionStore.redirectRoute(sectionID);
   };
 
   render() {
     const { sectionStore } = this.props;
-    const { lessonList } = sectionStore;
+    const { lessonList, lessonName } = sectionStore;
 
     return (
       <>
@@ -41,10 +48,10 @@ export default class Section extends Component<IProps, any> {
             <Card>
               <Tabs onChange={this.tabCallBack}>
                 <TabPane tab={TabName.SignIn} key={TabKey.SignIn}>
-                  <Card className={styles.tabPane}></Card>
+                  <SignInTab currentLessonName={lessonName} />
                 </TabPane>
                 <TabPane tab={TabName.Hw} key={TabKey.Hw}>
-                  <Card className={styles.tabPane}></Card>
+                  <HomeworkTab currentLessonName={lessonName} />
                 </TabPane>
                 <TabPane tab={TabName.Discuss} key={TabKey.Discuss}>
                   <Card className={styles.tabPane}>//TODO</Card>

@@ -3,7 +3,7 @@ import type SignInStore from '@/components/SignIn/model';
 import type HomeworkStore from '@/components/HomeWork/model';
 import type DiscussionStore from '@/components/Discussion/model';
 import type ResourceStore from '@/components/Resource/model';
-import { action, observable } from 'mobx';
+import { action, computed, observable } from 'mobx';
 import type { LessonReq } from '@/pages/Home/type';
 import { history } from 'umi';
 import { fetchLesson } from '@/services/homepage';
@@ -35,8 +35,10 @@ export default class SectionStore {
 
   requestAgain = async () => {
     if (this.currentLesson) {
-      // await this.listSign({ section_id: this.currentLesson });
-      // await this.listHw({ section_id: this.currentLesson });
+      this.signInStore.setCurrentLesson(this.currentLesson);
+      this.hwStore.setCurrentLesson(this.currentLesson);
+      await this.signInStore.listSign();
+      await this.hwStore.listHw();
     }
   };
 
@@ -48,17 +50,24 @@ export default class SectionStore {
     this.requestAgain();
   };
 
-  handleRoute = (sectionID: string | undefined) => {
-    if (sectionID === undefined || sectionID === ':id') {
+  handleRoute = (section_id: string | undefined) => {
+    if (section_id === undefined || section_id === ':id') {
       if (this.lessonList.length > 0) {
         const defaultID = this.lessonList[0].section_id;
         this.redirectRoute(defaultID);
       }
     } else {
-      this.setCurrentLesson(sectionID);
+      this.setCurrentLesson(section_id);
       this.requestAgain();
     }
   };
+
+  @computed get lessonName() {
+    return this.currentLesson
+      ? this.lessonList.filter((item: LessonReq) => item.section_id === this.currentLesson)[0]
+          ?.course_name
+      : undefined;
+  }
 
   @action setCurrentLesson(sectionID: string) {
     this.currentLesson = sectionID;
