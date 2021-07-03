@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import { history } from 'umi';
 import { Card, Col, Divider, List, Row, Tabs, Modal } from 'antd';
@@ -8,6 +8,8 @@ import type SectionStore from '@/pages/Section/model';
 import { Link } from 'react-router-dom';
 import Discussion from '@/components/Discussion';
 import Resource from '@/components/Resource';
+import SignInTab from '@/components/SignIn';
+import HomeworkTab from '@/components/HomeWork';
 
 const { TabPane } = Tabs;
 
@@ -48,10 +50,10 @@ export default class Section extends Component<IProps, any> {
             <Card>
               <Tabs onChange={this.tabCallBack}>
                 <TabPane tab={TabName.SignIn} key={TabKey.SignIn}>
-                  <Card className={styles.tabPane}></Card>
+                  <SignInTab currentLessonName={lessonName} />
                 </TabPane>
                 <TabPane tab={TabName.Hw} key={TabKey.Hw}>
-                  <Card className={styles.tabPane}></Card>
+                  <HomeworkTab currentLessonName={lessonName} />
                 </TabPane>
                 <TabPane tab={TabName.Discuss} key={TabKey.Discuss}>
                   <Card className={styles.tabPane}>

@@ -11,3 +11,29 @@ export enum TabName {
   Resource = '资源区',
   Discuss = '讨论区',
 }
+
+export type Record = {
+  content: string;
+  accessory: string[];
+};
+
+export interface SignIn {
+  id: string;
+  description: string;
+  expire_at: string;
+  extra: any;
+}
+
+export enum SignInStatus {
+  Signed = 0,
+  Signing = 1,
+  Expired = 2,
+}
+
+export interface HW {
+  batch_id: string;
+  description: string;
+  expire_at: string;
+  // hand_in_count: number;
+  extra: any;
+}
