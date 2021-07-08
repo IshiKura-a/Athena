@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 const fakeUser = {
-  name: 'Serati Ma',
+  name: '软件工程第一组',
   avatar: 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png',
   userid: '00000001',
   email: 'antdesign@alipay.com',

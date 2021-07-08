@@ -22,6 +22,10 @@ export class BaseStore {
   @action setType(type: RoleType) {
     this.type = type;
   }
+
+  @action getId() {
+    return this.id;
+  }
 }
 
 const baseStore = new BaseStore();

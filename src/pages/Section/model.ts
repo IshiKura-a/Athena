@@ -3,7 +3,7 @@ import type SignInStore from '@/components/SignIn/model';
 import type HomeworkStore from '@/components/HomeWork/model';
 import type DiscussionStore from '@/components/Discussion/model';
 import type ResourceStore from '@/components/Resource/model';
-import { action, observable } from 'mobx';
+import { action, observable, computed } from 'mobx';
 import type { LessonReq } from '@/pages/Home/type';
 import { history } from 'umi';
 import { fetchLesson } from '@/services/homepage';
@@ -15,7 +15,7 @@ export default class SectionStore {
 
   signInStore: SignInStore;
   hwStore: HomeworkStore;
-  discussion: DiscussionStore;
+  discussionStore: DiscussionStore;
   resourceStore: ResourceStore;
   baseStore: BaseStore;
 
@@ -29,7 +29,7 @@ export default class SectionStore {
     this.baseStore = baseStore;
     this.signInStore = signInStore;
     this.hwStore = hwStore;
-    this.discussion = discussionStore;
+    this.discussionStore = discussionStore;
     this.resourceStore = resourceStore;
   }
 
@@ -37,6 +37,10 @@ export default class SectionStore {
     if (this.currentLesson) {
       // await this.listSign({ section_id: this.currentLesson });
       // await this.listHw({ section_id: this.currentLesson });
+      this.discussionStore.setCurrentLesson(this.currentLesson);
+      this.resourceStore.setCurrentLesson(this.currentLesson);
+      await this.discussionStore.listDiscussion();
+      await this.resourceStore.listResource();
     }
   };
 
@@ -59,6 +63,13 @@ export default class SectionStore {
       this.requestAgain();
     }
   };
+
+  @computed get lessonName() {
+    return this.currentLesson
+      ? this.lessonList.filter((item: LessonReq) => item.section_id === this.currentLesson)[0]
+          ?.course_name
+      : undefined;
+  }
 
   @action setCurrentLesson(sectionID: string) {
     this.currentLesson = sectionID;
