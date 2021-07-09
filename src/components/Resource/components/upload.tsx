@@ -1,51 +1,42 @@
-import React from 'react';
-import { message } from 'antd';
+import React, { useState } from 'react';
 import styles from '../style.less';
-import request from '@/utils/request';
+import { Button, Form, message, Upload } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
-class FileInput extends React.Component {
-  constructor(props: any) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.fileInput = React.createRef();
-  }
+interface IProps {
+  handleSubmit: any;
+}
 
-  fileInput: any;
+const FileInput = (props: IProps) => {
+  const [fileResult, setFile] = useState(undefined);
 
-  handleSubmit(event: any) {
-    if (this.fileInput.current.files[0]) {
-      event.preventDefault();
-      message.success(`Selected file - ${this.fileInput.current.files[0].name}`);
-      const formData = new FormData();
-      formData.append('section_id', 'cs229_2021_0_03');
-      formData.append('title', 'title_test');
-      formData.append('filename', 'name_test');
-      formData.append('type', 0);
-      formData.append('content', this.fileInput.current.files[0]);
-
-      request(`/api/resource/create`, {
-        method: 'post',
-        requestType: 'form',
-        data: formData,
-      });
+  const handleSubmitFile = (event: any) => {
+    event.preventDefault();
+    if (fileResult !== undefined) {
+      props.handleSubmit(fileResult.name, fileResult.originFileObj);
     } else {
       message.error('还没有上传文件');
     }
-  }
+  };
 
-  render() {
-    return (
-      <>
-        <h3>上传文件</h3>
-        <form onSubmit={this.handleSubmit}>
-          <input type="file" ref={this.fileInput} className={styles.input} />
-          <button type="submit" className={styles.submit}>
-            上 传
-          </button>
-        </form>
-      </>
-    );
-  }
-}
+  const onUploadChange = ({ file }) => {
+    if (file.status === 'done' || file.status === 'error') {
+      message.success(`${file.name} uploaded successfully`);
+      setFile(file);
+    }
+  };
+
+  return (
+    <>
+      <h3>上传文件</h3>
+      <Upload onChange={onUploadChange}>
+        <Button icon={<UploadOutlined />}>添加附件</Button>
+      </Upload>
+      <Button type="primary" className={styles.submit} onClick={handleSubmitFile}>
+        上传
+      </Button>
+    </>
+  );
+};
 
 export default FileInput;

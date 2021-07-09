@@ -14,4 +14,12 @@ export async function getResource(params: { id: string }) {
   });
 }
 
-export default { getResourceList, getResource };
+export async function uploadResource(formData: FormData) {
+  return request(`/api/resource/create`, {
+    method: 'POST',
+    requestType: 'form',
+    data: formData,
+  });
+}
+
+export default { getResourceList, getResource, uploadResource };

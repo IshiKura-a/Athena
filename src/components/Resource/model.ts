@@ -3,6 +3,7 @@ import type { BaseStore } from '@/store';
 import { action, observable } from 'mobx';
 import services from './services';
 import { message } from 'antd';
+import request from '@/utils/request';
 
 export interface ResourceType {
   id: string;
@@ -71,5 +72,16 @@ export default class ResourceStore {
         }
       }
     });
+  }
+
+  @action async uploadFile(name: string, content: File) {
+    const formData = new FormData();
+    formData.append('section_id', this.currentLesson);
+    formData.append('title', name.split('.')[0]);
+    formData.append('filename', name);
+    formData.append('type', 0);
+    formData.append('content', content);
+    await services.uploadResource(formData);
+    await services.getResourceList({ section_id: this.currentLesson });
   }
 }

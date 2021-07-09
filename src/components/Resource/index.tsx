@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { inject, observer } from 'mobx-react';
-import type ResourceStore from './model';
-import { List, Result } from 'antd';
+import type ResourceStore from '@/components/Resource/model';
+import { List, message, Result } from 'antd';
 import { FileTextTwoTone } from '@ant-design/icons';
 import styles from './style.less';
 import FileInput from './components/upload';
@@ -15,24 +15,32 @@ interface ResourceProps {
 
 @inject('resourceStore')
 @observer
-export default class Resource extends Component<ResourceProps> {
-  ref: React.RefObject<any>;
+export default class Resource extends Component<ResourceProps, any> {
+  ref: React.RefObject<any> = React.createRef();
 
-  constructor(props: ResourceProps) {
-    super(props);
-    this.ref = React.createRef();
+  async componentDidMount() {
+    const { resourceStore } = this.props;
   }
 
-  componentDidMount() {
-    // this.props.resourceStore.fetchResourceList('cs229_2021_0_03');
-  }
+  handleSubmit = (name: string, content: File) => {
+    if (name !== '') {
+      message.success(`Selected file - ${name}`);
+      this.props.resourceStore.uploadFile(name, content);
+    } else {
+      message.error('还没有上传文件');
+    }
+  };
 
   render() {
     const { currentLessonName } = this.props;
 
     return (
       <>
-        {this.props.resourceStore.baseStore.type === RoleType.instructor ? <FileInput /> : <></>}
+        {this.props.resourceStore.baseStore.type === RoleType.instructor ? (
+          <FileInput handleSubmit={this.handleSubmit} />
+        ) : (
+          <></>
+        )}
 
         {this.props.resourceStore.resourceList.length ? (
           <List
