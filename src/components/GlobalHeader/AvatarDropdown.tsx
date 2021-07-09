@@ -19,6 +19,10 @@ export type GlobalHeaderRightProps = {
 @inject('loginStore')
 @observer
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
+  componentDidMount() {
+    console.log('mount', this.props.loginStore?.baseStore.name);
+  }
+
   onMenuClick = (event: {
     key: React.Key;
     keyPath: React.Key[];
@@ -39,7 +43,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     const {
       currentUser = {
         avatar: '',
-        name: '',
+        name: this.props.loginStore?.baseStore.name,
       },
       menu,
     } = this.props;
@@ -70,7 +74,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
           <span className={`${styles.name} anticon`}>
-            {this.props.loginStore?.baseStore.getName()}
+            {this.props.loginStore?.baseStore.getName}
           </span>
         </span>
       </HeaderDropdown>

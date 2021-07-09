@@ -4,10 +4,9 @@ export type ProfileParamsType = {
   id?: string;
 };
 
-export async function getProfileInfo(params: ProfileParamsType) {
-  return request(`/api/student/`, {
+export async function getProfileInfo() {
+  return request(`/api/profile`, {
     method: 'GET',
-    params,
   });
 }
 

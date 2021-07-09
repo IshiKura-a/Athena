@@ -1,7 +1,7 @@
 import HomePageStore from '@/pages/Home/model';
 import ProfileStore from '@/pages/Profile/model';
 import LoginStore, { RoleType } from '@/pages/Login/model';
-import { action, observable } from 'mobx';
+import { action, observable, computed } from 'mobx';
 import { TodoListStore } from '@/components/TodoList/model';
 import StudentStore from '@/pages/Section/component/Student/model';
 import InstructorStore from '@/pages/Section/component/Instructor/model';
@@ -32,7 +32,7 @@ export class BaseStore {
     this.name = name;
   }
 
-  getName() {
+  @computed get getName() {
     return this.name;
   }
 }

@@ -6,6 +6,7 @@ import { FileTextTwoTone } from '@ant-design/icons';
 import styles from './style.less';
 import FileInput from './components/upload';
 import type { ResourceType } from './model';
+import { RoleType } from '@/pages/login/model';
 
 interface ResourceProps {
   resourceStore: ResourceStore;
@@ -31,7 +32,7 @@ export default class Resource extends Component<ResourceProps> {
 
     return (
       <>
-        <FileInput />
+        {this.props.resourceStore.baseStore.type === RoleType.instructor ? <FileInput /> : <></>}
 
         {this.props.resourceStore.resourceList.length ? (
           <List

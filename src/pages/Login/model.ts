@@ -37,11 +37,11 @@ export default class LoginStore {
   @action login = async (payload: LoginParamsType) => {
     this.inSubmitting = true;
     const response = await accountLogin(payload);
+    setCookie('JWT-Token', response.token);
+
     // Login successfully
     if (!response.status || `${response.status}`.indexOf('2') === 0) {
-      const profileParam: ProfileParamsType = { id: payload.aid };
-      const profile = await getProfileInfo(profileParam);
-      console.log('login_profile:', profile);
+      const profile = await getProfileInfo();
       if (!profile.status || `${profile.status}`.indexOf('2') === 0) {
         this.baseStore.setName(profile.basic_person.name);
       } else {
@@ -52,7 +52,6 @@ export default class LoginStore {
         message: 'ok',
         loginType: 'account',
       });
-      setCookie('JWT-Token', response.token);
       setAuthority(payload.type);
       this.baseStore.setId(payload.aid);
       const urlParams = new URL(window.location.href);

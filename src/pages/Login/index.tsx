@@ -109,10 +109,7 @@ export default class Login extends Component<LoginProps, any> {
                   size: 'large',
                   prefix: <UserOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={formatMessage({
-                  id: 'pages.login.username.placeholder',
-                  defaultMessage: '请输入用户名',
-                })}
+                placeholder={'请输入id'}
                 rules={[
                   {
                     required: true,
@@ -131,10 +128,7 @@ export default class Login extends Component<LoginProps, any> {
                   size: 'large',
                   prefix: <LockOutlined className={styles.prefixIcon} />,
                 }}
-                placeholder={formatMessage({
-                  id: 'pages.login.password.placeholder',
-                  defaultMessage: '请输入密码',
-                })}
+                placeholder={'请输入密码'}
                 rules={[
                   {
                     required: true,
