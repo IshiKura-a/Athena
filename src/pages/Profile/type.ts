@@ -17,8 +17,7 @@ export type InfoType = {
   hometown: string;
   nation: string;
   blood_type: string;
-  campus: string;
-  dormitory: string;
+  address: string;
   wechat: string;
   qq: string;
   birthday: string;
