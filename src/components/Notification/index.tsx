@@ -2,13 +2,20 @@ import { Component } from 'react';
 import { inject, observer } from 'mobx-react';
 import type { NotifyListStore } from './model';
 import { List, Modal, Button } from 'antd';
-import { FileTextTwoTone } from '@ant-design/icons';
+import { FileTextTwoTone, NotificationTwoTone } from '@ant-design/icons';
 import styles from './style.less';
 import { action, observable } from 'mobx';
-import { bold } from 'chalk';
 
 interface NotifyProps {
   notifyListStore: NotifyListStore;
+}
+
+function NotifyIcon(props: { type: string; twoToneColor: string }) {
+  return props.type === 'homework' ? (
+    <FileTextTwoTone className={styles.icon} twoToneColor={props.twoToneColor} />
+  ) : (
+    <NotificationTwoTone className={styles.icon} twoToneColor={props.twoToneColor} />
+  );
 }
 
 @inject('notifyListStore')
@@ -37,10 +44,11 @@ export default class NotifyList extends Component<NotifyProps> {
     this.isModalVisible = false;
   };
 
-  @action getColor = (id: number) => {
+  @action getColor = (id: number, type: string) => {
     const valid = '#b7eb8f';
     const urgent = '#ffccc7';
     const overdue = '#bfbfbf';
+    if (type !== 'homework') return valid;
     let labelColor = '';
     switch (id) {
       case -1:
@@ -60,11 +68,13 @@ export default class NotifyList extends Component<NotifyProps> {
   };
 
   render() {
+    const { statuslist } = this.props.notifyListStore;
+
     return (
       <>
         <List
           itemLayout="horizontal"
-          dataSource={this.props.notifyListStore.statuslist}
+          dataSource={statuslist}
           renderItem={(item) => (
             <List.Item extra={<p className={styles.date}>{item.time}</p>}>
               <Button
@@ -80,11 +90,11 @@ export default class NotifyList extends Component<NotifyProps> {
                       <div className={styles.content}>
                         <div
                           id={styles.bar}
-                          style={{ backgroundColor: this.getColor(item.status) }}
+                          style={{ backgroundColor: this.getColor(item.status, item.type) }}
                         />
-                        <FileTextTwoTone
-                          className={styles.icon}
-                          twoToneColor={this.getColor(item.status)}
+                        <NotifyIcon
+                          type={item.type}
+                          twoToneColor={this.getColor(item.status, item.type)}
                         />
                       </div>
                     </>
