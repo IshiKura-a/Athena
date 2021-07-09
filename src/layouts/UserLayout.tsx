@@ -59,7 +59,7 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
           </div>
           {children}
         </div>
-        <Footer style={{ textAlign: 'center' }}>教学管理系统 ©2021 Created by Group One</Footer>
+        <Footer style={{ textAlign: 'center' }}>教学管理系统 ©2021 软件工程第一组</Footer>
       </div>
     </HelmetProvider>
   );

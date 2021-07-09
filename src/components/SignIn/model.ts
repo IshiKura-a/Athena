@@ -69,7 +69,6 @@ export default class SignInStore {
   @action listSign = async () => {
     if (this.currentLesson) {
       const response = await listSignIn({ section_id: this.currentLesson });
-      console.log('sign', response);
       this.setSignInList(response);
     }
   };

@@ -54,7 +54,7 @@ export default class SignInTab extends Component<IProps, any> {
 
   // instructor
   handleLookSignIn = (item: SignIn) => {
-    if (item.extra?.length === 0) {
+    if (item.extra.unsigned_students?.length === 0) {
       message.success('已全部签到');
       return;
     }
@@ -114,8 +114,14 @@ export default class SignInTab extends Component<IProps, any> {
 
   render() {
     const { signInStore, currentLessonName } = this.props;
-    const { isSign, signInList, signInModalVisible, polling, dataToShow, signInCreate } =
-      this.props.signInStore;
+    const {
+      isSign,
+      signInList,
+      signInModalVisible,
+      polling,
+      dataToShow,
+      signInCreate,
+    } = this.props.signInStore;
     return (
       <>
         {signInStore.baseStore.type === RoleType.student ? (

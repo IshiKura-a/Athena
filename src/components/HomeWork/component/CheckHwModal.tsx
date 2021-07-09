@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Form, InputNumber, List, Modal, Tooltip } from 'antd';
+import { saveAs } from 'file-saver';
 import styles from '../style.less';
 
-import { CheckOutlined, FileOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import {
+  CheckOutlined,
+  DownloadOutlined,
+  FileOutlined,
+  LeftOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 
 interface IProps {
   modalVisible: boolean;
@@ -16,7 +23,7 @@ const CheckModal = (props: IProps) => {
   const [dataToCheck, setDataToCheck] = useState(undefined as any | undefined);
   useEffect(() => setModalVisible(props.modalVisible), [props.modalVisible]);
   useEffect(() => {
-    const data = props.data ? props.data[checkId] : undefined;
+    const data = props.data ? props.data?.homeworks[checkId] : undefined;
     if (data) setDataToCheck(data);
   }, [checkId, props.data]);
 
@@ -52,6 +59,34 @@ const CheckModal = (props: IProps) => {
     }
   };
 
+  const dataURItoBlob = (dataURI) => {
+    if (dataURI === '') {
+      return new Blob();
+    }
+    const byteString = atob(dataURI.split(',')[1]);
+
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    const ab = new ArrayBuffer(byteString.length);
+
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i += 1) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([ab], { type: mimeString });
+    return blob;
+  };
+
+  const downLoad = (fileName, fileStr) => {
+    return (e: any) => {
+      // console.log(fileStr);
+      const blob = dataURItoBlob(fileStr);
+      saveAs(blob, fileName);
+    };
+  };
+
   return (
     <Modal
       visible={modalVisible}
@@ -79,15 +114,18 @@ const CheckModal = (props: IProps) => {
         </div>
 
         <div className={styles.hw_check_whole}>
-          <div className={styles.hw_check_content}>{dataToCheck?.record?.content}</div>
+          <div className={styles.hw_check_content}>{`备注：${dataToCheck?.record?.content}`}</div>
           <List
             className={styles.hw_check_appendix_list}
             dataSource={dataToCheck?.record?.accessory}
             renderItem={(item: string) => (
               <div className={styles.hw_check_appendix}>
-                <span>
-                  <FileOutlined className={styles.icon_margin} />
-                  {item}
+                <span className={styles.hw_check_text_overflow}>
+                  <DownloadOutlined
+                    className={styles.icon_margin}
+                    onClick={downLoad(item.split('\n')[0], item.split('\n')[1] || '')}
+                  />
+                  {item.split('\n')[0]}
                 </span>
               </div>
             )}

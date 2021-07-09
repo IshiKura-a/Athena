@@ -19,6 +19,7 @@ const HandInModal = (props: IProps) => {
   const [uploadList, setUploadList] = useState(undefined);
 
   useEffect(() => {
+    setAccessory([]);
     setModalVisible(props.modalVisible);
   }, [props.modalVisible]);
 
@@ -76,7 +77,7 @@ const HandInModal = (props: IProps) => {
 
   const downLoad = (fileName, fileStr) => {
     return (e: any) => {
-      console.log(fileStr);
+      // console.log(fileStr);
       const blob = dataURItoBlob(fileStr);
       saveAs(blob, fileName);
     };
@@ -124,14 +125,11 @@ const HandInModal = (props: IProps) => {
                       style={{ display: 'inline-block' }}
                       dataSource={item.accessory}
                       renderItem={(appendix: string) => (
-                        <div className={styles.hw_hand_in_appendix}>
-                          <FileOutlined
-                            className={styles.icon_margin}
-                            onClick={downLoad(
-                              appendix.split('\n')[0],
-                              appendix.split('\n')[1] || '',
-                            )}
-                          />
+                        <div
+                          className={styles.hw_hand_in_appendix}
+                          onClick={downLoad(appendix.split('\n')[0], appendix.split('\n')[1] || '')}
+                        >
+                          <FileOutlined className={styles.icon_margin} />
                           {appendix.split('\n')[0]}
                         </div>
                       )}

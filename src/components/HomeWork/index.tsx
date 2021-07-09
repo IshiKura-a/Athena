@@ -87,8 +87,14 @@ export default class HomeworkTab extends Component<InstructorProps, any> {
 
   render() {
     const { hwStore, currentLessonName } = this.props;
-    const { hwList, checkModalVisible, handInModalVisible, dataToCheck, recordsToShow, hwCreate } =
-      hwStore;
+    const {
+      hwList,
+      checkModalVisible,
+      handInModalVisible,
+      dataToCheck,
+      recordsToShow,
+      hwCreate,
+    } = hwStore;
     return (
       <>
         {hwStore.baseStore.type === RoleType.student ? (
@@ -177,7 +183,7 @@ export default class HomeworkTab extends Component<InstructorProps, any> {
                     </div>
                     <div
                       className={styles.signStatusYes}
-                    >{`${item.extra.hand_in_count}/${item.extra.length}`}</div>
+                    >{`${item.extra.hand_in_count}/${item.extra.homeworks?.length}`}</div>
                   </span>
                 </List.Item>,
               ]}

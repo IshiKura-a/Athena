@@ -69,7 +69,7 @@ const SignInModal = (props: ModalProps) => {
           }`}
         />
         <div className={styles.modal_table}>
-          <Table columns={columns} dataSource={signInData?.extra} size="small" />
+          <Table columns={columns} dataSource={signInData?.extra.unsigned_students} size="small" />
         </div>
       </Card>
     </Modal>
