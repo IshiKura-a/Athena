@@ -86,5 +86,7 @@ export default class ProfileStore {
 
   @action editStatus = async (status: number) => {
     this.profileInfo.basic_person.status = status;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), status });
+    console.log('update', response);
   };
 }

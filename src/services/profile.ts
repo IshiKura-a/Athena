@@ -6,6 +6,7 @@ export type ProfileParamsType = {
   wechat?: string;
   email?: string;
   qq?: string;
+  status?: number;
 };
 
 export async function getProfileInfo(params: { id: string }) {
