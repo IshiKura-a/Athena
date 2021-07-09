@@ -4,6 +4,7 @@ import { Button, Collapse, Divider, Form, Input, List, message, Modal, Upload } 
 import { DownOutlined, FileOutlined, UploadOutlined } from '@ant-design/icons';
 import styles from '../style.less';
 import CollapsePanel from 'antd/es/collapse/CollapsePanel';
+import { saveAs } from 'file-saver';
 
 interface IProps {
   modalVisible: boolean;
@@ -42,10 +43,43 @@ const HandInModal = (props: IProps) => {
   const onUploadChange = ({ file }) => {
     if (file.status === 'done' || file.status === 'error') {
       message.success(`${file.name} uploaded successfully`);
-      const tmp = accessory;
-      tmp.push(file.name);
-      setAccessory(tmp);
+      const tmp: any[] = accessory;
+      // tmp.push(file.name);
+      const reader = new FileReader();
+      reader.readAsDataURL(file.originFileObj);
+      reader.onload = () => {
+        tmp.push(`${file.name}\n${reader.result}`);
+        setAccessory(tmp);
+      };
     }
+  };
+
+  const dataURItoBlob = (dataURI) => {
+    if (dataURI === '') {
+      return new Blob();
+    }
+    const byteString = atob(dataURI.split(',')[1]);
+
+    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+    const ab = new ArrayBuffer(byteString.length);
+
+    const ia = new Uint8Array(ab);
+
+    for (let i = 0; i < byteString.length; i += 1) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+
+    const blob = new Blob([ab], { type: mimeString });
+    return blob;
+  };
+
+  const downLoad = (fileName, fileStr) => {
+    return (e: any) => {
+      console.log(fileStr);
+      const blob = dataURItoBlob(fileStr);
+      saveAs(blob, fileName);
+    };
   };
 
   return (
@@ -91,8 +125,14 @@ const HandInModal = (props: IProps) => {
                       dataSource={item.accessory}
                       renderItem={(appendix: string) => (
                         <div className={styles.hw_hand_in_appendix}>
-                          <FileOutlined className={styles.icon_margin} />
-                          {appendix}
+                          <FileOutlined
+                            className={styles.icon_margin}
+                            onClick={downLoad(
+                              appendix.split('\n')[0],
+                              appendix.split('\n')[1] || '',
+                            )}
+                          />
+                          {appendix.split('\n')[0]}
                         </div>
                       )}
                     />

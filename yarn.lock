@@ -5930,6 +5930,11 @@ file-entry-cache@^6.0.1:
   dependencies:
     flat-cache "^3.0.4"
 
+file-saver@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/file-saver/-/file-saver-2.0.5.tgz#d61cfe2ce059f414d899e9dd6d4107ee25670c38"
+  integrity sha512-P9bmyZ3h/PRG+Nzga+rbdI4OEpNDzAVyy74uVO9ATgzLK6VtAsYybF/+TOCvrc0MO793d6+42lLyZTw7/ArVzA==
+
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz"
@@ -13491,10 +13496,10 @@ umi-utils@^1.5.1:
     prettier "1.15.3"
     slash2 "2.0.0"
 
-umi@@3.4.1:
+umi@@3.4.8:
   version "3.4.8"
-  resolved "https://registry.nlark.com/umi/download/umi-3.4.8.tgz?cache=0&sync_timestamp=1625732712355&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fumi%2Fdownload%2Fumi-3.4.8.tgz#f9f473f77e7ce46809563d964b143b3a65c01c90"
-  integrity sha1-+fRz93585GgJVj2WSxQ7OmXAHJA=
+  resolved "https://registry.yarnpkg.com/umi/-/umi-3.4.8.tgz#f9f473f77e7ce46809563d964b143b3a65c01c90"
+  integrity sha512-PKpXqZpBl5iAADFVEosp07l5PHSjUbTcGb8h2VGoYFAE3rUj3zpsSgJjF05nKoLdpVPxBLZt7zPmmuVfXNzxfg==
   dependencies:
     "@umijs/bundler-webpack" "3.4.8"
     "@umijs/core" "3.4.8"
