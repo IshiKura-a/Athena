@@ -89,8 +89,11 @@ export default class Profile extends Component<ProfileProps, any> {
             if (checkTelephone === 1) {
               telephoneVisible = telephoneInput;
               profileStore.editTelephone(telephoneInput);
+              this.forceUpdate();
             } else if (checkTelephone === 0) {
-              info('Input format is not valid.');
+              info('Input should be number.');
+            } else if (checkTelephone === -1) {
+              info('Input length is not valid.');
             }
           },
         },
@@ -103,6 +106,7 @@ export default class Profile extends Component<ProfileProps, any> {
             if (checkEmail === 1) {
               emailVisible = emailInput;
               profileStore.editEmail(emailInput);
+              this.forceUpdate();
             } else if (checkEmail === 0) {
               info('Input format is not valid.');
             }
@@ -131,6 +135,7 @@ export default class Profile extends Component<ProfileProps, any> {
           onChange: (wechatInput: string) => {
             wechatVisible = wechatInput;
             profileStore.editWechat(wechatInput);
+            this.forceUpdate();
           },
         },
       },
@@ -142,8 +147,11 @@ export default class Profile extends Component<ProfileProps, any> {
             if (checkQQ === 1) {
               qqVisible = qqInput;
               profileStore.editQQ(qqInput);
+              this.forceUpdate();
             } else if (checkQQ === 0) {
-              info('Input format is not valid.');
+              info('Input should be number.');
+            } else if (checkQQ === -1) {
+              info('Input length is not valid.');
             }
           },
         },

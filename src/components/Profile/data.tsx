@@ -6,26 +6,31 @@ export interface ProfileProps {
 }
 
 export function checkValidPhone(phoneInput: string) {
-  console.log(phoneInput, /^[1][3,4,5,7,8][0-9]{9}$/.test('18502982125'));
-  if (!phoneInput.match(/^[1][3,4,5,7,8][0-9]{9}$/)) {
-    // 输入不正确
+  if (Number.isNaN(phoneInput)) {
+    // 输入的不是数字
     return 0;
+  }
+  if (phoneInput.length !== 11) {
+    // 输入的位数不对
+    return -1;
   }
   return 1;
 }
 
 export function checkValidEmail(emailInput: string) {
-  if (!emailInput.match(/^\w+@\w+\.\w+$/i)) {
-    // 输入不正确
-    return 0;
+  if (emailInput.match(/^\w+@\w+\.\w+$/i)) {
+    console.log(emailInput.match(/^\w+@\w+\.\w+$/i));
+    return 1;
   }
-  return 1;
+  return 0;
 }
 
 export function checkValidQQ(qqInput: string) {
-  if (!qqInput.match(/^[1-9]\d{4,11}$/)) {
-    // 输入不正确
+  if (Number.isNaN(qqInput)) {
     return 0;
+  }
+  if (qqInput.length < 5 || qqInput.length > 11) {
+    return -1;
   }
   return 1;
 }
@@ -33,6 +38,31 @@ export function checkValidQQ(qqInput: string) {
 export function info(msg: string) {
   message.info(msg);
 }
+
+// 两个参数：当前状态，状态更新函数
+// const {
+//   name,
+//   id,
+//   major,
+//   phone,
+//   email,
+//   wechat,
+//   qq,
+//   gender,
+//   campus,
+//   birthday,
+//   blood_type,
+//   status,
+//   politics,
+//   hometown,
+//   nation,
+//   dormitory,
+// } = profilestore.profileInfo.basic_person;
+
+// let emailVisible = email;
+// let telephoneVisible = phone;
+// let wechatVisible = wechat;
+// let qqVisible = qq;
 
 export const dataTitle = [
   {
@@ -48,6 +78,20 @@ export const dataTitle = [
   {
     title: '手 机',
     copyable: false,
+    // editable: {
+    //   onChange: (telephoneInput: string) => {
+    //     const checkTelephone = checkValidPhone(telephoneInput);
+    //     if (checkTelephone === 1) {
+    //       telephoneVisible = telephoneInput;
+    //       profileStore.editTelephone(telephoneInput);
+    //       forceUpdate();
+    //     } else if (checkTelephone === 0) {
+    //       info('Input should be number.');
+    //     } else if (checkTelephone === -1) {
+    //       info('Input length is not valid.');
+    //     }
+    //   },
+    // },
   },
   {
     title: '邮 箱',
