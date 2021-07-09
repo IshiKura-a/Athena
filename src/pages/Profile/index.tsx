@@ -55,14 +55,13 @@ export default class Profile extends Component<ProfileProps, any> {
       wechat,
       qq,
       gender,
-      campus,
+      address,
       birthday,
       blood_type,
       status,
       politics,
       nation,
       hometown,
-      dormitory,
     } = this.props.profileStore.profileInfo.basic_person;
 
     let emailVisible = email;
@@ -119,10 +118,6 @@ export default class Profile extends Component<ProfileProps, any> {
       },
       {
         content: hometown,
-        editable: false,
-      },
-      {
-        content: dormitory,
         editable: false,
       },
       {
@@ -198,14 +193,14 @@ export default class Profile extends Component<ProfileProps, any> {
                   </Card.Grid>
 
                   <Card.Grid style={{ textAlign: 'center', height: 150 }}>
-                    <Tooltip placement="top" title={campus}>
+                    <Tooltip placement="top" title={address}>
                       <div>
                         <p>
                           <HomeTwoTone style={iconStyle} twoToneColor="#69c0ff" />
                         </p>
                       </div>
                     </Tooltip>
-                    <p className={styles.labelStyle}>校区</p>
+                    <p className={styles.labelStyle}>住址</p>
                   </Card.Grid>
 
                   <Card.Grid style={{ textAlign: 'center', height: 150 }}>

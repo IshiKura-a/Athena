@@ -70,11 +70,6 @@ export const dataTitle = [
     // editable: false,
   },
   {
-    title: '寝室号',
-    copyable: true,
-    // editable: false,
-  },
-  {
     title: '微信号码',
     copyable: false,
     // editable: false,

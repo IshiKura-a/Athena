@@ -6,12 +6,12 @@ export type ProfileParamsType = {
   wechat?: string;
   email?: string;
   qq?: string;
+  status?: number;
 };
 
 export async function getProfileInfo(params: { id: string }) {
-  return request(`/api/student/`, {
+  return request(`/api/profile/`, {
     method: 'GET',
-    params,
   });
 }
 
@@ -20,7 +20,7 @@ export async function getProfileInfoNoToken() {
 }
 
 export async function updateProfileInfo(params: ProfileParamsType) {
-  return request(`/api/student/update`, {
+  return request(`/api/profile/update`, {
     method: 'POST',
     data: params,
   });

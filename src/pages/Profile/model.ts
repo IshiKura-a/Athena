@@ -17,8 +17,7 @@ export default class ProfileStore {
       hometown: '未获取',
       nation: '未获取',
       blood_type: 'O',
-      campus: '玉泉',
-      dormitory: '未获取',
+      address: '未获取',
       wechat: '',
       qq: '未获取',
       birthday: '2000-10-27',
@@ -87,5 +86,7 @@ export default class ProfileStore {
 
   @action editStatus = async (status: number) => {
     this.profileInfo.basic_person.status = status;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), status });
+    console.log('update', response);
   };
 }
