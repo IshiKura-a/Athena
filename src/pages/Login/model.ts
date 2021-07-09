@@ -8,6 +8,8 @@ import { setAuthority } from '@/utils/authority';
 import { stringify } from 'querystring';
 import type { BaseStore } from '@/store';
 import { cloneDeep } from 'lodash';
+import type { ProfileParamsType } from '@/services/profile';
+import { getProfileInfo } from '@/services/profile';
 
 export type StateType = {
   message?: 'ok' | 'error';
@@ -37,6 +39,15 @@ export default class LoginStore {
     const response = await accountLogin(payload);
     // Login successfully
     if (!response.status || `${response.status}`.indexOf('2') === 0) {
+      const profileParam: ProfileParamsType = { id: payload.aid };
+      const profile = await getProfileInfo(profileParam);
+      console.log('login_profile:', profile);
+      if (!profile.status || `${profile.status}`.indexOf('2') === 0) {
+        this.baseStore.setName(profile.basic_person.name);
+      } else {
+        this.baseStore.setName('');
+      }
+
       this.setUserLogin({
         message: 'ok',
         loginType: 'account',

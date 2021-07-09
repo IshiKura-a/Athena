@@ -20,7 +20,7 @@ export const menuRoutes = [
   {
     path: '/section/:id',
     name: 'section',
-    icon: 'UserOutlined',
+    icon: 'ExclamationCircleOutlined',
     component: './Section/[id]',
   },
   {
@@ -39,12 +39,7 @@ export const menuRoutes = [
       },
     ],
   },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
+
   {
     component: './404',
   },

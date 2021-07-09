@@ -13,6 +13,7 @@ import ResourceStore from '@/components/Resource/model';
 
 export class BaseStore {
   @observable id = '';
+  @observable name = '';
   @observable type = RoleType.student;
 
   @action setId(id: string) {
@@ -23,8 +24,16 @@ export class BaseStore {
     this.type = type;
   }
 
-  @action getId() {
+  getId() {
     return this.id;
+  }
+
+  @action setName(name: string) {
+    this.name = name;
+  }
+
+  getName() {
+    return this.name;
   }
 }
 

@@ -41,6 +41,10 @@ export default class SectionStore {
       this.resourceStore.setCurrentLesson(this.currentLesson);
       await this.discussionStore.listDiscussion();
       await this.resourceStore.listResource();
+      this.signInStore.setCurrentLesson(this.currentLesson);
+      this.hwStore.setCurrentLesson(this.currentLesson);
+      await this.signInStore.listSign();
+      await this.hwStore.listHw();
     }
   };
 

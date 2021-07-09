@@ -1,7 +1,7 @@
 import request from '@/utils/request';
 
 export type ProfileParamsType = {
-  id: string;
+  id?: string;
 };
 
 export async function getProfileInfo(params: ProfileParamsType) {
