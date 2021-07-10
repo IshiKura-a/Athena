@@ -107,14 +107,19 @@ const CheckModal = (props: IProps) => {
           <div className={styles.hw_check_form_inline}>
             <Form form={form} preserve={false}>
               <Form.Item label={'评分:'} name={'score'} rules={[{ required: true }]}>
-                <InputNumber defaultValue={dataToCheck?.score} />
+                <InputNumber
+                  defaultValue={dataToCheck?.score}
+                  disabled={dataToCheck?.record?.content === undefined}
+                />
               </Form.Item>
             </Form>
           </div>
         </div>
 
         <div className={styles.hw_check_whole}>
-          <div className={styles.hw_check_content}>{`备注：${dataToCheck?.record?.content}`}</div>
+          <div className={styles.hw_check_content}>{`备注：${
+            dataToCheck?.record?.content === undefined ? `暂未提交` : dataToCheck?.record?.content
+          }`}</div>
           <List
             className={styles.hw_check_appendix_list}
             dataSource={dataToCheck?.record?.accessory}
