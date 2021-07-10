@@ -60,11 +60,13 @@ export default class Resource extends Component<ResourceProps, any> {
                   </a>,
                 ]}
               >
-                <List.Item.Meta
-                  avatar={<FileTextTwoTone className={styles.icon} />}
-                  title={<div className={styles.title}>{item.title}</div>}
-                  description={<div className={styles.description}>{item.filename}</div>}
-                />
+                <div>
+                  <span>
+                    <FileTextTwoTone className={styles.icon} />
+                  </span>
+                  <div className={styles.title}>{item.title}</div>
+                  <div className={styles.description}>{item.filename}</div>
+                </div>
               </List.Item>
             )}
           />
