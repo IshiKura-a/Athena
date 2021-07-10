@@ -55,14 +55,13 @@ export default class Profile extends Component<ProfileProps, any> {
       wechat,
       qq,
       gender,
-      campus,
+      address,
       birthday,
       blood_type,
       status,
       politics,
       nation,
       hometown,
-      dormitory,
     } = this.props.profileStore.profileInfo.basic_person;
 
     let emailVisible = email;
@@ -89,11 +88,8 @@ export default class Profile extends Component<ProfileProps, any> {
             if (checkTelephone === 1) {
               telephoneVisible = telephoneInput;
               profileStore.editTelephone(telephoneInput);
-              this.forceUpdate();
             } else if (checkTelephone === 0) {
-              info('Input should be number.');
-            } else if (checkTelephone === -1) {
-              info('Input length is not valid.');
+              info('Input format is not valid.');
             }
           },
         },
@@ -106,7 +102,6 @@ export default class Profile extends Component<ProfileProps, any> {
             if (checkEmail === 1) {
               emailVisible = emailInput;
               profileStore.editEmail(emailInput);
-              this.forceUpdate();
             } else if (checkEmail === 0) {
               info('Input format is not valid.');
             }
@@ -126,16 +121,11 @@ export default class Profile extends Component<ProfileProps, any> {
         editable: false,
       },
       {
-        content: dormitory,
-        editable: false,
-      },
-      {
         content: wechatVisible,
         editable: {
           onChange: (wechatInput: string) => {
             wechatVisible = wechatInput;
             profileStore.editWechat(wechatInput);
-            this.forceUpdate();
           },
         },
       },
@@ -147,11 +137,8 @@ export default class Profile extends Component<ProfileProps, any> {
             if (checkQQ === 1) {
               qqVisible = qqInput;
               profileStore.editQQ(qqInput);
-              this.forceUpdate();
             } else if (checkQQ === 0) {
-              info('Input should be number.');
-            } else if (checkQQ === -1) {
-              info('Input length is not valid.');
+              info('Input format is not valid.');
             }
           },
         },
@@ -206,14 +193,14 @@ export default class Profile extends Component<ProfileProps, any> {
                   </Card.Grid>
 
                   <Card.Grid style={{ textAlign: 'center', height: 150 }}>
-                    <Tooltip placement="top" title={campus}>
+                    <Tooltip placement="top" title={address}>
                       <div>
                         <p>
                           <HomeTwoTone style={iconStyle} twoToneColor="#69c0ff" />
                         </p>
                       </div>
                     </Tooltip>
-                    <p className={styles.labelStyle}>校区</p>
+                    <p className={styles.labelStyle}>住址</p>
                   </Card.Grid>
 
                   <Card.Grid style={{ textAlign: 'center', height: 150 }}>

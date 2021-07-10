@@ -1,9 +1,9 @@
 import { action, observable } from 'mobx';
 import type { BaseStore } from '@/store';
-import { getProfileInfo } from '@/services/profile';
-import type { ProfileParamsType } from '@/services/profile';
-import type { ProfileType, InfoType } from './type';
+import { getProfileInfo, updateProfileInfo } from '@/services/profile';
+import type { ProfileType } from './type';
 import { message } from 'antd';
+import { cloneDeep } from 'lodash';
 
 export default class ProfileStore {
   @observable profileInfo: ProfileType = {
@@ -17,13 +17,12 @@ export default class ProfileStore {
       hometown: '未获取',
       nation: '未获取',
       blood_type: 'O',
-      campus: '玉泉',
-      dormitory: '未获取',
+      address: '未获取',
       wechat: '',
       qq: '未获取',
       birthday: '2000-10-27',
       gender: '',
-      status: 0, // in {0, 1, 2}
+      status: 2, // in {0, 1, 2}
     },
     takes: [
       {
@@ -33,6 +32,7 @@ export default class ProfileStore {
       },
     ],
   };
+  @observable id: string = '';
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
@@ -40,11 +40,12 @@ export default class ProfileStore {
   }
 
   @action fetchData = async () => {
-    const params: ProfileParamsType = { id: this.baseStore.id };
-    const response = await getProfileInfo(params);
+    // const params: ProfileParamsType = { id: this.baseStore.id };
+    const response: ProfileType = await getProfileInfo({ id: this.baseStore.id });
     if (response) {
       if (response.basic_person) {
-        this.setProfileInfo(response.basic_person);
+        this.setProfileInfo(response);
+        console.log(response.basic_person);
       } else {
         message.info('Fetch Incorrect Data');
         console.error('Fetch Incorrect Data');
@@ -55,87 +56,37 @@ export default class ProfileStore {
     }
   };
 
-  @action setProfileInfo = async (info: InfoType) => {
-    this.setName(info.name);
-    this.setId(this.baseStore.id);
-    this.setDepartment(info.major);
-    this.setBirthday(info.birthday);
-    this.setBloodType(info.blood_type);
-    this.setCampus(info.campus);
-    this.setGender(info.gender);
-    this.setNation(info.nation);
-    this.setHometown(info.hometown);
-    this.setPolitics(info.politics);
-    this.setDomitory(info.dormitory);
-    this.editEmail(info.email);
-    this.editTelephone(info.phone);
-    this.editWechat(info.wechat);
-    this.editQQ(info.qq);
-    this.editStatus(info.status);
+  @action setProfileInfo = (info: ProfileType) => {
+    this.profileInfo = cloneDeep(info);
   };
-
-  @action setName(name: string) {
-    this.profileInfo.basic_person.name = name;
-  }
-
-  @action setId(id: string) {
-    this.profileInfo.basic_person.id = id;
-    // console.error('set id in profile deprecated');
-  }
-
-  @action setDepartment(major: string) {
-    this.profileInfo.basic_person.major = major;
-  }
-
-  @action setBirthday(birthday: string) {
-    this.profileInfo.basic_person.birthday = birthday;
-  }
-
-  @action setBloodType(blood_type: string) {
-    this.profileInfo.basic_person.blood_type = blood_type;
-  }
-
-  @action setCampus(campus: string) {
-    this.profileInfo.basic_person.campus = campus;
-  }
-
-  @action setGender(gender: string) {
-    this.profileInfo.basic_person.gender = gender;
-  }
-
-  @action setHometown(hometown: string) {
-    this.profileInfo.basic_person.hometown = hometown;
-  }
-
-  @action setNation(nation: string) {
-    this.profileInfo.basic_person.nation = nation;
-  }
-
-  @action setPolitics(politics: string) {
-    this.profileInfo.basic_person.politics = politics;
-  }
-
-  @action setDomitory(dorm: string) {
-    this.profileInfo.basic_person.dormitory = dorm;
-  }
 
   @action editEmail = async (email: string) => {
     this.profileInfo.basic_person.email = email;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), email });
+    console.log('update', response);
   };
 
   @action editTelephone = async (telephone: string) => {
     this.profileInfo.basic_person.phone = telephone;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), phone: telephone });
+    console.log('update', response);
   };
 
   @action editWechat = async (wechat: string) => {
     this.profileInfo.basic_person.wechat = wechat;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), wechat });
+    console.log('update', response);
   };
 
   @action editQQ = async (qq: string) => {
     this.profileInfo.basic_person.qq = qq;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), qq });
+    console.log('update', response);
   };
 
   @action editStatus = async (status: number) => {
     this.profileInfo.basic_person.status = status;
+    const response = await updateProfileInfo({ id: this.baseStore.getId(), status });
+    console.log('update', response);
   };
 }
