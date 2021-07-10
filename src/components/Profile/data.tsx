@@ -65,7 +65,7 @@ export const dataTitle = [
     // editable: false,
   },
   {
-    title: '生源地',
+    title: '家乡',
     copyable: true,
     // editable: false,
   },
