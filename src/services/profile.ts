@@ -1,6 +1,7 @@
 import request from '@/utils/request';
 
 export type ProfileParamsType = {
+
   id: string;
   phone?: string;
   wechat?: string;

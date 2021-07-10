@@ -3,11 +3,13 @@ import { accountLogin } from '@/services/login';
 import type { LoginParamsType } from '@/services/login';
 import { getPageQuery, setCookie } from '@/utils/utils';
 import { message } from 'antd';
-import { history } from '@@/core/history';
+import { history } from 'umi';
 import { setAuthority } from '@/utils/authority';
 import { stringify } from 'querystring';
 import type { BaseStore } from '@/store';
 import { cloneDeep } from 'lodash';
+import type { ProfileParamsType } from '@/services/profile';
+import { getProfileInfo } from '@/services/profile';
 
 export type StateType = {
   message?: 'ok' | 'error';
@@ -17,6 +19,10 @@ export type StateType = {
 export enum RoleType {
   student = 'student',
   instructor = 'instructor',
+}
+
+export function isStudent(type: string) {
+  return type === RoleType.student;
 }
 
 export default class LoginStore {
@@ -31,13 +37,21 @@ export default class LoginStore {
   @action login = async (payload: LoginParamsType) => {
     this.inSubmitting = true;
     const response = await accountLogin(payload);
+    setCookie('JWT-Token', response.token);
+
     // Login successfully
     if (!response.status || `${response.status}`.indexOf('2') === 0) {
+      const profile = await getProfileInfo();
+      if (!profile.status || `${profile.status}`.indexOf('2') === 0) {
+        this.baseStore.setName(profile.basic_person.name);
+      } else {
+        this.baseStore.setName('');
+      }
+
       this.setUserLogin({
         message: 'ok',
         loginType: 'account',
       });
-      setCookie('JWT-Token', response.token);
       setAuthority(payload.type);
       this.baseStore.setId(payload.aid);
       const urlParams = new URL(window.location.href);

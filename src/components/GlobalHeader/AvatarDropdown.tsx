@@ -8,8 +8,10 @@ import type { CurrentUser } from '@/models/user';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
 import { inject, observer } from 'mobx-react';
+import type LoginStore from '@/pages/Login/model';
 
 export type GlobalHeaderRightProps = {
+  loginStore?: LoginStore;
   currentUser?: CurrentUser;
   menu?: boolean;
 } & Partial<ConnectProps>;
@@ -17,6 +19,10 @@ export type GlobalHeaderRightProps = {
 @inject('loginStore')
 @observer
 class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
+  componentDidMount() {
+    console.log('mount', this.props.loginStore?.baseStore.name);
+  }
+
   onMenuClick = (event: {
     key: React.Key;
     keyPath: React.Key[];
@@ -37,7 +43,7 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
     const {
       currentUser = {
         avatar: '',
-        name: '',
+        name: this.props.loginStore?.baseStore.name,
       },
       menu,
     } = this.props;
@@ -67,7 +73,9 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
       <HeaderDropdown overlay={menuHeaderDropdown}>
         <span className={`${styles.action} ${styles.account}`}>
           <Avatar size="small" className={styles.avatar} src={currentUser.avatar} alt="avatar" />
-          <span className={`${styles.name} anticon`}>{currentUser.name}</span>
+          <span className={`${styles.name} anticon`}>
+            {this.props.loginStore?.baseStore.getName}
+          </span>
         </span>
       </HeaderDropdown>
     ) : (

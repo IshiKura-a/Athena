@@ -1,10 +1,12 @@
 import { Component } from 'react';
 import type { Lesson } from '@/pages/Home/type';
-import { Timeline, Tooltip } from 'antd';
 import moment from 'moment';
 import styles from './style.less';
-import { FieldTimeOutlined, UserOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
+import { timeFormat } from '@/pages/Home/type';
+import { Link } from 'react-router-dom';
+import List from 'antd/es/list';
+import SmileSvg from '@/pages/Home/smile_svg';
 
 interface ScheduleProps {
   lessonInfo: Lesson[];
@@ -13,67 +15,61 @@ interface ScheduleProps {
 
 @observer
 export default class Schedule extends Component<ScheduleProps, any> {
-  judgeFinish = (startTime: string, endTime: string) => {
-    const nowString = moment().format('HH:mm');
-    const now = moment(nowString, 'HH:mm');
-    const start = moment(startTime, 'HH:mm');
-    const end = moment(endTime, 'HH:mm');
-
-    const started = now.diff(start);
-    const ended = end.diff(now);
-
-    if (moment().weekday() === this.props.day) {
-      if (ended >= 0) {
-        if (started >= 0) {
-          return 'red';
-        }
-        return 'green';
-      }
-      return 'yellow';
-    }
-    return 'grey';
-  };
   render() {
     const { lessonInfo } = this.props;
     return (
-      <Timeline mode="alternate">
-        {lessonInfo.map((item: Lesson) => (
-          <Timeline.Item
-            key={`${item.course_name}${item.time[0].start_time}`}
-            label={
-              <div style={{ paddingRight: '10px', paddingLeft: '10px' }}>
-                <div style={{ fontSize: 16, fontWeight: 500, textDecoration: 'underline' }}>
-                  bug!!!
-                </div>
-                <div>{item.address}</div>
-              </div>
-            }
-            dot={<FieldTimeOutlined style={{ fontSize: 20, color: 'grey' }} />}
-          >
-            <div
-              style={{
-                width: '70%',
-                display: 'inline-block',
-                textAlign: 'center',
-                border: '2px solid rgb(99 146 183 / 36%)',
-                borderRadius: 15,
-              }}
-            >
-              <span>
-                <a className={styles.link}>{item.course_name}</a>
-              </span>
-              <div>
-                <span style={{ marginRight: '10px' }}>
-                  <Tooltip title={item.instructor}>
-                    <UserOutlined />
-                  </Tooltip>
-                </span>
-                {item.department}
-              </div>
+      <>
+        {lessonInfo.length === 0 ? (
+          <div className="ant-empty ant-empty-normal">
+            <div className="class=" ant-empty ant-empty-normal>
+              <svg
+                className="ant-empty-img-simple"
+                viewBox="0 0 1024 1024"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                transform="scale(1.0)"
+                p-id="1188"
+                width="150"
+                height="150"
+              >
+                <SmileSvg />
+              </svg>
+              <div className="ant-empty-description">今日无课</div>
             </div>
-          </Timeline.Item>
-        ))}
-      </Timeline>
+          </div>
+        ) : (
+          <List
+            dataSource={lessonInfo}
+            renderItem={(item: Lesson) => (
+              <div className={styles.blockMargin}>
+                <div className={styles.block__bar__info}>
+                  <div className={styles.block__bar} />
+                  <div>
+                    <div>
+                      <Link
+                        to={`/section/${item.section_id}`}
+                        className={styles.block__info__title}
+                      >
+                        {item.course_name}
+                      </Link>
+                      <span className={styles.block__click}>
+                        <Link to={`/section/${item.section_id}`}>课程详情</Link>
+                      </span>
+                    </div>
+                    <div className={styles.block__info__detail}>
+                      <div>{`${moment(item.start_time, timeFormat).format('HH:mm')}~${moment(
+                        item.end_time,
+                        timeFormat,
+                      ).format('HH:mm')}`}</div>
+                      <div>{item.location}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+          />
+        )}
+      </>
     );
   }
 }

@@ -72,7 +72,7 @@ const CustomModal = (props: IProps) => {
           <TextArea />
         </Form.Item>
         <Form.Item label={'DDL'} name={'end_time'} initialValue={dataToEdit?.end_time}>
-          <TimeSelector />
+          <TimeSelector format={'HH:mm'} />
         </Form.Item>
       </Form>
     </Modal>

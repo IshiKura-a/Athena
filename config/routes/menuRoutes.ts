@@ -14,7 +14,14 @@ export const menuRoutes = [
     path: '/profile',
     name: 'profile',
     icon: 'UserOutlined',
-    component: './Profile'
+    component: './Profile',
+  },
+
+  {
+    path: '/section/:id',
+    name: 'section',
+    icon: 'ExclamationCircleOutlined',
+    component: './Section/[id]',
   },
   {
     path: '/admin',
@@ -32,12 +39,7 @@ export const menuRoutes = [
       },
     ],
   },
-  {
-    name: 'list.table-list',
-    icon: 'table',
-    path: '/list',
-    component: './TableList',
-  },
+
   {
     component: './404',
   },

@@ -54,17 +54,12 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
               </Link>
             </div>
             <div className={styles.desc}>
-              <FormattedMessage
-                id="pages.layouts.userLayout.title"
-                defaultMessage="zju线上教学管理系统"
-              />
+              <FormattedMessage id="pages.layouts.userLayout.title" defaultMessage="教学管理系统" />
             </div>
           </div>
           {children}
         </div>
-        <Footer style={{ textAlign: 'center' }}>
-          浙江大学教学管理系统 ©2021 Created by Group ID
-        </Footer>
+        <Footer style={{ textAlign: 'center' }}>教学管理系统 ©2021 软件工程第一组</Footer>
       </div>
     </HelmetProvider>
   );
