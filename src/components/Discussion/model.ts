@@ -1,6 +1,6 @@
 import { cloneDeep } from 'lodash';
 import type { BaseStore } from '@/store';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import services from './services';
 
 // store中的存储形式
@@ -40,10 +40,18 @@ export default class DiscussionStore {
   @observable commentLength = 0;
   @observable replyListLength = [] as number[];
   @observable currentLesson = '';
+  @observable isLoading = false;
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
+    reaction(
+      () => this.currentLesson,
+      (data: any) => {
+        this.listDiscussion();
+      },
+      { fireImmediately: false },
+    );
   }
 
   @action setCurrentLesson(lesson_id: string) {
@@ -51,7 +59,6 @@ export default class DiscussionStore {
   }
 
   @computed get getReplyListLength() {
-    // 好像不对
     return this.list.map((item, index) => {
       return item.replyList.length;
     });
@@ -62,8 +69,8 @@ export default class DiscussionStore {
   }
 
   @action async addComment(reply: string, id: string) {
-    services.createComment({ topic_id: id, user_id: this.baseStore.getId(), content: reply });
-    this.listDiscussion();
+    await services.createComment({ topic_id: id, user_id: this.baseStore.getId(), content: reply });
+    await this.listDiscussion();
   }
 
   @action async addTopic(comment: string) {
@@ -76,6 +83,7 @@ export default class DiscussionStore {
   }
 
   @action async listDiscussion() {
+    this.setLoading(true);
     let listData: DiscussType[] = [];
     const sectionID = this.currentLesson;
     const data: ResponseType[] = await services.getTopic({ section_id: sectionID });
@@ -94,5 +102,10 @@ export default class DiscussionStore {
       }),
     );
     this.setDiscuss(listData);
+    this.setLoading(false);
+  }
+
+  @action setLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
   }
 }

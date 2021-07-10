@@ -44,6 +44,7 @@ export default class Resource extends Component<ResourceProps, any> {
 
         {this.props.resourceStore.resourceList.length ? (
           <List
+            loading={this.props.resourceStore.isLoading}
             header={<h3>{`${currentLessonName}文件列表`}</h3>}
             itemLayout="horizontal"
             dataSource={this.props.resourceStore.resourceList}
@@ -71,7 +72,7 @@ export default class Resource extends Component<ResourceProps, any> {
             )}
           />
         ) : (
-          <Result status="404" title="404" subTitle="抱歉，当前文件列表为空" />
+          <Result title="抱歉，当前文件列表为空" />
         )}
       </>
     );

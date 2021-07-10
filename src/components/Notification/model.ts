@@ -25,7 +25,7 @@ export interface Status {
 
 export class NotifyListStore {
   @observable list = [] as Notify[];
-  @observable statuslist = [] as Status[];
+  @observable statusList = [] as Status[];
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
@@ -45,7 +45,7 @@ export class NotifyListStore {
   }
 
   @action async setStatus(list: Status[]) {
-    this.statuslist = cloneDeep(list);
+    this.statusList = cloneDeep(list);
   }
 
   @action async getStatus() {
@@ -55,7 +55,7 @@ export class NotifyListStore {
     const current = new Date(currentMoment);
     const week_later = new Date(weekMoment);
 
-    const statusList = this.list.map((value) => {
+    return this.list.map((value) => {
       const date = new Date(value.time);
       // get status
       let status = -1;
@@ -65,12 +65,8 @@ export class NotifyListStore {
           status = 1;
         }
       }
-      // get time in the correct form
-      const time = value.time
-        .replace('T', ' ')
-        .replaceAll('-', '.')
-        .replaceAll(':', '.')
-        .substring(0, 16);
+
+      const time = date.toLocaleString();
 
       return {
         time,
@@ -80,7 +76,5 @@ export class NotifyListStore {
         type: value.type,
       };
     });
-
-    return statusList;
   }
 }

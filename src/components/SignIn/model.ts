@@ -1,5 +1,5 @@
 import type { BaseStore } from '@/store';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import type { SignIn } from '@/pages/Section/type';
 import { cloneDeep } from 'lodash';
 import { createSignIn, listSignIn, updateSignIn } from '@/components/SignIn/service';
@@ -22,10 +22,18 @@ export default class SignInStore {
   @observable signInList = [] as SignIn[];
 
   @observable currentLesson = undefined as string | undefined;
+  @observable isLoading = false;
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
+    reaction(
+      () => this.currentLesson,
+      (data: any) => {
+        this.listSign();
+      },
+      { fireImmediately: false },
+    );
   }
 
   // student
@@ -68,8 +76,10 @@ export default class SignInStore {
 
   @action listSign = async () => {
     if (this.currentLesson) {
+      this.setLoading(true);
       const response = await listSignIn({ section_id: this.currentLesson });
       this.setSignInList(response);
+      this.setLoading(false);
     }
   };
 
@@ -91,5 +101,9 @@ export default class SignInStore {
     if (response.message === 'Sign in succeeded') {
       if (this.currentLesson) await this.listSign();
     }
+  };
+
+  @action setLoading = (isLoading: boolean) => {
+    this.isLoading = isLoading;
   };
 }

@@ -1,9 +1,8 @@
 import { cloneDeep } from 'lodash';
 import type { BaseStore } from '@/store';
-import { action, observable } from 'mobx';
+import { action, observable, reaction } from 'mobx';
 import services from './services';
 import { message } from 'antd';
-import request from '@/utils/request';
 
 export interface ResourceType {
   id: string;
@@ -16,10 +15,18 @@ export interface ResourceType {
 export default class ResourceStore {
   @observable resourceList = [] as ResourceType[];
   @observable currentLesson = '';
+  @observable isLoading = false;
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
+    reaction(
+      () => this.currentLesson,
+      (data: any) => {
+        this.listResource();
+      },
+      { fireImmediately: false },
+    );
   }
 
   @action setCurrentLesson(lesson_id: string) {
@@ -40,10 +47,12 @@ export default class ResourceStore {
   }
 
   @action async listResource() {
+    this.setLoading(true);
     const listData: ResourceType[] = await services.getResourceList({
       section_id: this.currentLesson,
     });
     this.setResourceList(listData);
+    this.setLoading(false);
   }
 
   @action async fetchResource(filename: string, id: string) {
@@ -83,5 +92,9 @@ export default class ResourceStore {
     formData.append('content', content);
     await services.uploadResource(formData);
     await services.getResourceList({ section_id: this.currentLesson });
+  }
+
+  @action setLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
   }
 }

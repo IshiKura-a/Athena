@@ -1,5 +1,5 @@
 import type { BaseStore } from '@/store';
-import { action, computed, observable } from 'mobx';
+import { action, computed, observable, reaction } from 'mobx';
 import type { HW } from '@/pages/Section/type';
 import { cloneDeep } from 'lodash';
 import { cmpTime } from '@/pages/Home';
@@ -26,10 +26,18 @@ export default class HomeworkStore {
 
   @observable currentLesson = undefined as string | undefined;
   @observable currentLessonName = undefined as string | undefined;
+  @observable isLoading = false;
 
   baseStore: BaseStore;
   constructor(baseStore: BaseStore) {
     this.baseStore = baseStore;
+    reaction(
+      () => this.currentLesson,
+      (data: any) => {
+        this.listHw();
+      },
+      { fireImmediately: false },
+    );
   }
 
   // student
@@ -79,8 +87,10 @@ export default class HomeworkStore {
 
   @action listHw = async () => {
     if (this.currentLesson) {
+      this.setLoading(true);
       const response = await listHw({ section_id: this.currentLesson });
       this.setHwList(response);
+      this.setLoading(false);
     }
   };
 
@@ -105,4 +115,8 @@ export default class HomeworkStore {
       await this.listHw();
     }
   };
+
+  @action setLoading(isLoading: boolean) {
+    this.isLoading = isLoading;
+  }
 }

@@ -21,7 +21,7 @@ export default class Schedule extends Component<ScheduleProps, any> {
       <>
         {lessonInfo.length === 0 ? (
           <div className="ant-empty ant-empty-normal">
-            <div className="class=" ant-empty ant-empty-normal>
+            <div className="class= ant-empty ant-empty-normal">
               <svg
                 className="ant-empty-img-simple"
                 viewBox="0 0 1024 1024"

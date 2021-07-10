@@ -109,6 +109,7 @@ export default class Discussion extends Component<DisProps, any> {
         </div>
 
         <List
+          loading={this.props.discussionStore.isLoading}
           itemLayout="vertical"
           dataSource={this.props.discussionStore.list}
           renderItem={(item) => (

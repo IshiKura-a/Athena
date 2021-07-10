@@ -35,16 +35,10 @@ export default class SectionStore {
 
   requestAgain = async () => {
     if (this.currentLesson) {
-      // await this.listSign({ section_id: this.currentLesson });
-      // await this.listHw({ section_id: this.currentLesson });
       this.discussionStore.setCurrentLesson(this.currentLesson);
       this.resourceStore.setCurrentLesson(this.currentLesson);
-      await this.discussionStore.listDiscussion();
-      await this.resourceStore.listResource();
       this.signInStore.setCurrentLesson(this.currentLesson);
       this.hwStore.setCurrentLesson(this.currentLesson);
-      await this.signInStore.listSign();
-      await this.hwStore.listHw();
     }
   };
 

@@ -23,7 +23,7 @@ interface IProps {
 export default class SignInTab extends Component<IProps, any> {
   async componentDidMount() {
     const { signInStore } = this.props;
-
+    await signInStore.listSign();
     signInStore.setIsSign(undefined);
     signInStore.setSignInShow(undefined);
     signInStore.setSignInModalVisible(false);
@@ -115,12 +115,12 @@ export default class SignInTab extends Component<IProps, any> {
   render() {
     const { signInStore, currentLessonName } = this.props;
     const {
-      isSign,
       signInList,
       signInModalVisible,
       polling,
       dataToShow,
       signInCreate,
+      isLoading,
     } = this.props.signInStore;
     return (
       <>
@@ -136,6 +136,7 @@ export default class SignInTab extends Component<IProps, any> {
               <span className={ListStyles.head_status}>签到状态</span>
             </span>
             <List
+              loading={isLoading}
               dataSource={signInStore.signInList}
               pagination={{
                 hideOnSinglePage: true,
@@ -179,6 +180,7 @@ export default class SignInTab extends Component<IProps, any> {
               <span className={ListStyles.head_status}>签到人数</span>
             </span>
             <List
+              loading={isLoading}
               dataSource={signInList}
               renderItem={(item: SignIn) => (
                 <List.Item

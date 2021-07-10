@@ -23,7 +23,6 @@ function NotifyIcon(props: { type: string; twoToneColor: string }) {
 export default class NotifyList extends Component<NotifyProps> {
   componentDidMount() {
     this.props.notifyListStore.fetchNotify();
-    console.log('component', this.props.notifyListStore.statuslist.length);
   }
 
   @observable isModalVisible = false;
@@ -68,13 +67,13 @@ export default class NotifyList extends Component<NotifyProps> {
   };
 
   render() {
-    const { statuslist } = this.props.notifyListStore;
+    const { statusList } = this.props.notifyListStore;
 
     return (
       <>
         <List
           itemLayout="horizontal"
-          dataSource={statuslist}
+          dataSource={statusList}
           renderItem={(item) => (
             <List.Item extra={<p className={styles.date}>{item.time}</p>}>
               <Button

@@ -87,7 +87,7 @@ export default class Section extends Component<IProps, any> {
                           width="140px"
                           height="76px"
                           viewBox="0 0 140 76"
-                          enable-background="new 0 0 140 76"
+                          enableBackground="new 0 0 140 76"
                         >
                           <SectionSvg />
                         </svg>

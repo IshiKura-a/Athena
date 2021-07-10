@@ -94,6 +94,7 @@ export default class HomeworkTab extends Component<InstructorProps, any> {
       dataToCheck,
       recordsToShow,
       hwCreate,
+      isLoading,
     } = hwStore;
     return (
       <>
@@ -108,6 +109,7 @@ export default class HomeworkTab extends Component<InstructorProps, any> {
               <span className={styles.head_status}>提交状态</span>
             </span>
             <List
+              loading={isLoading}
               dataSource={hwList}
               renderItem={(item) => [
                 <List.Item
@@ -163,6 +165,7 @@ export default class HomeworkTab extends Component<InstructorProps, any> {
               <span className={styles.head_status}>提交人数</span>
             </span>
             <List
+              loading={isLoading}
               dataSource={hwList}
               pagination={{
                 hideOnSinglePage: true,

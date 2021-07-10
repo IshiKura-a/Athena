@@ -3,13 +3,12 @@ import ProfileStore from '@/pages/Profile/model';
 import LoginStore, { RoleType } from '@/pages/Login/model';
 import { action, observable, computed } from 'mobx';
 import { TodoListStore } from '@/components/TodoList/model';
-import StudentStore from '@/pages/Section/component/Student/model';
-import InstructorStore from '@/pages/Section/component/Instructor/model';
 import SectionStore from '@/pages/Section/model';
 import SignInStore from '@/components/SignIn/model';
 import HomeworkStore from '@/components/HomeWork/model';
 import DiscussionStore from '@/components/Discussion/model';
 import ResourceStore from '@/components/Resource/model';
+import { NotifyListStore } from './components/Notification/model';
 
 export class BaseStore {
   @observable id = '';
@@ -48,6 +47,7 @@ export default {
   profileStore: new ProfileStore(baseStore),
   loginStore: new LoginStore(baseStore),
   todoListStore: new TodoListStore(baseStore),
+  notifyListStore: new NotifyListStore(baseStore),
   signInStore,
   hwStore,
   discussionStore,
