@@ -12,7 +12,9 @@ const CommentList = (props: any) => {
           <List.Item style={{ marginLeft: '20px' }}>
             <List.Item.Meta
               style={{ margin: '0' }}
-              avatar={<Avatar src={'https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png'} />}
+              avatar={
+                <Avatar src={'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png'} />
+              }
               description={item.content}
               title={<p>{item.user.name}</p>}
             />

@@ -153,7 +153,11 @@ const CheckModal = (props: IProps) => {
             />
           </div>
           <div className={styles.hw_check_button}>
-            <Button onClick={submitScore} icon={<CheckOutlined />}>
+            <Button
+              onClick={submitScore}
+              icon={<CheckOutlined />}
+              disabled={dataToCheck?.record?.content === undefined}
+            >
               确认
             </Button>
           </div>
