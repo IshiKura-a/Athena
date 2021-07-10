@@ -10,6 +10,7 @@ import type { BaseStore } from '@/store';
 import { cloneDeep } from 'lodash';
 import type { ProfileParamsType } from '@/services/profile';
 import { getProfileInfo } from '@/services/profile';
+import { updateRequest } from '@/utils/request';
 
 export type StateType = {
   message?: 'ok' | 'error';
@@ -38,6 +39,7 @@ export default class LoginStore {
     this.inSubmitting = true;
     const response = await accountLogin(payload);
     setCookie('JWT-Token', response.token);
+    updateRequest();
 
     // Login successfully
     if (!response.status || `${response.status}`.indexOf('2') === 0) {

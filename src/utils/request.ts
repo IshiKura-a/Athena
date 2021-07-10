@@ -47,21 +47,25 @@ const request = extend({
   errorHandler, // 默认错误处理
 });
 
-request.interceptors.request.use((url: string, options: RequestOptionsInit) => {
-  // options.mode = 'cors';
-  const jwt = getCookie('JWT-Token');
-  const headers = jwt
-    ? {
-        authorization: `Bearer ${jwt}`,
-      }
-    : undefined;
+const updateRequest = () => {
+  request.interceptors.request.use((url: string, options: RequestOptionsInit) => {
+    // options.mode = 'cors';
+    const jwt = getCookie('JWT-Token');
+    const headers = jwt
+      ? {
+          authorization: `Bearer ${jwt}`,
+        }
+      : undefined;
 
-  return {
-    options: {
-      ...options,
-      headers,
-    },
-  };
-});
+    return {
+      options: {
+        ...options,
+        headers,
+      },
+    };
+  });
+};
 
+updateRequest();
+export { updateRequest };
 export default request;
